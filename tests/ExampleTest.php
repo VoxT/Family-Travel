@@ -14,6 +14,6 @@ class ExampleTest extends TestCase
     public function testBasicExample()
     {
         $this->visit('/')
-             ->see('Laravel');
+             ->see('A navigation bar is a navigation header that is placed at the top of the page.');
     }
 }
