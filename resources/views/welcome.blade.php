@@ -4,7 +4,6 @@
 	<title>FAMILY-TRAVEL</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
 	<link rel="stylesheet" href="{{ elixir('css/app.css') }}">
 
 	<script src="{{ elixir('js/app.js') }}"></script>
@@ -26,7 +25,7 @@
   </div>
 </nav>
   
-<div class="container">
+<div class="container animated infinite bounce">
   <h3>Basic Navbar Example</h3>
   <p>A navigation bar is a navigation header that is placed at the top of the page.</p>
 </div>
