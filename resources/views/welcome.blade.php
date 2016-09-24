@@ -30,5 +30,20 @@
   <p>A navigation bar is a navigation header that is placed at the top of the page.</p>
 </div>
 
+<form action="/register" method="POST">
+    {{ csrf_field() }}
+
+    <div>
+        Name: <input type="text" name="name">
+    </div>
+
+    <div>
+        <input type="checkbox" value="yes" name="terms"> Accept Terms
+    </div>
+
+    <div>
+        <input type="submit" value="Register">
+    </div>
+</form>
 
 </body>

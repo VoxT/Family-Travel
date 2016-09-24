@@ -16,4 +16,11 @@ class ExampleTest extends TestCase
         $this->visit('/')
              ->see('A navigation bar is a navigation header that is placed at the top of the page.');
     }
+
+    public function testNewUserRegistration()
+    {
+        $this->visit('/')
+             ->type('', 'name')
+             ->uncheck('terms');
+    }
 }
