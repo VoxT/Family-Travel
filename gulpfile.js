@@ -1,11 +1,28 @@
 var elixir = require('laravel-elixir');
 
-var bowerDir ='bower_components/';
+var bowerDir ='vendor/bower/';
+
 
 elixir(function(mix) {
-	  mix.copy(bowerDir + 'bootstrap/fonts', 'public/fonts')
-	     .copy(bowerDir + 'jquery/dist/jquery.min.js', 'public/js/jquery.min.js')
-	     .copy(bowerDir + 'bootstrap/dist/js/bootstrap.min.js', 'public/js/bootstrap.min.js')
+	mix .copy( bowerDir + 'bootstrap/less/**', 'resources/assets/less/bootstrap')
+		.copy( bowerDir + 'bootstrap/dist/fonts/**', 'public/fonts')
+		.copy( bowerDir + 'bootstrap/dist/js/bootstrap.js', 'resources/assets/js')
+		.copy( bowerDir + 'jquery/dist/jquery.js', 'resources/assets/js')
+		.copy( bowerDir + 'font-awesome/less/**', 'resources/assets/less/fontawesome')
+		.copy( bowerDir + 'font-awesome/fonts', 'public/fonts')
+		.copy( bowerDir + 'animate.css/animate.css', 'resources/assets/less/animate');
 
-	     .less('app.less');
+	mix.less('app.less');
+
+	mix.scripts([
+		    'jquery.js',
+      		'bootstrap.js',
+      		'app.js'
+		], 'public/js/app.js');
+
+	 mix.version(['css/app.css', 'js/app.js']);
+
+	 mix.browserSync({
+        proxy: 'familytravel.com'
+    });
 });
