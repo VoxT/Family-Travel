@@ -1,3 +1,210 @@
-.style{
-	height: 50px;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.navbar {
+  z-index: 1001;
+}
+/*carousel style*/
+.carousel-inner {
+  margin-top: 0px; 
+}
+.carousel-inner > .item > img {
+  height: 530px;
+}
+.navbar {
+  margin-bottom: 0px;
+}
+.carousel-control.left, .carousel-control.right {
+  background-image: none;
+}
+.carousel-control{        
+    position: absolute;
+    /*set position of image from top to be 50%...*/
+    top: 70%;
+    /*and then shift it down to make it perfectly center.*/
+    transform: translate(0%, -120%);
+    background-image: none !important;
+    z-index: 5;
+    display: inline-block;
+}
+.carousel-caption {
+  top: 20px;
+}
+.banner-arrow-left, .banner-arrow-right {
+  position: absolute;
+  width: 60px;
+  height: 109px;
+  z-index: 3;
+  cursor: pointer;
+  background-image: url('/images/arrow.png');
+}
+.banner-arrow-left:hover {
+    background-position: 0 -109px;
+}
+.banner-arrow-left {
+    left: 150%;
+    top: -100px;
+}
+.banner-arrow-right:hover {
+    background-position: -60px -109px;
+}
+.banner-arrow-right {
+    right: 150%;
+    top: -100px;
+    background-position: -60px 0;
+}
+.item {
+  transition: none !important;
+  left: 0 !important;
+  transform: none !important;
+}
+.animated {
+  animation-duration: .6s;
+}
+.testform  {
+  position: absolute;
+  top: 350px;
+  left: 35%;
+  z-index: 6;
+  color: white;
+  background-color: grey;
+  width: 400px;
+}
+
+/*map style*/
+#map {
+  position: absolute;
+  z-index: 1;
+  top: 45px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - 45px);
+}
+/*search bar - result page*/
+.search-bar {
+    left: 0px;
+    z-index: 2;
+    position:  absolute;
+    width: 100%;
+    box-shadow: inset 0 0 5px #000;
+    box-shadow: inset 0 0 5px rgba(0,0,0,.67);
+    background: rgba(104, 161, 154, 0.9);;
+    padding: 0 6px 6px 10px;
+    font-size: 13px;
+    color: #fff;
+    min-height: 61px;
+    max-height: 20vh;
+    overflow-y: auto;
+    display: inline;
+}
+#search-form-bar > .form-group > .input-group{
+    position: relative;
+    width: 325px;
+    float: left;
+    margin: 11px 0 0 0;
+}
+#search-form-bar .form-group .input-group input {
+  box-shadow: none;
+  height: 40px;
+  width: 246px;
+}
+.input-group-addon {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #e7745c;
+}
+#from-label {
+  width: 45px;
+}
+#switch {
+  background-color: rgba(255, 255, 255, 0.0);
+  border: none;
+  margin: 15px 0px 0px 0px;
+}
+#switch > a {
+  font-size: 16px;
+  color: white;
+}
+/*search form welcome page*/
+.form-search {
+    width: 100%;
+    position: absolute;
+    bottom: 130px;
+    position: relative;
+    text-align: center;
+    color: #333333 !important;
+    margin: 0 auto;
+}
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+.form-bar-tab {
+  background: #fff;
+  height: 45px;
+  text-align: left;
+  color: #666;
+  line-height: 100%;
+  border-color: #0e545f;
+  display: block;
+  height: 45px;
+  line-height: 40px;
+  padding: 0 16px;
+  position: relative;
+  border-bottom: 5px solid rgba(104, 161, 154, 1);
+  margin: 0;
+}
+#search-form .input-group {
+  width: 100%;
+  box-shadow: none;
+  cursor: text;
+}
+#input-group{
+  padding: 5px 5px 5px 5px;
+  margin-left: 15px; 
+  background: rgba(255, 255, 255, 0.80);
+}
+.form-search .input-group > input {
+    box-shadow: none;
+    height: 55px;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 18px;
+    background: #d2d4d3;
+    border: 1px solid rgba(104, 161, 154, 0);
+}
+#input-group > .input-group {
+    border: 5px solid rgba(255, 255, 255, 0);
+}
+/*result collum*/
+.list-result {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  top: calc(44px + 60px);
+  padding: 0;
+  width: 379px;
+  height: calc(100% - 45px - 60px);    
+  overflow-y: auto;
+}
+.list-group {
+  margin: 0;
+}
+.list-group-item {
+  padding: 5px 15px 5px 20px;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    border: 3px solid #f6f6f6;
+    background-color: #e0e0e0;
+}
+::-webkit-scrollbar-track {
+    background-color: #fff;
+    border: 1px solid #f0f0f0;
 }

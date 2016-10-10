@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('findresult');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', 'test@test');
+
+Route::post('/search/{origin}/{destination}', 'test@map');
