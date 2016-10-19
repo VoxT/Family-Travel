@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 
 use App\Skyscanner\Transport\Flights;
@@ -20,22 +19,22 @@ class test extends Controller
 		    'locale' => 'en-GB',
 		    'originplace' => 'SIN-sky',
 		    'destinationplace' => 'KUL-sky',
-		    'outbounddate' => '2016-10-20',
-		    'inbounddate' => '2016-10-30',
+		    'outbounddate' => '2016-10-11',
+		    'inbounddate' => '2016-10-18',
 		    'adults' => 1);
     	$result = $flights_service->getResult(Flights::GRACEFUL, $params);
-    	return view('welcome', ['result' => json_decode(json_encode($result, JSON_PRETTY_PRINT), true)]);
+    	return view('pages.test', ['result' => json_decode(json_encode($result), true)]);
     }
 
-    public function test()
+    public function welcome()
     {
     	return view('welcome');
     }
 
-    public function map(Request $request)
+    public function map()
     {
         return view('pages.searchResult')->with([
-                'request' => $request
+                'request' => Input::get()
             ]);
     }
 }

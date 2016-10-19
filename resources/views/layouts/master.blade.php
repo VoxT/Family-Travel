@@ -17,13 +17,13 @@
 
     <section>
         @yield('content')
+
+        <script src="{{ elixir('js/script.js') }}"></script>
     </section>
 
     @section('footer')
             This is the master footer.
     @show
-
-    <script src="{{ elixir('js/script.js') }}"></script>
 
 </body>
 
