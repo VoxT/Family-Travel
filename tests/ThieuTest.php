@@ -11,15 +11,9 @@ class ThieuTest extends TestCase
      *
      * @return void
      */
-    public function testBasicExample()
-    {
-        $this->visit('/')
-             ->see('Máy Bay');
-    }
-
     public function testBrand()
     {
         $this->visit('/')
-             ->see('Brand');
+             ->see('Family Travel');
     }
 }

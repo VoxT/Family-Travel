@@ -11,6 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('findresult');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', 'test@welcome');
+
+Route::get('/test', 'test@GetLiveFlightPrice');
+
+// Route::post('/search/{origin}/{destination}', 'test@map');
+
+Route::get('search', ['as' => 'search', 'uses' => 'test@map']);
