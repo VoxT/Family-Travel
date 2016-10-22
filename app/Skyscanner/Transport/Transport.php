@@ -120,20 +120,31 @@ class Transport
 //            echo "API key not found in: " . $serviceUrl;
             $params['apiKey'] = $this->apiKey;
 //        }
-
+            
         if (count($params) > 0) {
             $serviceUrl .= '?' . http_build_query($params);
         }
 
+       //
+
+       echo $serviceUrl;
+       print_r($data);
+       // echo "string";
         // if ($callback == array('self', 'getPollURL')) {
         //     unset($params['apiKey']);
         // }
 
         // use our own httpRequest function if HttpRequest class is not available.
         $r = NetworkUtils::httpRequest($serviceUrl, $headers, $method, $data);
-
+        //print_r($r);
+        // printf('TR_THE');
+        // printf(substr($r,0,12));
+        if('HTTP/1.1 200'== substr($r,0,12)||'HTTP/1.1 201'== substr($r,0,12)){
+             return call_user_func($callback, $r);
+        }
 //        try {
-            return call_user_func($callback, $r);
+        else
+            return false; 
 //        } catch(Exception $e) {
 //            return self::withErrorHandling($r, null, $errorMode);
 //        }
@@ -183,17 +194,17 @@ class Transport
     public function poll(
         $pollUrl,
         $initialDelay = null,   // float
-        $delay = 1,
-        $tries = 10,
+        $delay = 3 ,
+        $tries = 20,
         $errors = self::STRICT,
         array $params = []
     ) {
-        $initialDelay = ($initialDelay == null) ? 2.0 : $initialDelay;
+        $initialDelay = ($initialDelay == null) ? 3.0 : $initialDelay;
         sleep($initialDelay);
         $pollResponse = null;
 
         for ($n = 0; $n < $tries; $n++) {
-            echo "polling, tries: $n";
+          //  echo "polling, tries: $n";
             $pollResponse = $this->makeRequest(
                 $pollUrl,
                 self::GET,
@@ -205,6 +216,7 @@ class Transport
             );
 
             if ($pollResponse && $this->isPollComplete($pollResponse)) {
+              //  echo $this->isPollComplete($pollResponse);
                 return $pollResponse;
             } else {
                 sleep($delay);
@@ -230,11 +242,16 @@ class Transport
         }
 
         $successList = array('UpdatesComplete', True, 'COMPLETE');
+       // print_r($successList);
         $status = $pollResp->parsed->Status ?: $pollResp->parsed->status;
         if (!$status) {
             throw new RuntimeException('Unable to get poll response status.');
         }
-        return in_array($status, $successList);
+        if($status == 'UpdatesComplete')
+            return true;
+        else
+            return false;
+       // return in_array($status, $successList);
     }
 
     /**
@@ -245,7 +262,13 @@ class Transport
      */
     public function getResult($errors = self::STRICT, array $params = [])
     {
-        return $this->poll($this->createSession($params), null, 1, 10, $errors);
+        $para = array(
+            'sorttype' => 'price',
+            'sortorder'=> 'asc' ,
+            'pageindex'=>'0',
+            'pagesize'=>'10' 
+         );
+        return $this->poll($this->createSession($params), null, 1, 20, $errors,$para);
     }
 
     /**
@@ -312,13 +335,14 @@ class Transport
     public static function parseResp($resp, $responseFormat)
     {
         if ($responseFormat == 'json') {
+        //    echo $resp;
             $resp = NetworkUtils::getJSONStr($resp);
 
             $jsonObj = json_decode($resp);
 
             $respObj = array();
             $respObj['parsed'] = $jsonObj;
-            return (object) $respObj;
+            return  (object)$respObj;
         } else if ($responseFormat == 'xml') {
             // TODO: handle XML
         }
@@ -346,6 +370,8 @@ class Transport
     public static function getPollURL($resp)
     {
         $headers = NetworkUtils::getHeaders($resp);
+
+      //  echo implode("",$headers);
         return $headers['Location'];
     }
 }

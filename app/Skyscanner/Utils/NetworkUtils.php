@@ -49,12 +49,14 @@ class NetworkUtils
     public static function getJSONStr($jsonString)
     {
         // $jsonString = preg_replace("/:([]\w\.]+)/", ":\"$1\"", $jsonString);
-
+       // echo implode("",$jsonString);
+      //  printf($jsonString);
         if (preg_match("/({.*})/", $jsonString, $matches)) {
-            return $matches[0];
+           return $matches[0];
         }
 
-        throw new BadJSONException(' - Syntax error, malformed JSON');
+       throw new BadJSONException(' - Syntax error, malformed JSON');
+     //   return json_encode($jsonString);
     }
 
     public static function getHeaders($resp)
