@@ -71,18 +71,18 @@
 		 			<div class="field-box flex">
 			 			<div class="place-selector">
 					        <div class="place-selector__root clearfix">
-					            <input type="text" name="origin-input" id="origin-input" placeholder="Origin Place" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="Ha noi" />
+					            <input type="text" name="originplace" id="origin-input" placeholder="Origin Place" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="Ha noi" />
 					        </div>
 					    </div>
 				    </div>
 				    <div class="field-box flex">
 			 			<div class="place-selector">
 					        <div class="place-selector__root clearfix" tabindex="1">
-					            <input type="text" name="destination-input" id="destination-input" placeholder="Destination Place" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="Ho Chi Minh">
+					            <input type="text" name="destinationplace" id="destination-input" placeholder="Destination Place" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="Ho Chi Minh">
 					        </div>
 					    </div>
 				    </div>
-				    <button class="btn-switch btn-change" tabindex="1" aria-label="Swap origin and destination">
+				    <button class="btn-switch btn-change" type="button" title="Swap origin and destination">
 	                    <i class="fa fa-exchange" aria-hidden="true"></i>
 	                </button>
 			    </div>
@@ -90,26 +90,33 @@
 			    	<div class="search-date field-box active" id="search-date-depart">
 			    		<div class="field-cover-bg">
 			    			<div class="field-caption field-box__caption">Depart</div>
-			    			<input id="date-depart" class="search-date-depart picker__input"></input>
-			    			<button class="search-date-cover"></button>
+			    			<input id="date-depart" name="outbounddate" class="search-date-depart picker__input"></input>
+			    			<button class="search-date-cover date-depart" type="button">
+			    				<div class="month">OCt</div>
+			    				<div class="day">28</div>
+			    				<div class="dayofweek">Friday</div>
+			    			</button>
 			    		</div>
 			    	</div>
 			    	<div class="search-date field-box inactive" id="search-date-depart">
 			    		<div class="field-cover-bg stripe">
 			    			<div class="field-caption field-box__caption">Depart</div>
-			    			<input id="date-depart" class="search-date-depart picker__input"></input>
-			    			<button class="search-date-cover"></button>
+			    			<input id="date-return" name="inbounddate" class="search-date-return picker__input"></input>
+			    			<button class="search-date-cover date-return" type="button">
+			    				<span><i class="fa fa-plus" aria-hidden="true"></i></span>
+			    			</button>
 			    		</div>
 			    	</div>
 			    </div>
 			    <div id="people-and-class">
 			    	<div class="people-selector field-box">
-			    		<div class="people-selector__item" title="Adults 12+">
+			    		<div class="people-selector__item adults" title="Adults 12+">
+			    			<input type="hidden" name="adults" id="adults" value="1">
 			    			<div class="dropdown">
 			    				<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults 12+">
 			    					<div>
 									    <i class="fa fa-male pax-icon" aria-hidden="true"></i>
-									    <span class="js-dropdown-toggle-name">2</span>
+									    <span class="js-dropdown-toggle-name">1</span>
 				    					<span class="caret"></span>
 									</div>
 			    				</button>
@@ -125,7 +132,7 @@
 			    				<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults under 12">
 			    					<div>
 									    <i class="fa fa-child pax-icon" aria-hidden="true"></i>
-									    <span class="js-dropdown-toggle-name">2</span>
+									    <span class="js-dropdown-toggle-name">0</span>
 				    					<span class="caret"></span>
 									</div>
 			    				</button>
@@ -141,7 +148,7 @@
 			    				<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults 12+">
 			    					<div>
 									    <i class="fa fa-female pax-icon" aria-hidden="true"></i>
-									    <span class="js-dropdown-toggle-name">2</span>
+									    <span class="js-dropdown-toggle-name">0</span>
 				    					<span class="caret"></span>
 									</div>
 			    				</button>
@@ -277,6 +284,25 @@
     //           }
     //     });
     // });
+    </script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+		$('.picker__input').datepicker({
+			format: "yyyy/mm/dd",
+			startDate: 'd',
+			minDate: new Date(),
+    	});
+		$('.date-depart').click(function(){
+			$('#date-depart').focus();
+		});
+		$('.date-return').click(function(){
+			$('#date-return').focus();
+		});
+		$('.adults .dropdown-items li > a').click(function(e){
+		    $('#adults').val($(this).attr('data-value'));;
+		    $('.adults .js-dropdown-toggle-name').text($(this).attr('data-value'));
+		});
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&libraries=places&callback=autocompletePlace"

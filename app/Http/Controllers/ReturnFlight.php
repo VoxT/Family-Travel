@@ -11,20 +11,20 @@ use App\Skyscanner\Transport\Flights;
 use App\Skyscanner\Transport\FlightsCache;
 
 
-class test extends Controller
+class ReturnFlight extends Controller
 {
-    public function getflight(Request $Request)
+    public function getflight(Request $request)
     {
     	$flights_service = new Flights('ab388326561270749029492042586956');
     	$arrayName = array(
     		'country'=>'VN',
    			'currency'=>'VND',
    			'locale'=>'vi-VN',
-    		'originplace'=> $Request->originplace,
-    		'destinationplace'=>$Request->destinationplace,
-    		'outbounddate'=> $Request->outbounddate,
-    		'inbounddate'=>$Request->inbounddate,
-    		'adults'=>$Request->adults ,
+    		'originplace'=> $request->originplace,
+    		'destinationplace'=>$request->destinationplace,
+    		'outbounddate'=> $request->outbounddate,
+    		'inbounddate'=>$request->inbounddate,
+    		'adults'=>$request->adults ,
     		'GroupPricing' =>true);
     	$result = $flights_service->getResult(Flights::GRACEFUL,$arrayName);
     	$json = json_encode($result);
@@ -150,7 +150,7 @@ class test extends Controller
                         'NameOrigin' => $NameOrigin,
                         'CodeOrigin' => $CodeOrigin,
                         'NameDestination' => $NameDestination,
-                        'CodeDestination' => $NameDestination,
+                        'CodeDestination' => $CodeDestination,
                         'Departure' => $Departure,
                         'Arrival' => $Arrival,
                         'ImageUrl' => $src,
@@ -175,24 +175,14 @@ class test extends Controller
         }
     	
         //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
-        printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
+        //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
 
-    	return view('test',[
-            'SessionKey' => $SessionKey,
-            'query' =>$Query ,
-            'Status' => $Status ,
-            'Itineraries' => $Itineraries,
-            'Legs' => $Legs,
-            'Carriers' => $Carriers,
-            'Agents' => $Agents,
-            'Places' => $Places,
-            'Currencies' => $Currencies
-            ]);
+    	return json_encode($flightArray);
         
     }
-    public function viewdata(Request $Request)
+    public function viewdata(Request $request)
     {
-        return $Request->all();
+        return $request->all();
     }
     
 }

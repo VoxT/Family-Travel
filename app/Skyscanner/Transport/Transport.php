@@ -126,9 +126,6 @@ class Transport
         }
 
        //
-
-       echo $serviceUrl;
-       print_r($data);
        // echo "string";
         // if ($callback == array('self', 'getPollURL')) {
         //     unset($params['apiKey']);

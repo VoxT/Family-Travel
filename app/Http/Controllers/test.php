@@ -19,11 +19,11 @@ class test extends Controller
 		    'locale' => 'en-GB',
 		    'originplace' => 'SIN-sky',
 		    'destinationplace' => 'KUL-sky',
-		    'outbounddate' => '2016-10-11',
-		    'inbounddate' => '2016-10-18',
+		    'outbounddate' => '2016-10-22',
+		    'inbounddate' => '2016-10-27',
 		    'adults' => 1);
     	$result = $flights_service->getResult(Flights::GRACEFUL, $params);
-    	return view('pages.test', ['result' => json_decode(json_encode($result), true)]);
+    	return json_decode(json_encode($result), true);
     }
 
     public function welcome()
