@@ -270,43 +270,25 @@
 	</div>
 </div>
 
-    <script type="text/javascript">
-    </script>
+<script type="text/javascript">
+//   $(document).ready(function () {
 
-    <script type="text/javascript">
-    //   $(document).ready(function () {
+//     $('#form').validate({ // initialize the plugin
 
-    //     $('#form').validate({ // initialize the plugin
-            
-    //         submitHandler: function(form) {
-    //             $("#form").attr("action", "/search/" + $('#origin-input').val().replace(/ /g,"-") + "/" + $('#destination-input').val().replace(/ /g,"-"));
-    //             form.submit();
-    //           }
-    //     });
-    // });
-    </script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+//         submitHandler: function(form) {
+//             $("#form").attr("action", "/search/" + $('#origin-input').val().replace(/ /g,"-") + "/" + $('#destination-input').val().replace(/ /g,"-"));
+//             form.submit();
+//           }
+//     });
+// });
+</script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <script type="text/javascript">
-		$('.picker__input').datepicker({
-			format: "yyyy/mm/dd",
-			startDate: 'd',
-			minDate: new Date(),
-    	});
-		$('.date-depart').click(function(){
-			$('#date-depart').focus();
-		});
-		$('.date-return').click(function(){
-			$('#date-return').focus();
-		});
-		$('.adults .dropdown-items li > a').click(function(e){
-		    $('#adults').val($(this).attr('data-value'));;
-		    $('.adults .js-dropdown-toggle-name').text($(this).attr('data-value'));
-		});
-    </script>
+<script src="{{ elixir('js/homeScript.js') }}"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&libraries=places&callback=autocompletePlace"
-        async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&libraries=places&callback=autocompletePlace"
+async defer></script>
+
 @endsection
 @section('footer')
 	@include('layouts.footer')

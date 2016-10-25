@@ -10,14 +10,9 @@
 | to using a Closure or controller method. Build something great!
 |
 */
+// Home page
+Route::get('/', 'HomeController@index');
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-Route::get('/', 'test@welcome');
-
-// Route::post('/search/{origin}/{destination}', 'test@map');
-
-Route::get('search', ['as' => 'search', 'uses' => 'test@map']);
+// Result page
+Route::get('search', ['as' => 'search', 'uses' => 'SearchResultController@searchResult']);
 

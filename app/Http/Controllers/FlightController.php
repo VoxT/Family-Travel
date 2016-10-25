@@ -11,9 +11,9 @@ use App\Skyscanner\Transport\Flights;
 use App\Skyscanner\Transport\FlightsCache;
 
 
-class ReturnFlight extends Controller
+class FlightController extends Controller
 {
-    public function getflight(Request $request)
+    public function getLivePriceFlight(Request $request)
     {
     	$flights_service = new Flights('ab388326561270749029492042586956');
     	$arrayName = array(
@@ -169,20 +169,22 @@ class ReturnFlight extends Controller
                         'ImageName' => $Name1,
                         'Duration_h' => $h1,
                         'Duration_m' =>$min1
-                        )
+                        ),
+                    'Price' => $price
                     )
                 );
         }
     	
         //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
         //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
-
-    	return json_encode($flightArray);
-        
+        return $this->jsonResponse($flightArray);
     }
-    public function viewdata(Request $request)
+
+    public function jsonResponse($data = null, $status = 200)
     {
-        return $request->all();
+        return response()->json([
+                'data' => $data
+            ], $status);
     }
     
 }

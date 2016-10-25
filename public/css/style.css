@@ -27,7 +27,7 @@ footer {
   margin-top: 0px;
   font-weight: 1000;
 }
-footer a {
+a, a:hover {
   text-decoration: none;
 }
 .footer-banner {
@@ -1023,11 +1023,11 @@ ul li {
 }
 
 #planeModal .modal-dialog .modal-content {
-  height: 1000px;
   width: 750px !important;
   border-radius: 0;
   border: none;
   box-shadow: none !important;
+  padding: 15px 20px;
 }
 .modal-backdrop {
   top: calc(43px + 60px) !important;
@@ -1053,4 +1053,182 @@ ul li {
     -webkit-transform: translate3d(300px, 0, 0);
     transform: translate3d(300px, 0, 0);
     opacity: 1;
+}
+
+.result-item {
+    border: 1px solid #a5a5a5;
+    margin-bottom: 15px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background: #fff;
+    position: relative;
+    display: table;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
+}
+.item-details {
+    padding: 15px 0 48px;
+    position: relative;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+.flight-logo, .origin-place, .destination-place, .stop-map {
+    display: table-cell;
+    vertical-align: top;
+}
+.journey-row {
+    border-bottom: 1px solid #e3e6e7;
+    margin-bottom: 10px;
+    padding: 0 15px 10px;
+}
+.journey-row-item {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    color: #000;
+}
+.flight-logo {
+    text-align: center;
+    width: 53px;
+    padding: 0 15px 0 0;
+    border-right: 1px dashed #a5a5a5;
+    position: relative;    
+    padding-top: 6px;
+}
+.flight-logo > img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border: 3px solid #fff;
+}
+.origin-place {
+    width: 100%;
+    padding: 3px 18px 0 15px;
+    text-align: right;
+}
+.journey-time {
+    font-size: 16px;
+    font-weight: 600;
+}
+.journey-station {
+    font-size: 12px;
+    font-weight: 400;
+}
+.destination-place {
+    width: 100%;
+    padding: 3px 15px 0 18px;
+    text-align: left;
+}
+.stop-map {
+      width: 95px;
+}
+.journey-duration {  
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: -3px;
+}
+.journey-line {  
+    height: 3px;
+    position: relative;
+    margin: 5px auto;
+    display: table;
+    table-layout: fixed;
+    width: 90%;
+    background-color: #04c9a6;
+}
+.journey-stop {
+    padding-top: 1px;
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+.item-details-footer {
+    position: absolute;
+    width: 100%;
+    bottom: 6px;
+    left: 0;
+    padding: 3px 15px 6px;
+}
+.item-details-footer .details-link {
+    margin-top: 2px;
+    border: 1px solid #de007b;
+    font-size: 12px;
+    display: inline-block;
+    line-height: 28px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font-weight: 400;
+    padding: 0 8px;
+}
+.agent-links {
+    font-size: 14px;
+    color: #909090;
+    font-weight: 400;
+    float: right;
+    padding: 2px 10px;
+    display: inline-block;
+    line-height: 30px;
+}
+.item-summary {
+  width: 180px;
+  background: #f8f6f9;
+  vertical-align: bottom;
+  position: relative;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  width: 180px;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  justify-content: space-between;
+}
+.summany-details {
+    padding: 9px 12px 12px;
+    font-size: 12px;
+    color: #2b2b2b;
+    font-weight: 400;
+}
+.price-select-block {
+  margin: 10px 8px 10px;
+}
+.flight-price {
+    color: #000;
+    font-weight: 500;
+    font-size: 26px;
+    text-align: right;
+    margin-right: 5px;
+}
+.item-select-button {
+    background: #00a651;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+    line-height: 33px;
+    margin-top: 10px;
+    display: block;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font-weight: 400;
+}
+.loading {
+  text-align: center;
+  vertical-align: middle;
+  font-size: 18px;
+}
+.loading p {
+
+  margin-top: 20px;
+}
+.fa-spinner {
+  font-size: 60px;
+  color: blue;
 }

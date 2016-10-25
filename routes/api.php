@@ -17,7 +17,9 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // })->middleware('auth:api');
 
-Route::get('test', [
-		'as' => 'test api',
-		'uses' => 'ReturnFlight@getflight'
+// Get live price
+// api/v1/livepriceflight + params
+Route::get('livePriceFlight', [
+		'as' => 'liveprice',
+		'uses' => 'FlightController@getLivePriceFlight'
 	]);

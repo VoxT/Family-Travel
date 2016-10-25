@@ -20,7 +20,6 @@
     <section>
         @yield('content')
 
-        <script src="{{ elixir('js/script.js') }}"></script>
     </section>
 
     @section('footer')

@@ -84,7 +84,12 @@
 	        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
 	      </div>
 	      <div class="modal-body">
-	        ...
+	      	<div class="result-list">
+	      		<div class="loading">
+	      			<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+	      			<p>Đang tìm kiếm ...</p>
+	      		</div>
+	      	</div>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -95,6 +100,48 @@
 	</div>
 </div>
 </div>
+
+<script type="text/template" id="flightTemplate">
+    <div class="result-item">
+		<div class="item-details">
+			@{{outbound}}
+			@{{inbound}}
+			<div class="item-details-footer">
+				<a class="details-link" href="">Details</a>
+				<a class="agent-links" href="">Jestar</a>
+			</div>
+		</div>
+		<div class="item-summary">
+			<div class="summany-details">1 Adult | Economy</div>
+			<div class="price-select-block">
+				<div class="flight-price">@{{price}}</div>
+				<a class="item-select-button" href="">Select</a>
+			</div>
+		</div>
+	</div>
+</script>
+<script type="text/template" id="flightItemTemplate">
+	<div class="journey-row">
+		<div class="journey-row-item">
+			<div class="flight-logo">
+				<img src="@{{ImageUrl}}" atl="@{{ImageName}}">
+			</div>
+			<div class="origin-place">
+				<div class="journey-time">@{{Departure}}</div>
+				<div class="journey-station">@{{NameOrigin}}</div>
+			</div>
+			<div class="stop-map">
+				<div class="journey-duration">@{{Duration_h}} giờ : @{{Duration_m}} phút</div>
+				<div class="journey-line"></div>
+				<div class="journey-stop">Non-stop</div>
+			</div>
+			<div class="destination-place">
+				<div class="journey-time">@{{Arrival}}</div>
+				<div class="journey-station">@{{NameDestination}}</div>
+			</div>
+		</div>	
+	</div>
+</script>
 	<script type="text/javascript">
 		// var pac_width = $('.input-group').width();
 		// $(".pac-container").css("width", "325px !important");
@@ -111,9 +158,13 @@
 
 	});
     </script>
+
+	<script src="{{ elixir('js/mapScript.js') }}"></script>	
+	<script src="{{ elixir('js/apiScript.js') }}"></script>	
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&libraries=places&callback=initMap">
     </script>
 @endsection
+
 @section('footer')
 @endsection
