@@ -90,18 +90,18 @@
 			    	<div class="search-date field-box active" id="search-date-depart">
 			    		<div class="field-cover-bg">
 			    			<div class="field-caption field-box__caption">Depart</div>
-			    			<input id="date-depart" name="outbounddate" class="search-date-depart picker__input"></input>
+			    			<input id="date-depart" type="date" name="outbounddate" class="search-date-depart picker__input"></input>
 			    			<button class="search-date-cover date-depart" type="button">
-			    				<div class="month">OCt</div>
-			    				<div class="day">28</div>
-			    				<div class="dayofweek">Friday</div>
+			    				<div class="month"></div>
+			    				<div class="day"></div>
+			    				<div class="dayofweek"></div>
 			    			</button>
 			    		</div>
 			    	</div>
 			    	<div class="search-date field-box inactive" id="search-date-depart">
 			    		<div class="field-cover-bg stripe">
 			    			<div class="field-caption field-box__caption">Depart</div>
-			    			<input id="date-return" name="inbounddate" class="search-date-return picker__input"></input>
+			    			<input id="date-return" type="date" name="inbounddate" class="search-date-return picker__input"></input>
 			    			<button class="search-date-cover date-return" type="button">
 			    				<span><i class="fa fa-plus" aria-hidden="true"></i></span>
 			    			</button>
@@ -117,7 +117,7 @@
 			    					<div>
 									    <i class="fa fa-male pax-icon" aria-hidden="true"></i>
 									    <span class="js-dropdown-toggle-name">1</span>
-				    					<span class="caret"></span>
+				    					<span class="caret caret-right"></span>
 									</div>
 			    				</button>
 		    					<ul class="dropdown-menu dropdown-items">
@@ -127,13 +127,14 @@
 								</ul>
 			    			</div>
 			    		</div>
-			    		<div class="people-selector__item" title="Childrens under 12">
+			    		<div class="people-selector__item childrens" title="Childrens under 12">
+			    			<input type="hidden" name="adults" id="childrens" value="1">
 			    			<div class="dropdown">
 			    				<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults under 12">
 			    					<div>
 									    <i class="fa fa-child pax-icon" aria-hidden="true"></i>
 									    <span class="js-dropdown-toggle-name">0</span>
-				    					<span class="caret"></span>
+				    					<span class="caret caret-right"></span>
 									</div>
 			    				</button>
 		    					<ul class="dropdown-menu dropdown-items">
@@ -143,13 +144,14 @@
 								</ul>
 			    			</div>
 			    		</div>
-			    		<div class="people-selector__item" title="Adults 12+">
+			    		<div class="people-selector__item kid" title="Adults 12+">
+			    			<input type="hidden" name="adults" id="kid" value="1">
 			    			<div class="dropdown">
 			    				<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults 12+">
 			    					<div>
 									    <i class="fa fa-female pax-icon" aria-hidden="true"></i>
 									    <span class="js-dropdown-toggle-name">0</span>
-				    					<span class="caret"></span>
+				    					<span class="caret caret-right"></span>
 									</div>
 			    				</button>
 		    					<ul class="dropdown-menu dropdown-items">
@@ -165,7 +167,7 @@
 				    		<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults 12+">
 		    					<div>
 							    <span class="js-dropdown-toggle-name">Economy</span>
-		    					<span class="caret"></span>
+		    					<span class="caret caret-right"></span>
 							</div>
 		    				</button>
 	    					<ul class="dropdown-menu dropdown-items">

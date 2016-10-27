@@ -16,7 +16,7 @@ class FlightController extends Controller
     public function getLivePriceFlight(Request $request)
     {
     	$flights_service = new Flights('ab388326561270749029492042586956');
-    	$arrayName = array(
+    	$params = array(
     		'country'=>'VN',
    			'currency'=>'VND',
    			'locale'=>'vi-VN',
@@ -26,7 +26,10 @@ class FlightController extends Controller
     		'inbounddate'=>$request->inbounddate,
     		'adults'=>$request->adults ,
     		'GroupPricing' =>true);
-    	$result = $flights_service->getResult(Flights::GRACEFUL,$arrayName);
+        $addParams = array(
+            'pageindex' => 0,
+            'pagesize' => 10);
+    	$result = $flights_service->getResult(Flights::GRACEFUL,$params, $addParams);
     	$json = json_encode($result);
     	$array = json_decode($json,true);
 
@@ -178,13 +181,6 @@ class FlightController extends Controller
         //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
         //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
         return $this->jsonResponse($flightArray);
-    }
-
-    public function jsonResponse($data = null, $status = 200)
-    {
-        return response()->json([
-                'data' => $data
-            ], $status);
     }
     
 }

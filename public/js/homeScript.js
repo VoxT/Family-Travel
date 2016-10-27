@@ -33,11 +33,63 @@ $(".btn-switch").click( function() {
   $('#destination-input').val(origin_input);
 });
 
-$('.picker__input').datepicker({
-  format: "yyyy/mm/dd",
-  startDate: 'd',
+// select date
+var weekday = new Array();
+weekday[1] = "Thứ 2";
+weekday[2] = "Thứ 3";
+weekday[3] = "Thứ 4";
+weekday[4] = "Thứ 5";
+weekday[5] = "Thứ 6";
+weekday[6] = "Thứ 7";
+weekday[0] = "Chủ Nhật";
+
+function currentDate() {
+  var today = new Date(),
+      day  = weekday[today.getDay()],  
+      month = today.getMonth() + 1,
+      dd = today.getDate(),
+      yyyy = today.getFullYear();
+
+    $('.date-depart .month').text('Tháng ' + month);
+    $('.date-depart .day').text(dd);
+    $('.date-depart .dayofweek').text(day);
+    $('#date-depart').val(yyyy + '-' + month + '-' + dd);
+}
+currentDate();
+
+$('#date-depart').datepicker({
+  dateFormat: "yy-mm-dd",
   minDate: new Date(),
-  });
+  firstDay: 1,
+  onSelect: function() {
+    var date = $(this).datepicker('getDate'),
+    day  = weekday[date.getDay()],  
+    month = date.getMonth() + 1;
+    $('.date-depart .month').text('Tháng ' + month);
+    $('.date-depart .day').text(date.getDate());
+    $('.date-depart .dayofweek').text(day);
+    $('#date-return').datepicker('option', 'minDate', new Date($('#date-depart').val()));
+    if($('#date-return').val() != '')
+      changeReturnDateInput();
+  }
+});
+
+$('#date-return').datepicker({
+  dateFormat: "yy-mm-dd",
+  minDate: $('#date-depart').val(),
+  firstDay: 1,
+  onSelect: function() {
+    changeReturnDateInput();
+  }
+});
+
+function changeReturnDateInput() {
+    var date = new Date($('#date-return').val());
+    day  = weekday[date.getDay()],  
+    month = date.getMonth() + 1;
+    $('.date-return').parent().removeClass('stripe');
+    $('.date-return').html('<div class="month">' + 'Tháng ' + month + '</div><div class="day">' + date.getDate() + '</div><div class="dayofweek">' + day + '</div>')
+}
 
 $('.date-depart').click(function(){
   $('#date-depart').focus();
@@ -47,9 +99,18 @@ $('.date-return').click(function(){
   $('#date-return').focus();
 });
 
+// select people
 $('.adults .dropdown-items li > a').click(function(e){
     $('#adults').val($(this).attr('data-value'));;
     $('.adults .js-dropdown-toggle-name').text($(this).attr('data-value'));
+});
+$('.childrens .dropdown-items li > a').click(function(e){
+    $('#childrens').val($(this).attr('data-value'));;
+    $('.childrens .js-dropdown-toggle-name').text($(this).attr('data-value'));
+});
+$('.kid .dropdown-items li > a').click(function(e){
+    $('#kid').val($(this).attr('data-value'));;
+    $('.kid .js-dropdown-toggle-name').text($(this).attr('data-value'));
 });
 
 // begin autocomplete searchbox

@@ -1,12 +1,13 @@
+
 $.ajax({
 	type: 'GET',
-	url: '/api/v1/livePriceFlight',
+	url: 'http://familytravel.com/api/v1/livePriceFlight',
 	data: {
 		originplace: 'HAN-sky',
 		destinationplace: 'SGN-sky',
-		outbounddate: '2016-10-27',
-		inbounddate: '2016-10-28',
-		adults: 1
+		outbounddate: '2016-11-01',
+		inbounddate: '2016-11-03',
+		adults: '1'
 	},
 	success: function (data) {
 		var flights = data.data;
@@ -38,5 +39,27 @@ $.ajax({
 										).
 										replace('{{price}}', flights[i].Price));			
 		}
+	},
+	error: function () {
+		console.log('fail');
 	}
 });
+
+function getRigion() {
+		
+	$.ajax({
+		type: 'GET',
+		url: 'http://terminal2.expedia.com/x/mhotels/search',
+		data: {
+			city: 'H%E1%BB%93+Ch%C3%AD+Minh',
+			apikey: 't3a2uaYi1iePqNh3DVuhEX8UqUQGPZT1',
+			checkInDate: '2016-11-01',
+			checkOutDate: '2016-11-03',
+			room: '2,12'
+		},
+		success: function (data) {
+			console.log(JSON.stringify(data));
+		}
+	});
+
+}

@@ -16,6 +16,14 @@ html, body {
     background-color: #fff;
     border: 1px solid #f0f0f0;
 }
+::selection {
+  color: white;
+  background: #e7745c; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+  color: white;
+  background: #e7745c; /* Gecko Browsers */
+}
 /*footer*/
 footer {
   background-color: #d2d4d3;
@@ -189,6 +197,11 @@ a, a:hover {
 #switch > i {
   font-size: 16px;
   color: white;
+}
+.caret-right {
+  position: absolute;
+  top: 20px;
+  right: 10px;
 }
 /*result collum*/
 .list-result {
@@ -1014,20 +1027,57 @@ ul li {
 #planeModal {
   top: calc(43px + 60px) !important;
   padding-left: 0px !important;
-  width: 770px !important;
+  width: 740px !important;
 }
 
 #planeModal .modal-dialog {
   margin: 0px 0px 0px 10px !important;
   width: 100% !important;
+  min-height: calc(100% - 45px - 60px); 
 }
 
 #planeModal .modal-dialog .modal-content {
-  width: 750px !important;
+  width: 100% !important;
   border-radius: 0;
   border: none;
   box-shadow: none !important;
-  padding: 15px 20px;
+  padding-right: 10px;
+}
+#planeModal .modal-header {
+  padding: 20px 20px 20px 40px;
+  background: #04c9a6;
+  width: 100%;
+  color: #fff;
+}
+#planeModal .modal-header button {
+    position: absolute;
+    width: 38px;
+    top: 15px;
+    left: 4px;
+    border: none;
+    background: none;
+    border: 0;
+    padding: 0;
+    line-height: 1;
+    padding: 10px;
+    border-radius: 50%;
+}
+#planeModal .modal-header button i {
+  font-size: 17px;
+}
+#planeModal .modal-header button:hover {
+  background: rgba(255,255,255,.1);
+}
+#planeModal .modal-header h2 {
+    opacity: .9;
+    margin: 0;
+    margin-left: 10px;
+    font-weight: 300;
+    font-size: 20px;
+}
+#planeModal .fa-plane {
+  margin-top: 2px;
+  transform: rotate(-45deg);
 }
 .modal-backdrop {
   top: calc(43px + 60px) !important;
@@ -1077,6 +1127,11 @@ ul li {
     -webkit-flex: 1;
     flex: 1;
 }
+.item-details .fa-info-circle {
+  font-size: 17px;
+  vertical-align: middle;
+  margin-bottom: 3px;
+}
 .flight-logo, .origin-place, .destination-place, .stop-map {
     display: table-cell;
     vertical-align: top;
@@ -1095,7 +1150,7 @@ ul li {
 .flight-logo {
     text-align: center;
     width: 53px;
-    padding: 0 15px 0 0;
+    padding: 0 10px 0 0;
     border-right: 1px dashed #a5a5a5;
     position: relative;    
     padding-top: 6px;
@@ -1105,7 +1160,7 @@ ul li {
   height: auto;
   display: block;
   margin: 0 auto;
-  border: 3px solid #fff;
+  border: 0px solid #fff;
 }
 .origin-place {
     width: 100%;
@@ -1158,7 +1213,8 @@ ul li {
 }
 .item-details-footer .details-link {
     margin-top: 2px;
-    border: 1px solid #de007b;
+    border: 1px solid #e7745c;
+    color: #e7745c;
     font-size: 12px;
     display: inline-block;
     line-height: 28px;
@@ -1166,6 +1222,9 @@ ul li {
     border-radius: 3px;
     font-weight: 400;
     padding: 0 8px;
+}
+.item-details-footer .details-link:hover {
+  background: #f6f6f6;
 }
 .agent-links {
     font-size: 14px;
@@ -1208,7 +1267,7 @@ ul li {
     margin-right: 5px;
 }
 .item-select-button {
-    background: #00a651;
+    background: #04c9a6;
     color: #fff;
     text-align: center;
     font-size: 18px;
@@ -1218,6 +1277,13 @@ ul li {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     font-weight: 400;
+}
+.item-select-button:hover a, a:hover {
+  color: white;
+}
+.item-select-button:hover {
+
+  background: #e7745c;
 }
 .loading {
   text-align: center;
@@ -1230,5 +1296,134 @@ ul li {
 }
 .fa-spinner {
   font-size: 60px;
-  color: blue;
+  color: #04c9a6;
+}
+/*-------------------------Date picker --------------*/
+.ui-datepicker {
+  background: #fff;
+    border-radius: 1px 1px 5px 5px;
+    border: 1px solid #e7745c;
+    margin-top: -11px;
+    padding: 15px;
+    text-align: left;
+    box-shadow: 3px 3px 4px rgba(231, 116, 92, 0.3);
+    overflow-y: auto;
+    width: 270px;
+    top: 307px;
+    left: 90px;
+    display: block;
+}
+.ui-datepicker a,
+.ui-datepicker a:hover {
+  text-decoration: none;
+}
+.ui-datepicker a:hover,
+.ui-datepicker td:hover a {
+  color: #2A6496;
+  -webkit-transition: color 0.1s ease-in-out;
+     -moz-transition: color 0.1s ease-in-out;
+       -o-transition: color 0.1s ease-in-out;
+          transition: color 0.1s ease-in-out;
+}
+.ui-datepicker .ui-datepicker-header {
+  margin-bottom: 4px;
+  text-align: center;
+}
+.ui-datepicker .ui-datepicker-title {
+  font-weight: 700;    
+  font-size: 18px;
+    margin-bottom: 10px;
+}
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+  cursor: default;
+  font-family: 'Glyphicons Halflings';
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-weight: normal;
+  height: 20px;
+  line-height: 1;
+  margin-top: 2px;
+  width: 30px;
+  margin-top: 5px;
+  color: #78aba5;
+}
+.ui-datepicker .ui-datepicker-prev:hover,
+.ui-datepicker .ui-datepicker-next:hover {
+  color: #e7745c;
+}
+.ui-datepicker .ui-datepicker-prev {
+  margin-left: 15px;
+  float: left;
+  text-align: left;    
+}
+.ui-datepicker .ui-datepicker-next {
+  margin-right: 15px;
+  float: right;
+  text-align: right;
+}
+.ui-datepicker .ui-datepicker-prev:before {
+  content: "\e079";
+}
+.ui-datepicker .ui-datepicker-next:before {
+  content: "\e080";
+}
+.ui-datepicker .ui-icon {
+  display: none;
+}
+.ui-datepicker .ui-datepicker-calendar {
+  table-layout: fixed;
+  width: 100%;
+}
+.ui-datepicker .ui-datepicker-calendar th {
+  font-weight: 500;
+}
+.ui-datepicker .ui-datepicker-calendar th,
+.ui-datepicker .ui-datepicker-calendar td {
+  text-align: center;
+  padding: 4px 0;
+}
+.ui-datepicker .ui-datepicker-calendar td {
+  border-radius: 4px;
+  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+     -moz-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+       -o-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+          transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+}
+.ui-datepicker .ui-datepicker-calendar td:hover {
+  background-color: #78aba5;
+  cursor: pointer;
+}
+.ui-datepicker .ui-datepicker-calendar td a {
+  text-decoration: none;
+  color: #4b4b4b;
+}
+.ui-datepicker .ui-datepicker-calendar td:hover a{
+  color: white;
+}
+.ui-datepicker .ui-datepicker-current-day {
+  background: #e7745c;
+}
+.ui-datepicker .ui-datepicker-current-day a {
+  color: #fff
+}
+.ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
+  background-color: #fff;
+  cursor: default;
+}
+.ui-state-disabled, .ui-datepicker-unselectable {
+    color: #bbb;
+    opacity: .5;
+}
+.ui-datepicker-days-cell-over {
+  color: #4b4b4b;
+}
+tbody .ui-datepicker-week-end {
+  background: #f6f6f6;
+}
+.ui-datepicker-today a {
+  font-weight: 700;
+}
+.ui-state-active {
+  color: white !important;
 }

@@ -23,3 +23,7 @@ Route::get('livePriceFlight', [
 		'as' => 'liveprice',
 		'uses' => 'FlightController@getLivePriceFlight'
 	]);
+
+// Get Car Hire
+// api/v1/livecarhire
+Route::get('livecarhire', 'CarHireController@getCarPrice');

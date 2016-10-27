@@ -80,8 +80,8 @@
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+	        <button type="button" data-dismiss="modal" aria-label="Close"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+	        <h2 class="modal-title" id="planeModalLabel"><i class="fa fa-plane" aria-hidden="true"></i> Bay từ Hanoi đến Ho Chi Minh City</h2>
 	      </div>
 	      <div class="modal-body">
 	      	<div class="result-list">
@@ -107,15 +107,15 @@
 			@{{outbound}}
 			@{{inbound}}
 			<div class="item-details-footer">
-				<a class="details-link" href="">Details</a>
+				<a class="details-link" href=""><i class="fa fa-info-circle" aria-hidden="true"></i> Chi tiết</a>
 				<a class="agent-links" href="">Jestar</a>
 			</div>
 		</div>
 		<div class="item-summary">
-			<div class="summany-details">1 Adult | Economy</div>
+			<div class="summany-details">1 người lớn | Economy</div>
 			<div class="price-select-block">
-				<div class="flight-price">@{{price}}</div>
-				<a class="item-select-button" href="">Select</a>
+				<div class="flight-price">@{{price}}vnđ</div>
+				<a class="item-select-button" href="">Đặt Ngay <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
 			</div>
 		</div>
 	</div>
@@ -133,7 +133,7 @@
 			<div class="stop-map">
 				<div class="journey-duration">@{{Duration_h}} giờ : @{{Duration_m}} phút</div>
 				<div class="journey-line"></div>
-				<div class="journey-stop">Non-stop</div>
+				<div class="journey-stop">Bay thẳng</div>
 			</div>
 			<div class="destination-place">
 				<div class="journey-time">@{{Arrival}}</div>

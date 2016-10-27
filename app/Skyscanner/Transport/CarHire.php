@@ -47,11 +47,11 @@ class CarHire extends Transport
 
         $pollPath = $this->makeRequest(
             $serviceUrl,
-            GET,
+            self::GET,
             null,
             null,
             $callback,
-            STRICT,
+            self::STRICT,
             $params
         );
 
