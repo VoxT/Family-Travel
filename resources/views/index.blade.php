@@ -89,7 +89,7 @@
 			    <div class="dates-control">
 			    	<div class="search-date field-box active" id="search-date-depart">
 			    		<div class="field-cover-bg">
-			    			<div class="field-caption field-box__caption">Depart</div>
+			    			<div class="field-caption field-box__caption">Ngày Đi</div>
 			    			<input id="date-depart" type="date" name="outbounddate" class="search-date-depart picker__input"></input>
 			    			<button class="search-date-cover date-depart" type="button">
 			    				<div class="month"></div>
@@ -100,7 +100,7 @@
 			    	</div>
 			    	<div class="search-date field-box inactive" id="search-date-depart">
 			    		<div class="field-cover-bg stripe">
-			    			<div class="field-caption field-box__caption">Depart</div>
+			    			<div class="field-caption field-box__caption">Ngày Về</div>
 			    			<input id="date-return" type="date" name="inbounddate" class="search-date-return picker__input"></input>
 			    			<button class="search-date-cover date-return" type="button">
 			    				<span><i class="fa fa-plus" aria-hidden="true"></i></span>
@@ -194,8 +194,8 @@
 	<div id="suggestion-header">
 		<span id="caption">Suggestion</span>
 		<span>|</span>
-		<span>everything look like shit</span>
-		<span class="right">everything look like shit</span>
+		<span></span>
+		<span class="right"></span>
 	</div>
 	<div class="col-lg-offset-1">
 		<h2>Việt Nam</h2>
@@ -206,7 +206,7 @@
 	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
 	            <div class="overlay">
 	                <h2>Hải Phòng</h2>
-	                <h4>12.000.00 đ</h4>
+	                <h4>12.000.00 <sup>đ</sup></h4>
 					<p> 
 						Chi Tiết
 					</p> 
@@ -220,7 +220,7 @@
 	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
 	            <div class="overlay">
 	                <h2>Mù Cang Chải</h2>
-	                <h4>12.000.00 đ</h4>
+	                <h4>12.000.00 <sup>đ</sup></h4>
 					<p> 
 						Chi Tiết
 					</p> 
@@ -234,7 +234,7 @@
 	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
 	            <div class="overlay">
 	                <h2>Hồ Chí Minh</h2>
-	                <h4>12.000.00 đ</h4>
+	                <h4>12.000.00 <sup>đ</sup></h4>
 					<p> 
 						Chi Tiết
 					</p> 
@@ -248,7 +248,7 @@
 	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
 	            <div class="overlay">
 	                <h2>Hải Phòng</h2>
-	                <h4>12.000.00 đ</h4>
+	                <h4>12.000.00 <sup>đ</sup></h4>
 					<p> 
 						Chi Tiết
 					</p> 
@@ -262,7 +262,7 @@
 	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
 	            <div class="overlay">
 	                <h2>Hải Phòng</h2>
-	                <h4>12.000.00 đ</h4>
+	                <h4>12.000.00 <sup>đ</sup></h4>
 					<p> 
 						Chi Tiết
 					</p> 
@@ -284,7 +284,6 @@
 //     });
 // });
 </script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script src="{{ elixir('js/homeScript.js') }}"></script>
 

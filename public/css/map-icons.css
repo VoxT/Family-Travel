@@ -1,48 +1,62 @@
+ hr {
+        color:#292828;
+        margin-left: 100px;
+        border-style: dashed;
+        width:450px;
+        margin-top: 1px;
+        border-top: 2px  dashed #ACAAAA;
+      }
+      #iw-rating-row{
+        margin-top: 10px;
+      }
+
 
       .iw-rating{
-      	font-size: 15px;
-        margin-left: 120px;
-        color:#053BAA;
+        font-size: 17px;
+        margin-left: 100px;
+        margin-top: -20px;
+        color:#08779a;
         font-weight: bold;
 
       }
       
       
       .image_place{
-      	width: 100px;
-      	height: 100px;
+        width: 80px;
+        height: 80px;
         border-radius: 0;
-      	float: left;
-      	border-style: solid;
-      	border-color: #ECEBEB;
-      	border-width: 5px;
+        float: left;
+  
+        
 
       }
-      .iw-url {
-      	  color: #EF2DC4;
-      	
-      }
      
-      .url_name {
-        font-size: 15px;
-        margin-left: 120px;
-      
+     
+      .url_name a{
+        font-size: 17px;
+        margin-left: 10px;
+        color:#08779a;
+        margin-left: 20px;
        
       }
-     #info-content {
-	    background: #fff;
-	    -webkit-border-radius: 3px;
-	    border-radius: 3px;
-	    padding: 5px;
-	    margin-left: 10px;
-	    margin-bottom: 30px;
-	    width: 350px !important;
-	    height: 130px !important;
-	    
-	}
-	.gm-style-iw{
-		width: 350px !important;
-	    height: 130px !important;
-	    
-	}
-	
+    #info-content {
+      background: #fff;
+      -webkit-border-radius: 3px;
+      border-radius: 3px;
+      padding: 5px;
+      margin-left: 10px;
+      margin-bottom: 30px;
+      width: 510px !important;
+      height: 90px !important;
+  }
+  .gm-style-iw{
+    width: 510px !important;
+      height: 90px !important;
+      
+  }
+  .gm-style-iw + div {display: none;}
+   
+  
+  .views{
+    margin-left: 100px;
+  }

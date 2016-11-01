@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="{{ elixir('css/map-icons.css') }}">
     <script src="{{ elixir('js/app.js') }}"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
 

@@ -18,11 +18,11 @@ html, body {
 }
 ::selection {
   color: white;
-  background: #e7745c; /* WebKit/Blink Browsers */
+  background: #68a19a; /* WebKit/Blink Browsers */
 }
 ::-moz-selection {
   color: white;
-  background: #e7745c; /* Gecko Browsers */
+  background: #68a19a; /* Gecko Browsers */
 }
 /*footer*/
 footer {
@@ -35,8 +35,15 @@ footer {
   margin-top: 0px;
   font-weight: 1000;
 }
-a, a:hover {
+a, a:hover, a:visited, a:focus, a:active {
   text-decoration: none;
+  outline: none;
+}
+ ul {
+    list-style: none;
+}
+button:focus {
+  outline: none;
 }
 .footer-banner {
     padding: 50px 3.75% 0;
@@ -268,14 +275,14 @@ button.list-group-item > p {
   color: #04c9a6;
 }
 .car {
-  background-color: #84ca4b;
+  background-color: #3c6e76;
 }
 #car:hover {
-  background-color: #84ca4b;
+  background-color: #3c6e76;
 }
 #car:hover .car {
   background-color: white;
-  color: #84ca4b;
+  color: #3c6e76;
 }
 .hotel {
   background-color: #0b91d8;
@@ -312,7 +319,7 @@ button.list-group-item > p {
   background-color: white;
   color: #e47225;
 }
-button.list-group-item:hover > h4, button.list-group-item:hover > p, button.list-group-item:hover > .price-right {
+button.list-group-item:hover > h4, button.list-group-item:hover > p, button.list-group-item:hover > .price-right , button.list-group-item:hover .chevron-right{
   color: white !important;
 }
 .chevron-right {
@@ -618,13 +625,13 @@ ul li {
     padding: 0 5px 5px;
 }
 .search-date input {
-    left: 0;
+    right: 0;
     opacity: 0;
     height: 0;
     width: 0;
     position: absolute;
-    z-index: -1;
     font-size: 0;
+    margin-top: 7px;
 }
 .picker__input {
     cursor: default;
@@ -1024,32 +1031,39 @@ ul li {
 }
 
 /*Modal customize style*/
-#planeModal {
+#planeModal, #carModal {
   top: calc(43px + 60px) !important;
   padding-left: 0px !important;
   width: 740px !important;
 }
 
-#planeModal .modal-dialog {
+#planeModal .modal-dialog, #carModal .modal-dialog {
   margin: 0px 0px 0px 10px !important;
   width: 100% !important;
-  min-height: calc(100% - 45px - 60px); 
+  padding-right: 10px;
 }
 
-#planeModal .modal-dialog .modal-content {
+.modal-dialog .modal-content {
   width: 100% !important;
   border-radius: 0;
   border: none;
   box-shadow: none !important;
-  padding-right: 10px;
+  margin-right: 10px;
 }
-#planeModal .modal-header {
+
+.modal-dialog .modal-content .modal-body {
+  min-height: 500px; 
+}
+.modal-header {
   padding: 20px 20px 20px 40px;
   background: #04c9a6;
   width: 100%;
   color: #fff;
 }
-#planeModal .modal-header button {
+#carModal .modal-header {
+  background: #3c6e76;
+}
+.modal-header .closeButton {
     position: absolute;
     width: 38px;
     top: 15px;
@@ -1062,13 +1076,16 @@ ul li {
     padding: 10px;
     border-radius: 50%;
 }
-#planeModal .modal-header button i {
+.modal-header .closeButton i {
   font-size: 17px;
 }
-#planeModal .modal-header button:hover {
+.modal-header .closeButton:hover {
   background: rgba(255,255,255,.1);
 }
-#planeModal .modal-header h2 {
+.modal-header .closeButton:focus {
+  outline: none;
+}
+.modal-header h2 {
     opacity: .9;
     margin: 0;
     margin-left: 10px;
@@ -1079,11 +1096,19 @@ ul li {
   margin-top: 2px;
   transform: rotate(-45deg);
 }
-.modal-backdrop {
+.modal-open {
+  overflow-y: hidden;
+}
+.modal { overflow: auto !important; }
+.modal-backdrop-left { 
   top: calc(43px + 60px) !important;
   width: 10px;
+  z-index: 1038;
 }
-.modal.fade .modal-dialog {
+.modal.fadeLeft {
+  z-index: 1039;
+}
+.modal.fadeLeft.fade .modal-dialog {
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
     -ms-transform: scale(1);
@@ -1095,7 +1120,7 @@ ul li {
     transition: all 0.3s;
 }
 
-.modal.fade.in .modal-dialog {
+.modal.fadeLeft.fade.in .modal-dialog {
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
     -ms-transform: scale(1);
@@ -1104,7 +1129,180 @@ ul li {
     transform: translate3d(300px, 0, 0);
     opacity: 1;
 }
+#flightdetailsmodal .modal-dialog{
+  border-radius: 0;
+  width: 850px;
+}
+#flightdetailsmodal .modal-body {
+  display: table;
+  width: 100%;
+  padding: 0;
+}
+#flightdetailsmodal h3 {
+  color: white;
+}
+.row-title {
+  margin-bottom: 15px;
+  color: black !important;
+  font-size: 20px;
+}
+#flightdetailsmodal .summary {
+  display: table-cell;
+  width: 25%;
+  background: #f8f6f9;
+  vertical-align: top;
+  padding: 20px;
+}
+#flightdetailsmodal .best-price {
+    margin: 8px 0 5px;
+    vertical-align: top;
+    text-align: center;
+    border: 1px solid #a5a5a5;
+    padding: 10px;
+    border-radius: 4px;
+    background: #fff;
+    margin-top: 25px;
+}
+#flightdetailsmodal .details-title {
+    padding: 20px 30px;
+    margin: 0;
+    text-align: left;
+    font-size: 22px;
+}
+#flightdetailsmodal .details-row {
+    padding: 24px 30px 30px 30px;
+    border-top: 1px solid #ddd;
+}
+#flightdetailsmodal .details-content {
+    display: table;
+    text-align: left;
+    width: 100%;
+    position: relative;
+    border: solid 1px #e1e1e1;
+    border-radius: 3px;
+    padding: 15px;
+    border-left: solid 2px #ddd;
+    border-left-color: #04c9a6;
+}
+#flightdetailsmodal .content-info {
+  margin: 0;
+  overflow: hidden;
+  display: table;
+  width: 100%;
+}
 
+#flightdetailsmodal .info-cell span {
+      position: absolute;
+    top: 8px;
+    margin-left: -30px;
+}
+#flightdetailsmodal .modal-header .close {
+  opacity: 1;
+  color: white;
+  font-size: 40px;
+  margin-right: -30px;
+}
+#flightdetailsmodal .carrier span {
+    margin-left: 70px;
+    position: absolute;
+    top: 8px;
+}
+#flightdetailsmodal .info-cell {
+    width: 38%;
+    display: table-cell;    
+    white-space: nowrap;
+    table-layout: fixed;
+    vertical-align: bottom;
+    padding-right: 20px;
+    line-height: 22px;
+    font-weight: 400;
+    position: relative;    
+}
+#flightdetailsmodal .info-cell h4 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 190px;
+}
+#flightdetailsmodal .info-cell h4:nth-child(1) {
+    padding-right: 10px;
+}
+#flightdetailsmodal .info-cell:nth-child(3) {
+  width: 24%;
+  padding-right: 0;
+}
+#flightdetailsmodal .carrier {
+      display: block;
+    position: relative;
+    line-height: 20px;
+    font-weight: 400;
+    margin-top: 15px;
+    font-size: 13px;
+}
+#flightdetailsmodal .modal-header {
+      padding: 20px 40px;
+    margin: 0;
+    text-align: center;
+    color: #000;
+    height: 73px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-right: 60px;
+    background-color: #04c9a6;
+}
+.stop-time {
+    font-weight: 300;
+    padding: 15px 20px 15px 15px;
+    font-size: 14px;
+    margin: 0;
+    position: relative;
+    border-left: dashed 2px #e1e1e1;
+    margin-left: 18px;
+}
+.stop-time:after {
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    background-color: #ddd;
+    border: solid 2px #ddd;
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: -5px;
+    content: '';
+    background: #fff;
+    z-index: 2;
+    border-color: #04c9a6;
+}
+.stop-time span{
+    float: right;
+    width: 24%;
+}
+.line-stop {
+    display: table-cell;
+    width: 100%;
+    position: relative;
+}
+.stop-dot {  
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -3.5px;
+    font-size: 0;
+}
+.stop-dot:after {
+      content: "";
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    background: #909090;
+    height: 7px;
+    width: 7px;
+    border: 1px solid #fff;
+    top: 0;
+    border-radius: 50%;
+}
 .result-item {
     border: 1px solid #a5a5a5;
     margin-bottom: 15px;
@@ -1222,6 +1420,7 @@ ul li {
     border-radius: 3px;
     font-weight: 400;
     padding: 0 8px;
+    background: white;
 }
 .item-details-footer .details-link:hover {
   background: #f6f6f6;
@@ -1236,7 +1435,6 @@ ul li {
     line-height: 30px;
 }
 .item-summary {
-  width: 180px;
   background: #f8f6f9;
   vertical-align: bottom;
   position: relative;
@@ -1250,7 +1448,7 @@ ul li {
   -webkit-flex-direction: column;
   justify-content: space-between;
 }
-.summany-details {
+.summary-details {
     padding: 9px 12px 12px;
     font-size: 12px;
     color: #2b2b2b;
@@ -1297,21 +1495,23 @@ ul li {
 .fa-spinner {
   font-size: 60px;
   color: #04c9a6;
+  margin-top: 50px;
 }
 /*-------------------------Date picker --------------*/
 .ui-datepicker {
   background: #fff;
     border-radius: 1px 1px 5px 5px;
-    border: 1px solid #e7745c;
+    border: 1px solid #68a19a;
     margin-top: -11px;
     padding: 15px;
     text-align: left;
     box-shadow: 3px 3px 4px rgba(231, 116, 92, 0.3);
     overflow-y: auto;
-    width: 270px;
+    width: 330px;
     top: 307px;
     left: 90px;
-    display: block;
+    display: block;    
+    z-index: 2000 !important;
 }
 .ui-datepicker a,
 .ui-datepicker a:hover {
@@ -1391,7 +1591,7 @@ ul li {
           transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
 .ui-datepicker .ui-datepicker-calendar td:hover {
-  background-color: #78aba5;
+  background-color: #e7745c;
   cursor: pointer;
 }
 .ui-datepicker .ui-datepicker-calendar td a {
@@ -1426,4 +1626,235 @@ tbody .ui-datepicker-week-end {
 }
 .ui-state-active {
   color: white !important;
+}
+
+/*------ flight form-modal-----------*/
+.flight-form-modal {
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
+    margin: 20px -5px 0 -25px;
+    padding: 15px;
+    overflow:auto; 
+}
+.depart, .arrival {
+  text-align: left;
+    float: left;
+    box-shadow: none;
+    display: block;
+    width: 159px;
+    height: 37px;
+    border: 1px solid #cfcfcf;
+    vertical-align: top;
+    background: white;
+  padding-left: 10px;
+    color: black;
+}
+.arrival, .moreInfo {
+  margin-left: -1px;
+}
+.moreInfo {
+  text-align: left;
+  padding-left: 10px;
+    float: left;
+    box-shadow: none;
+    display: block;
+    width: 230px;
+    height: 37px;
+    border: 1px solid #cfcfcf;
+    vertical-align: top;
+    background: white;
+    color: black;
+}
+.depart:focus, .arrival:focus, .moreInfo:focus {
+  outline: none;
+}
+.depart i, .arrival i {
+      padding-right: 10px;
+      color: #e7745c;
+}
+.moreInfo .caret {
+    float: right;
+    margin-right: 5px;
+    margin-top: 6px;
+      color: #e7745c;
+ }
+#planeModal #outbounddate,  #planeModal #inbounddate {
+  display: none;
+}
+input#pickupdate-input, input#dropoffdate-input, #pickupdatetime, #dropoffdatetime {
+  display: none;
+  margin-left: -11px;
+}
+.flight-search {
+  margin-top: 0;
+  line-height: 35px;
+  float: right;
+}
+.btn-search {
+  color: #fff;
+  padding: 0 1em;
+  font-size: 15px;
+  background-color: #e7745c;
+  border: solid 1px #e7745c;
+  border-radius: 3px;
+}
+.btn-search:hover {
+  background-color: #04c9a6;
+  border: solid 1px #04c9a6;
+}
+.btn-search:focus {
+  outline: none;
+}
+.popover-content {
+  min-width: 230px;
+  color: black;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.popover-content  .form-control {
+  border-radius: 5px;
+  border: 1px solid #cccccc;
+}
+#adults, #childrens, #kid {
+  float: right;
+  width: 100px;
+}
+.cabinclass {
+  border-top: 1px solid lightgrey;
+  margin-top: 25px;
+  padding-top: 10px;
+}
+.popover-content label {
+  font-weight: normal;
+}
+.popover-content .form-horizontal .form-group {
+     margin-left: 0px; 
+     margin-right: 0px; 
+}
+
+.picktime {
+  text-align: left;
+    float: left;
+    box-shadow: none;
+    display: block;
+    width: 50px;
+    height: 37px;
+    line-height: 37px;
+    border: 1px solid #cfcfcf;
+    vertical-align: top;
+    background: white;
+  padding-left: 30px;
+    color: black;
+    border-left: none;
+    width: 90px;
+    padding-left: 30px;
+}
+.picktime option {
+    padding: 5px 0 !important;
+    line-height: 37px !important;
+    height: 37px !important;
+}
+.picktime:focus {
+  outline: none;
+}
+.fa-clock-o {
+  font-size: 16px;
+    color: #e7745c;
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+#car-search:hover {
+  background: #3c6e76 !important;
+  border-color: #3c6e76 !important;
+}
+#dropoffdate {
+  margin-left: 30px;
+}
+#carModal .fa-spinner {
+  color: #3c6e76 !important;
+}
+.car-logo {
+    width: 190px;
+    float: left;
+    padding: 0 10px;
+  height: 100%;
+    border-right: 1px solid #e6e6e6;
+}
+.car-logo p {
+  margin-bottom: 20px;
+}
+.car-details {
+  background: #fff;
+  padding: 10px 0;
+  color: #444;
+  position: relative;
+}
+.item-car-details {
+  width: 320px;
+  float: left;
+  margin: 0 10px 0 15px;
+}
+p.car-class {
+    font-weight: 600;
+    color: #666;
+    margin: 0 0 5px;
+}
+.strong {
+  font-weight: 700;    
+  display: block;
+  clear: both;
+}
+.car-details ul li {
+    padding: 0 0 0 0px;
+    margin: 0 10px 0 0;
+    line-height: 18px;
+    font-size: 14px;
+}
+.strong li {
+    padding: 0 2px !important;
+    margin-right: 0 !important;
+}
+.item-car-details ul li {
+    float: left;
+}
+#carModal .item-summary {
+  width: 150px;
+}
+.free-group {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid lightgrey;
+}
+.fa-check, .fa-check-circle{
+  color: #3c6e76;
+}
+.fa-times-circle, .fa-times {
+  color: red;
+}
+#carModal .fa-map-marker {
+  color: #e7745c;
+  font-size: 18px;
+}
+#carModal .item-select-button {
+  background: #3c6e76;
+}
+#carModal .item-select-button:hover {
+  background: #e7745c;
+}
+.fuel {
+    margin: 20px 20px 0 20px; 
+    max-width: 148px;
+    height: 30px;
+    float: left;
+    padding: 0 0 0 30px;
+    background: url(https://booking.easycar.com/images/site_graphics/newsite/ico-fuel.png) no-repeat 2px 2px;
+}
+.fuel p {
+  margin: 5px 0;
+}
+.pickup {
+  float: left;
+  margin: 0 10px 0 0;
 }

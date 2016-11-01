@@ -1,4 +1,13 @@
 
+$(document).ready(function() {
+  
+$.datepicker.regional['vn'] = {
+    monthNames: ['Tháng Một','Tháng Hai','Tháng Ba','Tháng Tư','Tháng Năm','Tháng Sáu',
+    'Tháng Bảy','Tháng Tám','Tháng Chín','Tháng Mười','Tháng Mười Một','Tháng Mười Hai'],
+    dayNamesMin: ['CN','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7']
+  };
+ $.datepicker.setDefaults($.datepicker.regional['vn']);
+
 // Carousel slide effect
 $('#myCarousel').on('slide.bs.carousel', function() {
   if ($('.carousel-inner .item:last').hasClass('active')) {
@@ -98,7 +107,7 @@ $('.date-depart').click(function(){
 $('.date-return').click(function(){
   $('#date-return').focus();
 });
-
+$('#ui-datepicker-div').hide();
 // select people
 $('.adults .dropdown-items li > a').click(function(e){
     $('#adults').val($(this).attr('data-value'));;
@@ -145,3 +154,5 @@ function autocompletePlace() {
   })
 }
 // end autocomplete searchbox
+
+})// end document ready

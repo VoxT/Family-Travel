@@ -1,24 +1,24 @@
-
+// Get flight list
 $.ajax({
 	type: 'GET',
 	url: 'http://familytravel.com/api/v1/livePriceFlight',
 	data: {
 		originplace: 'HAN-sky',
 		destinationplace: 'SGN-sky',
-		outbounddate: '2016-11-01',
-		inbounddate: '2016-11-03',
+		outbounddate: '2016-11-03',
+		inbounddate: '2016-11-06',
 		adults: '1'
 	},
 	success: function (data) {
 		var flights = data.data;
 		for(var i in flights) {
-				$('.loading').hide();
+				$('#planeModal .loading').hide();
 				var outbound = flights[i].Outbound;
 				var inbound = flights[i].Inbound;
-				var template = $('#flightTemplate').html();
+				var template = $('#itemsTemplate').html();
 				var outboundTemplate = $('#flightItemTemplate').html();
 				var inboundTemplate = $('#flightItemTemplate').html();
-				$('.result-list').append(template.replace('{{outbound}}', 
+				$('#planeModal .result-list').append(template.replace('{{outbound}}', 
 										outboundTemplate.replace('{{ImageUrl}}', outbound.ImageUrl).
 														replace('{{ImageName}}', outbound.ImageName).
 														replace('{{Departure}}', outbound.Departure).
@@ -37,13 +37,61 @@ $.ajax({
 														replace('{{Arrival}}', inbound.Arrival).
 														replace('{{NameDestination}}', inbound.NameDestination)
 										).
-										replace('{{price}}', flights[i].Price));			
+										replace('{{price}}', numberWithCommas(flights[i].Price)));			
 		}
 	},
 	error: function () {
-		console.log('fail');
+		console.log("flight fails");
 	}
 });
+
+// Get car list
+$.ajax({
+	type: 'GET',
+	url: 'http://familytravel.com/api/v1/livecarhire',
+	data: {
+		pickupplace: 'HAN-sky',
+		dropoffplace: 'HAN-sky',
+		pickupdatetime: '2016-11-03T12:00',
+		dropoffdatetime: '2016-11-04T12:00'
+	},
+	success: function (data) {
+		var cars = data.data;
+		if(cars.lenght == 0)
+			$('#carModal .loading').html('<b> Không có dịch vụ thuê xe phù hợp!</b>');
+		for(var i in cars) {
+			$('#carModal .loading').hide();
+			var item = cars[i];
+			var template = $('#carItemTemplate').html();
+			$('#carModal .result-list').append(
+				template.replace('{{vehicle}}', item.vehicle)
+						.replace('{{image_url}}', item.image_url)
+						.replace('{{car_class_name}}', item.car_class_name)
+						.replace('{{seats}}', item.seats)
+						.replace('{{doors}}', item.doors)
+						.replace('{{bags}}', item.bags)
+						.replace('{{air_conditioning_icon}}', item.air_conditioning ? " fa-check":" fa-times" )
+						.replace('{{manual_icon}}', item.manual ? " fa-check":"fa-times").
+						replace('{{mandatory_chauffeur_icon}}', item.mandatory_chauffeur ? " fa-check":" fa-times" )
+						.replace('{{pick_up_address}}', item.pick_up_address)
+						.replace('{{free_cancellation_icon}}', item.free_cancellation ? " fa-check-circle ":" fa-times-circle")
+						.replace('{{theft_protection_insurance_icon}}', item.theft_protection_insurance ? " fa-check-circle ":" fa-times-circle")
+						.replace('{{free_collision_waiver_insurance_icon}}', item.free_collision_waiver_insurance ? " fa-check-circle ":" fa-times-circle")
+						.replace('{{free_breakdown_assistance_icon}}', item.free_breakdown_assistance ? " fa-check-circle ":" fa-times-circle")
+						.replace('{{fuel_policy}}', (item.fuel_policy === "full_to_full")? "":"Không ")
+						.replace('{{price_all_days}}', numberWithCommas(item.price_all_days))
+				)
+		}
+	},
+	error: function () {
+		console.log(" car fail");
+	}
+})
+
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 
 function getRigion() {
 		
@@ -63,3 +111,4 @@ function getRigion() {
 	});
 
 }
+

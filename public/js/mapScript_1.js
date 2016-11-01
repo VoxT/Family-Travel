@@ -4,6 +4,7 @@ var key = 'AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40';
 // begin result search map
 var map, placeService, infoWindow;
 var markers = [];
+var flightPlanCoordinates = [];
 var iconType = {
          
           'museum':
@@ -17,7 +18,11 @@ var iconType = {
           'zoo':
                {
                 icon  : "images/icons/zoo.png"
-              },        
+              },
+          'art_gallery':
+               {
+                icon  : "images/icons/art.png"
+              },
           'amusement_park':
                 {
                   icon : "images/icons/amuseum_park.png"
@@ -25,13 +30,7 @@ var iconType = {
           'church':
           {
             icon : "images/icons/church.png"
-          },
-
-          
-          'art_gallery':
-               {
-                icon  : "images/icons/art.png"
-              }
+          }
         
          };
 
@@ -206,11 +205,9 @@ function search() {
  
   var searchParams = {
     bounds: map.getBounds(),
-    types: ['museum','park','zoo','amusement_park','church'],//, 'night_club', 'campground', 'church'
-    //keyword:   "(zoo) OR (park) OR (establishment)  "
-    //keyword : 'Attractions',
-    keyword:   " (attractions) OR (point_of_interest)OR (establishment)  "
-
+    //types: ['park'],
+    types: ['museum','park','zoo'],//, 'night_club', 'campground', 'church'
+    keyword: 'Attractions'
   };
   placeService.radarSearch(searchParams, callback);
 }
@@ -245,19 +242,15 @@ function addMarker(place) {
             icon : iconType[icon[0]].icon
           });
       //mousover 
-      google.maps.event.addListener(marker, 'mouseover', function() {
+      google.maps.event.addListener(marker, 'click', function() {
           infoWindow.open(map, marker);
           buildIWContent(result);
       }); 
-      google.maps.event.addListener(marker, 'mouseout', function() {
-          infoWindow.close();
-          
-      }); 
+     // setTimeout(dropMarker(i), i * 100);
     }); 
 }
 
-function intersectionJson(a, b)
-{
+function intersectionJson(a, b) {
   var result = [];
   for(var x in a) {
     for(y in b) {
@@ -308,20 +301,26 @@ function buildIWContent(place) {
     var ratingHtml = '';
     for (var i = 0; i < 5; i++) {
       if (place.rating < (i + 0.5)) {
-            ratingHtml += '<span style="font-size:120%;color:#E7E5E5;" >&#9734;</span>'
-          } else {
-            ratingHtml += '<span style="font-size: 120%;color:#F9C81F;">&#9733;</span>'
-          }
+        ratingHtml += '<span style="font-size:200%;color:#D0CDCD;" >&#9734;</span>'
+      } else {
+        ratingHtml += '<span style="font-size: 200%;color:yellow;">&#9733;</span>'
+      }
     document.getElementById('iw-rating-row').style.display = '';
     document.getElementById('iw-rating').innerHTML = ratingHtml;
     }
   } else {
-      var ratingHtml = '';
-      ratingHtml = '<span style="font-size:120%;color:#E7E5E5;" >&#9734; &#9734; &#9734; &#9734; &#9734;</span>'
-      document.getElementById('iw-rating-row').style.display = '';
-      document.getElementById('iw-rating').innerHTML = ratingHtml;
-         
-      }  
- 
+    document.getElementById('iw-rating-row').style.display = 'none';
+  }   
+}
 
+function drawPolylines(flightPlanCoordinates ) {
+  var flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          geodesic: true,
+          strokeColor: '#04c9a6',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath.setMap(map);
 }
