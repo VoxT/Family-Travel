@@ -397,8 +397,8 @@
 		// $(".pac-container").css("width", "325px !important");
 	</script>
     <script type="text/javascript">
-    var origin_place_name = '{{$request["originplace"]}}';
-    var destination_place_name = '{{$request["destinationplace"]}}';
+    var $request = JSON.parse('{{ $request}}'.replace(/&quot;/g,'"'));
+    
     $('#switch').click(function(){
     	var originInput = $('#origin-input').val();
     	$('#origin-input').val($('#destination-input').val());

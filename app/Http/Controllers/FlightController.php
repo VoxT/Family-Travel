@@ -23,9 +23,14 @@ class FlightController extends Controller
     		'originplace'=> $request->originplace,
     		'destinationplace'=>$request->destinationplace,
     		'outbounddate'=> $request->outbounddate,
-    		'inbounddate'=>$request->inbounddate,
-    		'adults'=>$request->adults ,
+    		'adults'=>$request->adults,
+            'children' => $request->children,
+            'infants' => $request->infants,
+            'cabinclass' => $request->cabinclass,
     		'GroupPricing' =>true);
+
+        if($request->inbounddate != null) $params['inbounddate'] = $request->inbounddate;
+        
         $addParams = array(
             'pageindex' => 0,
             'pagesize' => 10);

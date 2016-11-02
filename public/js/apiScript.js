@@ -5,9 +5,12 @@ $.ajax({
 	data: {
 		originplace: 'HAN-sky',
 		destinationplace: 'SGN-sky',
-		outbounddate: '2016-11-03',
-		inbounddate: '2016-11-06',
-		adults: '1'
+		outbounddate: $request.outbounddate,
+		inbounddate: $request.inbounddate,
+		adults: $request.adults,
+		children: $request.children,
+        infants: $request.infants,
+        cabinclass: $request.cabinclass
 	},
 	success: function (data) {
 		var flights = data.data;
@@ -52,8 +55,8 @@ $.ajax({
 	data: {
 		pickupplace: 'HAN-sky',
 		dropoffplace: 'HAN-sky',
-		pickupdatetime: '2016-11-03T12:00',
-		dropoffdatetime: '2016-11-04T12:00'
+		pickupdatetime: $request.outbounddate +'T12:00',
+		dropoffdatetime: ($request.inbounddate != '')? $request.inbounddate +'T12:00': (new Date($request.inbounddate)).setDate((new Date($request.inbounddate)).getDate() + 7).getDate() +'T12:00'
 	},
 	success: function (data) {
 		var cars = data.data;

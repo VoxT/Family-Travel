@@ -1,6 +1,4 @@
-
-$(document).ready(function() {
-  
+ 
 $.datepicker.regional['vn'] = {
     monthNames: ['Tháng Một','Tháng Hai','Tháng Ba','Tháng Tư','Tháng Năm','Tháng Sáu',
     'Tháng Bảy','Tháng Tám','Tháng Chín','Tháng Mười','Tháng Mười Một','Tháng Mười Hai'],
@@ -62,7 +60,7 @@ function currentDate() {
     $('.date-depart .month').text('Tháng ' + month);
     $('.date-depart .day').text(dd);
     $('.date-depart .dayofweek').text(day);
-    $('#date-depart').val(yyyy + '-' + month + '-' + dd);
+    $('#date-depart').val(yyyy + '-' + ((month < 10)? ('0' + month):month)  + '-' + ((dd < 10)? ('0'+ dd):dd));
 }
 currentDate();
 
@@ -118,8 +116,18 @@ $('.childrens .dropdown-items li > a').click(function(e){
     $('.childrens .js-dropdown-toggle-name').text($(this).attr('data-value'));
 });
 $('.kid .dropdown-items li > a').click(function(e){
+    if($(this).attr('data-value') > $('#adults').val()) {
+      // $("#exceed").tooltip({ 'animation': true, 'title': 'Số trẻ không được quá số người lớn.' });
+      //  $('#exceed').tooltip('show'); 
+      //  setTimeOut(function(){$('#exceed').tooltip('hide');}, 2000);
+       return; // Cần chỉnh lại thứ tự js, jquery - jqueryUi - bootstrapjs
+    }
     $('#kid').val($(this).attr('data-value'));;
     $('.kid .js-dropdown-toggle-name').text($(this).attr('data-value'));
+});
+$('#service-class .dropdown-items li > a').click(function(e){
+    $('#cabinclass').val($(this).attr('data-value'));;
+    $('#service-class .js-dropdown-toggle-name').text($(this).text());
 });
 
 // begin autocomplete searchbox
@@ -154,5 +162,16 @@ function autocompletePlace() {
   })
 }
 // end autocomplete searchbox
-
-})// end document ready
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+function showPosition(position) {
+  var lat = position.coords.latitude;
+  var lng = position.coords.longitude;
+  console.log(lat);
+}
+getLocation();

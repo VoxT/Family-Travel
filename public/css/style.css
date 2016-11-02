@@ -883,7 +883,7 @@ ul li {
 .suggestion {
   padding-bottom: 50px;
 }
-.suggestion > div {
+.suggestion .row-suggest > div {
   padding: 0 5px;
 }
 .suggestion a {
@@ -931,8 +931,8 @@ ul li {
   padding: 20px;
   text-align: left;
 }
-
 .hovereffect img {
+  height: 180px;
   display: block;
   position: relative;
   max-width: none;
@@ -1831,7 +1831,7 @@ p.car-class {
   color: #3c6e76;
 }
 .fa-times-circle, .fa-times {
-  color: red;
+  color: #e7745c;
 }
 #carModal .fa-map-marker {
   color: #e7745c;

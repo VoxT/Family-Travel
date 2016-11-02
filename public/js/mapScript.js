@@ -46,7 +46,7 @@ function initMap() {
       type: 'GET',
       url: "https://maps.googleapis.com/maps/api/place/textsearch/json",
       data: {
-        query: origin_place_name,
+        query: $request.originplace,
         key: key
       },
       success: function(data){
@@ -57,7 +57,7 @@ function initMap() {
       type: 'GET',
       url: "https://maps.googleapis.com/maps/api/place/textsearch/json",
       data: {
-        query: destination_place_name,
+        query: $request.destinationplace,
         key: key
       },
       success: function(data){
