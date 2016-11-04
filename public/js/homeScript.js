@@ -175,3 +175,88 @@ function showPosition(position) {
   console.log(lat);
 }
 getLocation();
+
+
+$(function(){
+ 
+    $(document).on('click', '#login',function() {
+        $('#registerModal').modal('hide');
+        $('#message').html('');
+        setTimeout(function(){$('#loginModal').modal(); }, 500);
+    });
+    $(document).on('click', '#register',function() {
+        $('#loginModal').modal('hide');
+        $('#message').html('');
+        setTimeout(function(){$('#registerModal').modal(); }, 500);
+    });
+    $(document).on('submit', '#formRegister', function(e) {  
+        e.preventDefault();
+         
+        $('input+small').text('');
+        $('input').parent().removeClass('has-error');
+        $.ajax({
+            method: $(this).attr('method'),
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            dataType: "json"
+        })
+        .done(function(data) {
+            $('.alert-success').removeClass('hidden');
+            if(data.message === 'success') {
+              $('#registerModal').modal('hide');
+              $('#user-dropdown .dropdown a').first().remove();
+              $('#user-dropdown .dropdown').prepend('<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-secret" aria-hidden="true"></i> ' + data.user_name + ' <span class="caret"></span></a>');
+            }
+        })
+        .fail(function(data) {
+            $.each(data.responseJSON, function (key, value) {
+                var input = '#formRegister input[name=' + key + ']';
+                $(input + '+small').text(value);
+                $(input).parent().addClass('has-error');
+            });
+            $('input[name="password"]').val('');
+        });
+    });
+    $(document).on('submit', '#formLogin', function(e) {  
+        e.preventDefault();
+         
+        $('input+small').text('');
+        $('input').parent().removeClass('has-error');
+        $.ajax({
+            method: $(this).attr('method'),
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            dataType: "json"
+        })
+        .done(function(data) {
+          $('.alert-success').removeClass('hidden');
+          if(data.message === 'success') {
+            $('#loginModal').modal('hide');
+            $('#user-dropdown .dropdown a').first().remove();
+            $('#user-dropdown .dropdown').prepend('<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-secret" aria-hidden="true"></i> ' + data.user_name + ' <span class="caret"></span></a>');
+          } else {
+            
+            $('input[name="password"]').val('');
+            $('#message').html('<div class="alert alert-danger col-md-10 col-md-offset-1"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>!</strong> Email hoặc Mật khẩu không đúng.</div>');
+          }
+        })
+        .fail(function(data) {
+            
+        });
+    });
+    $(document).on('click', '#logout', function(e) {  
+        e.preventDefault();
+
+        $.ajax({
+            method: $('#logout-form').attr('method'),
+            url: $('#logout-form').attr('action'),
+            data: $('#logout-form').serialize(),
+            dataType: "json"
+        })
+        .done(function(data) {
+            $('#user-dropdown .dropdown a').first().remove();
+            $('#user-dropdown .dropdown').prepend('<a href="#" id="login"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng Nhập</a>');
+        })
+    });
+
+})

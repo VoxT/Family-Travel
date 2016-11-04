@@ -15,7 +15,11 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#">Link</a></li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-secret" aria-hidden="true"></i> Thiều Võ <span class="caret"></span></a>
+        @if (Auth::guest())
+          <a href="#" id="login"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng Nhập</a>
+        @else        
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-secret" aria-hidden="true"></i> {{Auth::user()->full_name}} <span class="caret"></span></a>        
+        @endif
           <ul class="dropdown-menu">
             <li><a href="#">Action</a></li>
             <li><a href="#">Another action</a></li>
@@ -23,7 +27,12 @@
             <li role="separator" class="divider"></li>
             <li><a href="#">Separated link</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
+            <li><a href="#" id="logout">
+                <i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a>
+                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                </form>
+            </li>
           </ul>
         </li>
       </ul>

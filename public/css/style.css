@@ -1858,3 +1858,42 @@ p.car-class {
   float: left;
   margin: 0 10px 0 0;
 }
+
+/* login and Register modal*/
+#loginModal .modal-content  .modal-body, #registerModal .modal-content  .modal-body {
+  min-height: 50px !important;
+}
+#loginModal .modal-dialog,  #registerModal .modal-dialog {
+  top: 10px;
+} 
+#loginModal .modal-header,  #registerModal .modal-header {
+  background: #68a19a !important;
+} 
+#formLogin .form-control, #formRegister .form-control,.mergin-top input {
+  border-color: #ccc !important;
+}
+#formLogin .form-control:focus , #formRegister .form-control:focus,.mergin-top input:focus {
+  border-color: #68a19a !important;
+}
+ 
+#formLogin button, #formRegister button,.mergin-top button {
+  background: #68a19a !important;
+  border-radius: 0;
+  border: none;
+}
+#formLogin button:hover, #formRegister button:hover,.mergin-top button:hover {
+  background: #e7745c !important;
+}
+#register, #login {
+  color: #e7745c;
+}
+#register:hover, #login:hover {
+  color: #68a19a;
+}
+#loginModal .modal-body .clearfix, #registerModal .modal-body .clearfix{
+  margin-bottom: 20px;
+}
+.mergin-top {
+  padding-top: 200px;
+  margin-bottom: 200px;
+}

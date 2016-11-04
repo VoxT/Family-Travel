@@ -16,3 +16,7 @@ Route::get('/', 'HomeController@index');
 // Result page
 Route::get('search', ['as' => 'search', 'uses' => 'SearchResultController@searchResult']);
 
+
+Auth::routes();
+
+// Route::get('/home', 'HomeController@index');
