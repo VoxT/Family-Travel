@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-<div class="container mergin-top">
+<div class="container margin-top">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">

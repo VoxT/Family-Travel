@@ -16,7 +16,7 @@ function outbounddatepicker() {
 	    if($('#inbounddate').val() != '')
       		$('.arrival span').text(day + '/' + month + '/' + year);
 	  }
-	}).datepicker("setDate", new Date());;
+	}).datepicker("setDate", $request.outbounddate);
 }
 function inbounddatepicker() {
 	$('#inbounddate').datepicker({
@@ -88,36 +88,92 @@ $('#pickupdate').click(function() {
 	$('#pickupdate-input').show().focus().hide();
 });
 
-// open flight details modal
-	$(document).on('click', '.details-link', function(e){
-		var dom = $(e.target).closest('div[class^="result-item"]');
-		var sum = dom.children('.item-summary');
-		var i = 2;
-		dom.children('.item-details').children('.journey-row').each(function() {
-			var logo = $(this).children().children('.flight-logo'),
-				origin = $(this).children().children('.origin-place'),
-				destination = $(this).children().children('.destination-place'),
-				stop = $(this).children().children('.stop-map');
-
-			var row = $('#flightdetailsmodal .details-row:nth-child(' + i + ')').children('.details-content');
-			var info_0 = row.children('.content-info').children('.info-cell').eq(0),
-				info_1 = row.children('.content-info').children('.info-cell').eq(1),
-				info_2 = row.children('.content-info').children('.info-cell').eq(2),
-				carrier = row.children('.carrier');
-
-			info_0.children('h4').text(origin.children('.journey-station').text());
-			info_0.children('h5').text(origin.children('.journey-time').text());
-			info_1.children('h4').text(destination.children('.journey-station').text());
-			info_1.children('h5').text(destination.children('.journey-time').text());
-			info_2.children('h5').last().text(stop.children('.journey-duration').text());
-			carrier.children('.flight-logo').html(logo.html());
-
-			i++;
-		})
-
-		$('#flightdetailsmodal .summary').children('h5').text(sum.children('.summary-details').text());
-		$('#flightdetailsmodal .summary').children('.best-price').html(sum.children('.price-select-block').html())
-
-		$('#flightdetailsmodal').modal('show');
-	});
 })
+
+
+// open flight details modal
+$(document).on('click', '.details-link', function(e){
+	var dom = $(e.target).closest('div[class^="result-item"]');
+	renderFlightDetails(dom);
+	$('#flightdetailsmodal').modal('show');
+});
+$(document).on('click', '.result-item .item-select-button', function(e){
+	var dom = $(e.target).closest('div[class^="result-item"]');
+	renderFlightDetails(dom);
+	redirectToBook();
+});
+
+$(document).on('click', '#flightdetailsmodal .item-select-button', function(e){
+	redirectToBook();
+});
+
+function renderFlightDetails(dom) {
+	var sum = dom.children('.item-summary');
+	var i = 2;
+	dom.children('.item-details').children('.journey-row').each(function() {
+		var logo = $(this).children().children('.flight-logo'),
+			origin = $(this).children().children('.origin-place'),
+			destination = $(this).children().children('.destination-place'),
+			stop = $(this).children().children('.stop-map');
+
+		var row = $('#flightdetailsmodal .details-row:nth-child(' + i + ')').children('.details-content');
+		var info_0 = row.children('.content-info').children('.info-cell').eq(0),
+			info_1 = row.children('.content-info').children('.info-cell').eq(1),
+			info_2 = row.children('.content-info').children('.info-cell').eq(2),
+			carrier = row.children('.carrier');
+
+		info_0.children('h4').text(origin.children('.journey-station').text());
+		info_0.children('h5').text(origin.children('.journey-time').text());
+		info_1.children('h4').text(destination.children('.journey-station').text());
+		info_1.children('h5').text(destination.children('.journey-time').text());
+		info_2.children('h5').last().text(stop.children('.journey-duration').text());
+		carrier.children('.flight-logo').html(logo.html());
+		carrier.children('span').text('chưa trả về');
+
+		i++;
+	})
+
+	$('#flightdetailsmodal .summary').children('h5').text(sum.children('.summary-details').text());
+	$('#flightdetailsmodal .summary').children('.best-price').html(sum.children('.price-select-block').html());
+}
+
+//  submit post flight
+function createFlightJson() {
+	var i = 0, jsonObj = [];
+	$('#flightdetailsmodal .details-row').each(function() {
+		var temp_bound = [];
+		$(this).children('.details-content').each(function() {
+			var content = $(this).children('.content-info').children('.info-cell');
+			var carrier = $(this).children('.carrier');
+			var item = {};
+			item['origin'] = content.eq(0).children('h4').text();
+			item['depart'] = content.eq(0).children('h5').text()
+			item['destination'] = content.eq(1).children('h4').text();
+			item['arrival'] = content.eq(1).children('h5').text();
+			item['carrier_name'] = carrier.children('span').text();
+			item['carrier_logo'] = carrier.children().children().attr('src');
+			
+			temp_bound.push(item);
+		});
+		if(i == 0) {
+			jsonObj.push({outbound: temp_bound});
+		} else {
+			jsonObj.push({inbound: temp_bound});
+		}
+		i++;
+	});
+	jsonObj.push({price: $('#flightdetailsmodal .flight-price span').val()});
+	console.log(JSON.stringify(jsonObj));
+	return jsonObj;
+}
+
+function redirectToBook() {
+	$('#flightbook input[name="flightdetails"]').val(JSON.stringify(createFlightJson()));
+	$.ajax({
+		url: 'api/v1/getuser',
+		method: 'get'
+	}).done(function(status) {
+		status.login? $('#flightbook').submit(): $('#loginModal').modal();
+	}).fail(function(){
+	});
+}

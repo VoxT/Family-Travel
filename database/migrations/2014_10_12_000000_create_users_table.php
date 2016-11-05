@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->text('address')->nullable();
             $table->date('birthday')->nullable();
             $table->char('gender', 6)->default('other');
+            $table->char('phone', 15);
             $table->string('password');
             $table->char('role', 6)->default('user');
             $table->rememberToken();

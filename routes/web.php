@@ -11,12 +11,14 @@
 |
 */
 // Home page
-Route::get('/', 'HomeController@index');
+Route::group(['middleware' => ['web']], function () {
+	Route::get('/', 'HomeController@index');
 
-// Result page
-Route::get('search', ['as' => 'search', 'uses' => 'SearchResultController@searchResult']);
+	// Result page
+	Route::get('search', ['as' => 'search', 'uses' => 'SearchResultController@searchResult']);
 
+	Route::post('booking/flight', 'BookingController@getDetails')->middleware('checklogin');
 
-Auth::routes();
-
+	Auth::routes();
+});
 // Route::get('/home', 'HomeController@index');

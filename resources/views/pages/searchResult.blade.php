@@ -296,6 +296,11 @@
   </div>
 </div>
 
+<form action="/booking/flight" method="post" target="_blank" id="flightbook" enctype='application/json'>
+	 {{ csrf_field() }}
+	<input type="hidden" name="flightdetails" value="">
+</form>
+<!-- --------------------------------------------------- -->
 <script type="text/template" id="itemsTemplate">
     <div class="result-item">
 		<div class="item-details">
@@ -303,14 +308,13 @@
 			@{{inbound}}
 			<div class="item-details-footer">
 				<a class="details-link" href="#openmodel"><i class="fa fa-info-circle" aria-hidden="true"></i> Chi tiết</a>
-				<a class="agent-links" href="">Jestar</a>
 			</div>
 		</div>
 		<div class="item-summary">
 			<div class="summary-details">1 người lớn | Economy</div>
 			<div class="price-select-block">
-				<div class="flight-price">@{{price}}<sup>đ</sup></div>
-				<a class="item-select-button" href="">Đặt Ngay <i class="fa fa-plane" aria-hidden="true" style="transform: rotate(0deg); margin-left: 10px"></i></a>
+				<div class="flight-price"><span>@{{price}}</span><sup>đ</sup></div>
+				<a class="item-select-button" href="#">Đặt Ngay <i class="fa fa-plane" aria-hidden="true" style="transform: rotate(0deg); margin-left: 10px"></i></a>
 			</div>
 		</div>
 	</div>

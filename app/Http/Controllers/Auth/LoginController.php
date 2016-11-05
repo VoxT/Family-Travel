@@ -42,4 +42,13 @@ class LoginController extends Controller
         Auth::logout();
         return response()->json(['message' => 'success']);
     }
+
+    public function getUser()
+    {
+        if(Auth::check()) {
+             return response()->json(['login' => true]);
+        } else {
+             return response()->json(['login' => false]);
+        }
+    }
 }
