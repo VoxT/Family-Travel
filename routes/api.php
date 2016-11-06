@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 
 // Get live price
 // api/v1/livepriceflight + params
+
 Route::get('livePriceFlight', [
 		'as' => 'liveprice',
 		'uses' => 'FlightController@getLivePriceFlight'
@@ -27,3 +28,5 @@ Route::get('livePriceFlight', [
 // Get Car Hire
 // api/v1/livecarhire
 Route::get('livecarhire', 'CarHireController@getCarPrice');
+
+Route::get('getuser', 'Auth\LoginController@getUser');

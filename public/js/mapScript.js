@@ -17,7 +17,17 @@ var iconType = {
           'zoo':
                {
                 icon  : "images/icons/zoo.png"
-              },
+              },        
+          'amusement_park':
+                {
+                  icon : "images/icons/amuseum_park.png"
+                },
+          'church':
+          {
+            icon : "images/icons/church.png"
+          },
+
+          
           'art_gallery':
                {
                 icon  : "images/icons/art.png"
@@ -36,7 +46,7 @@ function initMap() {
       type: 'GET',
       url: "https://maps.googleapis.com/maps/api/place/textsearch/json",
       data: {
-        query: origin_place_name,
+        query: $request.originplace,
         key: key
       },
       success: function(data){
@@ -47,7 +57,7 @@ function initMap() {
       type: 'GET',
       url: "https://maps.googleapis.com/maps/api/place/textsearch/json",
       data: {
-        query: destination_place_name,
+        query: $request.destinationplace,
         key: key
       },
       success: function(data){
@@ -196,9 +206,11 @@ function search() {
  
   var searchParams = {
     bounds: map.getBounds(),
-    //types: ['park'],
-    types: ['museum','park','zoo'],//, 'night_club', 'campground', 'church'
-    keyword: 'Attractions'
+    types: ['museum','park','zoo','amusement_park','church'],//, 'night_club', 'campground', 'church'
+    //keyword:   "(zoo) OR (park) OR (establishment)  "
+    //keyword : 'Attractions',
+    keyword:   " (attractions) OR (point_of_interest)OR (establishment)  "
+
   };
   placeService.radarSearch(searchParams, callback);
 }
@@ -233,11 +245,14 @@ function addMarker(place) {
             icon : iconType[icon[0]].icon
           });
       //mousover 
-      google.maps.event.addListener(marker, 'click', function() {
+      google.maps.event.addListener(marker, 'mouseover', function() {
           infoWindow.open(map, marker);
           buildIWContent(result);
       }); 
-     // setTimeout(dropMarker(i), i * 100);
+      google.maps.event.addListener(marker, 'mouseout', function() {
+          infoWindow.close();
+          
+      }); 
     }); 
 }
 
@@ -293,15 +308,20 @@ function buildIWContent(place) {
     var ratingHtml = '';
     for (var i = 0; i < 5; i++) {
       if (place.rating < (i + 0.5)) {
-        ratingHtml += '<span style="font-size:200%;color:#D0CDCD;" >&#9734;</span>'
-      } else {
-        ratingHtml += '<span style="font-size: 200%;color:yellow;">&#9733;</span>'
-      }
+            ratingHtml += '<span style="font-size:120%;color:#E7E5E5;" >&#9734;</span>'
+          } else {
+            ratingHtml += '<span style="font-size: 120%;color:#F9C81F;">&#9733;</span>'
+          }
     document.getElementById('iw-rating-row').style.display = '';
     document.getElementById('iw-rating').innerHTML = ratingHtml;
     }
   } else {
-    document.getElementById('iw-rating-row').style.display = 'none';
-  }   
+      var ratingHtml = '';
+      ratingHtml = '<span style="font-size:120%;color:#E7E5E5;" >&#9734; &#9734; &#9734; &#9734; &#9734;</span>'
+      document.getElementById('iw-rating-row').style.display = '';
+      document.getElementById('iw-rating').innerHTML = ratingHtml;
+         
+      }  
+ 
 
 }

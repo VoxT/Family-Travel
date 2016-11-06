@@ -11,17 +11,17 @@ use App\Skyscanner\Transport\CarHire;
 
 class CarHireController extends Controller
 {
-    public function getCarPrice()
+    public function getCarPrice(Request $request)
     {
     	$carhire_service = new CarHire('ab388326561270749029492042586956');
     	$params = array(
     		'currency' => 'VND',
     		'market' => 'VN',
     		'locale' => 'vi-VN',
-    		'pickupplace' => 'SGN-sky',
-    		'dropoffplace' => 'SGN-sky',
-    		'pickupdatetime' => '2016-11-02T12:00',
-    		'dropoffdatetime' => '2016-11-03T18:00',
+    		'pickupplace' => $request->pickupplace,
+    		'dropoffplace' => $request->dropoffplace,
+    		'pickupdatetime' => $request->pickupdatetime,
+    		'dropoffdatetime' => $request->dropoffdatetime,
     		'driverage' => '30',
     		'userip' => '192.168.238.184'
     		);

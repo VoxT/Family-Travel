@@ -6,35 +6,36 @@
 		<div class="col-md-12 footer-details">
 			<div class="col-md-2">
 				<ul>
-					<li>Hotels and Resorts</li>
-					<li>Food and Drink</li>
-					<li>Culture and Design</li>
+					<li>Máy Bay</li>
+					<li>Khách sạn</li>
+					<li>Thuê Xe</li>
+					<li>Địa điểm vui chơi</li>
 				</ul>
 			</div>		
 			<div class="col-md-2">
 				<ul>
-					<li>World's Best Awards</li>
-					<li>Blog</li>
-					<li>Subscribe</li>
+					<li>Hướng dẫn</li>
+					<li>Trang Cá nhân</li>
+					<li>Theo dõi</li>
 				</ul>
 			</div>		
 			<div class="col-md-4 footer-center">
 				<h1>Family Travel</h1>
-				<p>© 2015 Time Inc. Affluent Media Group. All rights reserved.</p>
+				<p>© 2015 Nhóm luận văn K2012 - CSE - HCMUT</p>
 			</div>		
 			<div class="col-md-2">
 				<ul>
-					<li>Time Inc. Corporate Site</li>
-					<li>Privacy Policy</li>
-					<li>Company Info</li>
+					<li>Thông tin giới thiệu</li>
+					<li>Thông tin thành viên</li>
+					<li>Lời cảm ơn</li>
 				</ul>
 			</div>
 			
 			<div class="col-md-2">
 				<ul>
-					<li>Contact</li>
-					<li>Advertising</li>
-					<li>Travel + Leisure</li>
+					<li>Liên hệ</li>
+					<li>Du lịch một mình</li>
+					<li>Du lịch gia đình</li>
 				</ul>
 			</div>
 		</div>

@@ -1,39 +1,36 @@
 <?php
-
 namespace App\Http\Controllers;
-
-
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Skyscanner\Transport\Flights;
 use App\Skyscanner\Transport\FlightsCache;
-
-
 class FlightController extends Controller
 {
     public function getLivePriceFlight(Request $request)
     {
-    	$flights_service = new Flights('prtl6749387986743898559646983194');
-    	$params = array(
-    		'country'=>'VN',
-   			'currency'=>'VND',
-   			'locale'=>'vi-VN',
-    		'originplace'=> $request->originplace,
-    		'destinationplace'=>$request->destinationplace,
-    		'outbounddate'=> $request->outbounddate,
-    		'inbounddate'=>$request->inbounddate,
-    		'adults'=>$request->adults ,
-    		'GroupPricing' =>true);
+        $flights_service = new Flights('ab388326561270749029492042586956');
+        $params = array(
+            'country'=>'VN',
+            'currency'=>'VND',
+            'locale'=>'vi-VN',
+            'originplace'=> $request->originplace,
+            'destinationplace'=>$request->destinationplace,
+            'outbounddate'=> $request->outbounddate,
+            'adults'=>$request->adults,
+            'children' => $request->children,
+            'infants' => $request->infants,
+            'cabinclass' => $request->cabinclass,
+            'GroupPricing' =>true);
+        if($request->inbounddate != null) $params['inbounddate'] = $request->inbounddate;
+        
         $addParams = array(
             'pageindex' => 0,
             'pagesize' => 10);
-    	$result = $flights_service->getResult(Flights::GRACEFUL,$params, $addParams);
-    	$json = json_encode($result);
-    	$array = json_decode($json,true);
-
-    	
+        $result = $flights_service->getResult(Flights::GRACEFUL,$params, $addParams);
+        $json = json_encode($result);
+        $array = json_decode($json,true);
+        
         $SessionKey = $array['parsed']['SessionKey'];
         $Query =    $array['parsed']['Query'];
         $Status = $array['parsed']['Status'];
@@ -46,22 +43,16 @@ class FlightController extends Controller
        //
         
         $flightArray = array();
-
         foreach ($Itineraries as $result) 
         {
            //Id chuyến bay đi
             $OutboundLegId = $result['OutboundLegId'];
-
              //Id chuyến bay đến
             $InboundLegId  = $result['InboundLegId'];
-
              //Giá
             $PricingOptions = $result['PricingOptions'];
-
             $price = $PricingOptions[0]['Price'];
-
             $LinkBooking = $PricingOptions[0]['DeeplinkUrl'];
-
             foreach($Legs as $r1)
             {
                 if($r1['Id'] == $OutboundLegId)
@@ -80,9 +71,7 @@ class FlightController extends Controller
                     $min = intval($Duration)%60;
                     //Id hảng máy bay
                     $IdCarriers = $r1['Carriers'][0];
-
                 }
-
                 if($r1['Id'] == $InboundLegId)
                 {
                     //Id Điểm đi
@@ -147,7 +136,6 @@ class FlightController extends Controller
                     $NameDestination1 = $r3['Name'];
                 }   
             }
-
             array_push($flightArray,array(
                     'Outbound' => array(
                         'NameOrigin' => $NameOrigin,
@@ -177,7 +165,7 @@ class FlightController extends Controller
                     )
                 );
         }
-    	
+        
         //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
         //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
         return $this->jsonResponse($flightArray);

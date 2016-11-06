@@ -89,7 +89,7 @@
 			    <div class="dates-control">
 			    	<div class="search-date field-box active" id="search-date-depart">
 			    		<div class="field-cover-bg">
-			    			<div class="field-caption field-box__caption">Depart</div>
+			    			<div class="field-caption field-box__caption">Ngày Đi</div>
 			    			<input id="date-depart" type="date" name="outbounddate" class="search-date-depart picker__input"></input>
 			    			<button class="search-date-cover date-depart" type="button">
 			    				<div class="month"></div>
@@ -100,7 +100,7 @@
 			    	</div>
 			    	<div class="search-date field-box inactive" id="search-date-depart">
 			    		<div class="field-cover-bg stripe">
-			    			<div class="field-caption field-box__caption">Depart</div>
+			    			<div class="field-caption field-box__caption">Ngày Về</div>
 			    			<input id="date-return" type="date" name="inbounddate" class="search-date-return picker__input"></input>
 			    			<button class="search-date-cover date-return" type="button">
 			    				<span><i class="fa fa-plus" aria-hidden="true"></i></span>
@@ -127,10 +127,10 @@
 								</ul>
 			    			</div>
 			    		</div>
-			    		<div class="people-selector__item childrens" title="Childrens under 12">
-			    			<input type="hidden" name="adults" id="childrens" value="1">
+			    		<div class="people-selector__item childrens" title="Trẻ em trên 12 tuổi">
+			    			<input type="hidden" name="children" id="childrens" value="0">
 			    			<div class="dropdown">
-			    				<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults under 12">
+			    				<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="">
 			    					<div>
 									    <i class="fa fa-child pax-icon" aria-hidden="true"></i>
 									    <span class="js-dropdown-toggle-name">0</span>
@@ -144,10 +144,10 @@
 								</ul>
 			    			</div>
 			    		</div>
-			    		<div class="people-selector__item kid" title="Adults 12+">
-			    			<input type="hidden" name="adults" id="kid" value="1">
+			    		<div class="people-selector__item kid" title="Trẻ sơ sinh">
+			    			<input type="hidden" name="infants" id="kid" value="0">
 			    			<div class="dropdown">
-			    				<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults 12+">
+			    				<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults 12+" id="exceed">
 			    					<div>
 									    <i class="fa fa-female pax-icon" aria-hidden="true"></i>
 									    <span class="js-dropdown-toggle-name">0</span>
@@ -163,6 +163,7 @@
 			    		</div>
 			    	</div>
 			    	<div id="service-class" class="field-box">
+			    		<input type="hidden" name="cabinclass" id="cabinclass" value="Economy">
 				    	<div class="dropdown">
 				    		<button class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" area-label="Adults 12+">
 		    					<div>
@@ -172,7 +173,7 @@
 		    				</button>
 	    					<ul class="dropdown-menu dropdown-items">
 							    <li><a role="menuitem" class="dropdown-item" data-value="Economy" >Economy</a></li>
-							    <li><a role="menuitem" class="dropdown-item" data-value="Premium Economy" >Premium Economy</a></li>
+							    <li><a role="menuitem" class="dropdown-item" data-value="PremiumEconomy" >Premium Economy</a></li>
 							    <li><a role="menuitem" class="dropdown-item" data-value="Business" >Business</a></li>
 							    <li><a role="menuitem" class="dropdown-item" data-value="First" >First</a></li>
 							</ul>
@@ -194,81 +195,161 @@
 	<div id="suggestion-header">
 		<span id="caption">Suggestion</span>
 		<span>|</span>
-		<span>everything look like shit</span>
-		<span class="right">everything look like shit</span>
+		<span></span>
+		<span class="right"></span>
 	</div>
-	<div class="col-lg-offset-1">
-		<h2>Việt Nam</h2>
+
+	<div class="row-suggest">
+		<div class="col-lg-offset-1">
+			<h2>Việt Nam</h2>
+		</div>
+		<div class="col-lg-offset-1 col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/1.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Mù Cang Chải</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/2.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Hà Nội</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/3.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Đà Nẵng</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/4.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Nha Trang</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/5.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Đà Lạt</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
 	</div>
-	<div class="col-lg-offset-1 col-lg-2 col-md-2 col-sm-6 col-xs-12">
-	   <a href="#click"> 
-		   <div class="hovereffect">
-	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
-	            <div class="overlay">
-	                <h2>Hải Phòng</h2>
-	                <h4>12.000.00 đ</h4>
-					<p> 
-						Chi Tiết
-					</p> 
-	            </div>
-		    </div>
-	    </a>
-	</div>
-	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-	   <a href="#click"> 
-		   <div class="hovereffect">
-	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
-	            <div class="overlay">
-	                <h2>Mù Cang Chải</h2>
-	                <h4>12.000.00 đ</h4>
-					<p> 
-						Chi Tiết
-					</p> 
-	            </div>
-		    </div>
-	    </a>
-	</div>
-	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-	   <a href="#click"> 
-		   <div class="hovereffect">
-	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
-	            <div class="overlay">
-	                <h2>Hồ Chí Minh</h2>
-	                <h4>12.000.00 đ</h4>
-					<p> 
-						Chi Tiết
-					</p> 
-	            </div>
-		    </div>
-	    </a>
-	</div>
-	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-	   <a href="#click"> 
-		   <div class="hovereffect">
-	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
-	            <div class="overlay">
-	                <h2>Hải Phòng</h2>
-	                <h4>12.000.00 đ</h4>
-					<p> 
-						Chi Tiết
-					</p> 
-	            </div>
-		    </div>
-	    </a>
-	</div>
-	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-	   <a href="#click"> 
-		   <div class="hovereffect">
-	        	<img class="img-responsive" src="{{ url('/images/image350x250.png') }}" alt="">
-	            <div class="overlay">
-	                <h2>Hải Phòng</h2>
-	                <h4>12.000.00 đ</h4>
-					<p> 
-						Chi Tiết
-					</p> 
-	            </div>
-		    </div>
-	    </a>
+	<div class="clearfix"></div>
+	<!-- temp -->
+	<div class="row-suggest">
+		<div class="col-lg-offset-1">
+			<h2>Việt Nam</h2>
+		</div>
+		<div class="col-lg-offset-1 col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/2.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Mù Cang Chải</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/4.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Hà Nội</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/5.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Đà Nẵng</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/1.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Nha Trang</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+		   <a href="#click"> 
+			   <div class="hovereffect">
+		        	<img class="img-responsive" src="{{ url('/images/suggest/3.jpg') }}" alt="">
+		            <div class="overlay">
+		                <h2>Đà Lạt</h2>
+		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+						<p> 
+							Chi Tiết
+						</p> 
+		            </div>
+			    </div>
+		    </a>
+		</div>
 	</div>
 </div>
 
@@ -284,13 +365,11 @@
 //     });
 // });
 </script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script src="{{ elixir('js/homeScript.js') }}"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&libraries=places&callback=autocompletePlace"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&libraries=places&callback=autocompletePlace&language=vi&region=VN"
 async defer></script>
-
 @endsection
 @section('footer')
 	@include('layouts.footer')

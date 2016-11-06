@@ -1,3 +1,10 @@
+ 
+$.datepicker.regional['vn'] = {
+    monthNames: ['Tháng Một','Tháng Hai','Tháng Ba','Tháng Tư','Tháng Năm','Tháng Sáu',
+    'Tháng Bảy','Tháng Tám','Tháng Chín','Tháng Mười','Tháng Mười Một','Tháng Mười Hai'],
+    dayNamesMin: ['CN','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7']
+  };
+ $.datepicker.setDefaults($.datepicker.regional['vn']);
 
 // Carousel slide effect
 $('#myCarousel').on('slide.bs.carousel', function() {
@@ -53,7 +60,7 @@ function currentDate() {
     $('.date-depart .month').text('Tháng ' + month);
     $('.date-depart .day').text(dd);
     $('.date-depart .dayofweek').text(day);
-    $('#date-depart').val(yyyy + '-' + month + '-' + dd);
+    $('#date-depart').val(yyyy + '-' + ((month < 10)? ('0' + month):month)  + '-' + ((dd < 10)? ('0'+ dd):dd));
 }
 currentDate();
 
@@ -98,7 +105,7 @@ $('.date-depart').click(function(){
 $('.date-return').click(function(){
   $('#date-return').focus();
 });
-
+$('#ui-datepicker-div').hide();
 // select people
 $('.adults .dropdown-items li > a').click(function(e){
     $('#adults').val($(this).attr('data-value'));;
@@ -109,8 +116,18 @@ $('.childrens .dropdown-items li > a').click(function(e){
     $('.childrens .js-dropdown-toggle-name').text($(this).attr('data-value'));
 });
 $('.kid .dropdown-items li > a').click(function(e){
+    if($(this).attr('data-value') > $('#adults').val()) {
+      // $("#exceed").tooltip({ 'animation': true, 'title': 'Số trẻ không được quá số người lớn.' });
+      //  $('#exceed').tooltip('show'); 
+      //  setTimeOut(function(){$('#exceed').tooltip('hide');}, 2000);
+       return; // Cần chỉnh lại thứ tự js, jquery - jqueryUi - bootstrapjs
+    }
     $('#kid').val($(this).attr('data-value'));;
     $('.kid .js-dropdown-toggle-name').text($(this).attr('data-value'));
+});
+$('#service-class .dropdown-items li > a').click(function(e){
+    $('#cabinclass').val($(this).attr('data-value'));;
+    $('#service-class .js-dropdown-toggle-name').text($(this).text());
 });
 
 // begin autocomplete searchbox
@@ -145,3 +162,101 @@ function autocompletePlace() {
   })
 }
 // end autocomplete searchbox
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+function showPosition(position) {
+  var lat = position.coords.latitude;
+  var lng = position.coords.longitude;
+  console.log(lat);
+}
+getLocation();
+
+
+$(function(){
+ 
+    $(document).on('click', '#login',function() {
+        $('#registerModal').modal('hide');
+        $('#message').html('');
+        setTimeout(function(){$('#loginModal').modal(); }, 500);
+    });
+    $(document).on('click', '#register',function() {
+        $('#loginModal').modal('hide');
+        $('#message').html('');
+        setTimeout(function(){$('#registerModal').modal(); }, 500);
+    });
+    $(document).on('submit', '#formRegister', function(e) {  
+        e.preventDefault();
+         
+        $('input+small').text('');
+        $('input').parent().removeClass('has-error');
+        $.ajax({
+            method: $(this).attr('method'),
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            dataType: "json"
+        })
+        .done(function(data) {
+            $('.alert-success').removeClass('hidden');
+            if(data.message === 'success') {
+              $('#registerModal').modal('hide');
+              $('#user-dropdown .dropdown a').first().remove();
+              $('#user-dropdown .dropdown').prepend('<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-secret" aria-hidden="true"></i> ' + data.user_name + ' <span class="caret"></span></a>');
+            }
+        })
+        .fail(function(data) {
+            $.each(data.responseJSON, function (key, value) {
+                var input = '#formRegister input[name=' + key + ']';
+                $(input + '+small').text(value);
+                $(input).parent().addClass('has-error');
+            });
+            $('input[name="password"]').val('');
+        });
+    });
+    $(document).on('submit', '#formLogin', function(e) {  
+        e.preventDefault();
+         
+        $('input+small').text('');
+        $('input').parent().removeClass('has-error');
+        $.ajax({
+            method: $(this).attr('method'),
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            dataType: "json"
+        })
+        .done(function(data) {
+          $('.alert-success').removeClass('hidden');
+          if(data.message === 'success') {
+            $('#loginModal').modal('hide');
+            $('#user-dropdown .dropdown a').first().remove();
+            $('#user-dropdown .dropdown').prepend('<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-secret" aria-hidden="true"></i> ' + data.user_name + ' <span class="caret"></span></a>');
+          } else {
+            
+            $('input[name="password"]').val('');
+            $('#message').html('<div class="alert alert-danger col-md-10 col-md-offset-1"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>!</strong> Email hoặc Mật khẩu không đúng.</div>');
+          }
+        })
+        .fail(function(data) {
+            
+        });
+    });
+    $(document).on('click', '#logout', function(e) {  
+        e.preventDefault();
+
+        $.ajax({
+            method: $('#logout-form').attr('method'),
+            url: $('#logout-form').attr('action'),
+            data: $('#logout-form').serialize(),
+            dataType: "json"
+        })
+        .done(function(data) {
+            $('#user-dropdown .dropdown a').first().remove();
+            $('#user-dropdown .dropdown').prepend('<a href="#" id="login"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng Nhập</a>');
+        })
+    });
+
+})

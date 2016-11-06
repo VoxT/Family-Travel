@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Skyscanner\Transport;
-
 /**
  * Class CarHire
  * @package Skyscanner\Transport
@@ -13,17 +11,14 @@ class CarHire extends Transport
      * @var string
      */
     private $pricingSessionUrl;
-
     /**
      * @param string $apiKey
      */
     public function __construct($apiKey)
     {
         $this->pricingSessionUrl = self::API_HOST . '/apiservices/carhire/liveprices/v2';
-
         parent::__construct($apiKey);
     }
-
     /**
      * @param array $params
      *
@@ -44,7 +39,6 @@ class CarHire extends Transport
         );
         $paramsPath = self::constructParams($params, $reqParams);
         $serviceUrl = "{$this->pricingSessionUrl}/{$paramsPath}";
-
         $pollPath = $this->makeRequest(
             $serviceUrl,
             self::GET,
@@ -54,10 +48,8 @@ class CarHire extends Transport
             self::STRICT,
             $params
         );
-
         return self::API_HOST . $pollPath;
     }
-
     /**
      * @param $pollResp
      *
@@ -68,23 +60,18 @@ class CarHire extends Transport
         if (!$pollResp->parsed) {
             return false;
         }
-
         $websites = [];
-
         if ($this->getResponseFormat() === 'json') {
             $websites = $pollResp->parsed->websites;
         }
-
         if (count($websites) == 0) {
             return false;
         }
-
         foreach ($websites as $w) {
             if (!$w->in_progress) {
-             //   echo "\nin progress: {$w->in_progress}\n";
+                //echo "\nin progress: {$w->in_progress}\n";
                 return false;
             }
         }
     }
 }
-

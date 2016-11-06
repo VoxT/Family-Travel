@@ -4,14 +4,14 @@ var bowerDir ='vendor/bower/';
 
 
 elixir(function(mix) {
-	mix .copy( bowerDir + 'bootstrap/less/**', 'resources/assets/less/bootstrap')
+	mix .copy( bowerDir + 'animate.css/animate.css', 'resources/assets/less/animate')
+		.copy( bowerDir + 'bootstrap/less/**', 'resources/assets/less/bootstrap')
 		.copy( bowerDir + 'bootstrap/dist/fonts/**', 'public/build/fonts')
-		.copy( bowerDir + 'bootstrap/dist/js/bootstrap.js', 'resources/assets/js')
+		.copy( bowerDir + 'bootstrap/dist/js/bootstrap.min.js', 'resources/assets/js')
 		.copy( bowerDir + 'jquery/dist/jquery.js', 'resources/assets/js')
 		.copy( bowerDir + 'font-awesome/less/**', 'resources/assets/less/fontawesome')
-		.copy( bowerDir + 'font-awesome/fonts', 'public/build/fonts')
-		.copy( bowerDir + 'animate.css/animate.css', 'resources/assets/less/animate');
-	mix.less('app.less');
+		.copy( bowerDir + 'font-awesome/fonts', 'public/build/fonts');
+	mix.less(['app.less']);
 
 	mix.scripts([
 		    'jquery.js',
