@@ -123,15 +123,18 @@ class Transport
         }
             
 //        }
-        if (count($params) > 0) {
-            $serviceUrl .= '?' . http_build_query($params);
+        if (count($params) > 0 ) {
+            if (strpos($serviceUrl, 'apikey') === false)
+                $serviceUrl .= '?' . http_build_query($params);
+            else
+                $serviceUrl .= '&' . http_build_query($params);
         }
         // if ($callback == array('self', 'getPollURL')) {
         //     unset($params['apiKey']);
         // }
         // use our own httpRequest function if HttpRequest class is not available.
         $r = NetworkUtils::httpRequest($serviceUrl, $headers, $method, $data);
-
+        
         if('HTTP/1.1 200'== substr($r,0,12)||'HTTP/1.1 201'== substr($r,0,12)||'HTTP/1.1 302'== substr($r,0,12)){
              return call_user_func($callback, $r);
         }
@@ -228,11 +231,12 @@ class Transport
         }
 
         $successList = array('UpdatesComplete', True, 'COMPLETE');
-        $status = $pollResp->parsed->Status ?: $pollResp->parsed->status;
+        
+        $status = isset($pollResp->parsed->Status) ? $pollResp->parsed->Status : $pollResp->parsed->status;
         if (!$status) {
             throw new RuntimeException('Unable to get poll response status.');
         }
-        if($status == 'UpdatesComplete')
+        if($status == 'UpdatesComplete'|| $status == 'COMPLETE'|| $status == True)
              return true;
          else
             return false;
@@ -248,7 +252,15 @@ class Transport
     {
         return $this->poll($this->createSession($params), null, 2, 10, $errors, $addParams);
     }
+    public function getResultHotelDetails($errors = self::STRICT, $sessionKey, array $addParams = [])
+    {
+        return $this->poll($this->createHotelDetails($sessionKey,$addParams), null, 2, 10, $errors);
+    }
 
+    public function getResultWithSession($errors = self::STRICT, $sessionKey, array $addParams = [])
+    {
+        return $this->poll($sessionKey, null, 2, 10, $errors, $addParams);
+    }
     /**
      * @param $params
      * @param $requiredKeys

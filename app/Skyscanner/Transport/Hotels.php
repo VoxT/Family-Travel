@@ -19,7 +19,7 @@ class Hotels extends Transport
      */
     public function __construct($apiKey)
     {
-        $this->pricingSessionUrl = self::API_HOST . '/apiservices/hotels/liveprices/v2';
+        $this->pricingSessionUrl = self::API_HOST . '/apiservices/hotels/liveprices/v3';
         parent::__construct($apiKey);
     }
 
@@ -45,14 +45,28 @@ class Hotels extends Transport
         $callback = array('self', 'getPollURL');
         $pollPath = $this->makeRequest(
             $serviceUrl,
-            GET,
+            self::GET,
             null,
             null,
             $callback,
-            STRICT,
+            self::STRICT,
             $params
         );
 
+        return self::API_HOST . $pollPath;
+    }
+    public function createHotelDetails($sessionKey,array $addParams = [])
+    {
+        $callback = array('self', 'getPollURL');
+        $pollPath = $this->makeRequest(
+            $sessionKey,
+            self::GET,
+            null,
+            null,
+            $callback,
+            self::STRICT,
+            $addParams
+        );
         return self::API_HOST . $pollPath;
     }
 }

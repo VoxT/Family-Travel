@@ -15,7 +15,7 @@ class FlightController extends Controller
 {
     public function getLivePriceFlight(Request $request)
     {
-    	$flights_service = new Flights('ab388326561270749029492042586956');
+    	$flights_service = new Flights('prtl6749387986743898559646983194');
     	$params = array(
     		'country'=>'VN',
    			'currency'=>'VND',

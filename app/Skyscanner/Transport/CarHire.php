@@ -81,7 +81,7 @@ class CarHire extends Transport
 
         foreach ($websites as $w) {
             if (!$w->in_progress) {
-                echo "\nin progress: {$w->in_progress}\n";
+             //   echo "\nin progress: {$w->in_progress}\n";
                 return false;
             }
         }
