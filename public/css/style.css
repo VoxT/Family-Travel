@@ -1034,21 +1034,25 @@ ul li {
 #planeModal, #carModal {
   top: calc(43px + 60px) !important;
   padding-left: 0px !important;
-  width: 740px !important;
-}
-
-#planeModal .modal-dialog, #carModal .modal-dialog {
-  margin: 0px 0px 0px 10px !important;
-  width: 100% !important;
+  width: 752px !important;
   padding-right: 10px;
+}
+#hotelModal {
+  top: calc(43px + 60px) !important;
+  padding-left: 0px !important;
+  width: 600px !important;
+  padding-right: 10px;
+}
+#hotelModal .modal-dialog, #planeModal .modal-dialog, #carModal .modal-dialog {
+  margin: 0px 0px 0px 10px !important;
+  width: calc(100% ) !important;
 }
 
 .modal-dialog .modal-content {
-  width: 100% !important;
+  width: calc(100% ) !important;
   border-radius: 0;
   border: none;
   box-shadow: none !important;
-  margin-right: 10px;
 }
 
 .modal-dialog .modal-content .modal-body {
@@ -1062,6 +1066,9 @@ ul li {
 }
 #carModal .modal-header {
   background: #3c6e76;
+}
+#hotelModal .modal-header {
+  background: #0b91d8;
 }
 .modal-header .closeButton {
     position: absolute;
@@ -1105,6 +1112,16 @@ ul li {
   width: 10px;
   z-index: 1038;
 }
+.modal-backdrop-top {
+  z-index: 1052;
+  background: 
+}
+.modal-backdrop-top.in {
+  opacity: 0.8;
+}
+#loginModal, #registerModal, #imageModal {
+  z-index: 1053;
+}
 .modal.fadeLeft {
   z-index: 1039;
 }
@@ -1129,7 +1146,7 @@ ul li {
     transform: translate3d(300px, 0, 0);
     opacity: 1;
 }
-#flightdetailsmodal .modal-dialog{
+#imageModal .modal-dialog, #hoteldetailsmodal .modal-dialog, #flightdetailsmodal .modal-dialog{
   border-radius: 0;
   width: 850px;
 }
@@ -1679,10 +1696,9 @@ tbody .ui-datepicker-week-end {
     margin-top: 6px;
       color: #e7745c;
  }
-#planeModal #outbounddate,  #planeModal #inbounddate {
-  display: none;
-}
-input#pickupdate-input, input#dropoffdate-input, #pickupdatetime, #dropoffdatetime {
+#planeModal #outbounddate,  #planeModal #inbounddate, 
+input#pickupdate-input, input#dropoffdate-input, #pickupdatetime, #dropoffdatetime,
+input#checkindate, input#checkoutdate{
   display: none;
   margin-left: -11px;
 }
@@ -1715,6 +1731,10 @@ input#pickupdate-input, input#dropoffdate-input, #pickupdatetime, #dropoffdateti
 .popover-content  .form-control {
   border-radius: 5px;
   border: 1px solid #cccccc;
+}
+.popover-content label {
+    font-weight: normal;
+    padding: 0 !important;
 }
 #adults, #childrens, #kid {
   float: right;
@@ -2100,4 +2120,212 @@ p.car-class {
 #flight-booking .panel-body, #flight-booking .details-row {
   padding: 0;
   border: none;
+}
+#accordion button[id='book'] {
+  background: #04c9a6 !important;
+}
+#accordion button[id='payment'] {
+  margin-top: 10px;
+  background: #e7745c !important
+}
+#accordion button:hover {
+  background: #68a19a !important
+}
+
+/* hotel list style*/
+.listing-item {
+    min-height: 119px;
+    padding: 14px 12px !important;
+    background: #fff;
+    position: relative;
+    border: solid 1px #eaeaea;
+    margin: 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0;
+}
+.listing-details {
+    min-height: 90px;
+    overflow: hidden;
+    position: relative;
+    padding-left: 108px;
+}
+.listing-details__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #f1f1f1;
+    height: 90px;
+    width: 90px;
+    overflow: hidden;
+}
+.listing-details__title {
+    font-size: 16px;
+    color: #0b91d8;
+    margin: 4px 0 0 0;
+    line-height: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.listing-details__details {
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 300;
+    color: #a5a5a5;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-top: 2px;
+}
+.listing-details__details p {
+  font-size: 12px;
+}
+.listing-details__details .stars {
+    display: inline-block;
+    vertical-align: middle;
+    color: #ffad00;
+}
+.listing-details__price {
+    color: #0b91d8;
+    font-weight: 500;
+    font-size: 16px;
+    float: right;
+}
+.listing-details__meta {
+    border-top: dashed 1px #e4e4e4;
+    margin-top: 8px;
+    padding-top: 12px;
+    font-size: 14px;
+    line-height: 16px;
+}
+.listing-details__review {
+    color: #0b91d8;
+    font-weight: 400;
+    font-size: 14px;
+}
+.listing-details__review span {
+    font-weight: 300;
+    font-style: normal;
+    font-size: 12px;
+    color: #a5a5a5;
+}
+.listing-details__price small {
+    text-transform: capitalize;
+    font-weight: 300;
+    font-size: 12px;
+    margin-right: 4px;
+}
+#hotelModal .modal-body {
+  padding: 0;
+}
+
+#hotelModal .fa-spinner {
+  color: #0b91d8 !important;
+}
+#hotelModal .moreInfo {
+  width: 30% !important; 
+}
+#hotelModal .arrival, #hotelModal .depart {
+  width: 25% !important;
+}
+#guests, #rooms {
+  float: right;
+  width: 50%;
+}
+#hoteldetailsmodal .details {
+  overflow: hidden;
+}
+#hoteldetailsmodal .modal-header {
+  background: #0b91d8;
+}
+#imageModal .modal-body {
+  padding: 0;
+  width: 100%;
+}
+.image-gallery {
+  width: 250px;
+}
+.image-gallery li  img {
+  float: left;
+  width: 50px;
+  height: 50px;
+  padding: 1px;
+}
+.image-gallery li:first-child img{
+  width: 200px;
+  height: 200px;
+  float: left;
+}
+.image-gallery > li {
+  padding: 0;
+}
+#hoteldetailsmodal .listing-details {
+  padding-left: 10px; 
+}
+#hoteldetailsmodal .listing-details h2 {
+  color: #0b91d8;
+}
+#hoteldetailsmodal .listing-details__details {
+    font-size: 16px;
+}
+#hoteldetailsmodal h2 {
+  margin-top: 0;
+}
+#hoteldetailsmodal .container {
+  margin-top: 20px;
+}
+#hoteldetailsmodal .btn-search:hover {
+    background: #0b91d8;
+    border: 1px solid #0b91d8;
+}
+#hoteldetailsmodal .listing-details__price {
+  float: left !important;
+  margin-bottom: 10px;
+  padding: 10px 20px 0px 0;
+  color: #ffad00;
+  font-size: 24px;
+}
+#hoteldetailsmodal .btn-search {
+    margin-top: 0;
+    line-height: 35px;
+    float: left;
+}
+#hoteldetailsmodal .btn-search:hover, #hotelModal .btn-search:hover { 
+    background: #0b91d8 !important;
+    border-color: #0b91d8 !important;
+}
+#hoteldetailsmodal .nav {
+  margin-top: 5px;
+}
+#hoteldetailsmodal .nav li a{
+  border: none;
+}
+#hoteldetailsmodal .nav li a:hover{
+  background: white;
+  color: #0b91d8;
+}
+#hoteldetailsmodal .nav li.active a {
+  background: white;
+  color: #0b91d8;
+  border-bottom: 3px solid #0b91d8;
+}
+#hoteldetailsmodal .container {
+  width: initial;
+}
+#hoteldetailsmodal .container #menu1 h5{
+      font-weight: 600;
+}
+#imageModal .carousel-inner {
+  border-bottom: 0;
+}
+#hotelModal .listing-item:hover {
+  background: #f9f9f9;
+}
+.img-responsive {
+  height: 100%;
+}
+#imageModal .carousel-inner > .item > img {
+    width: 100%;
+    height: 500px;
 }

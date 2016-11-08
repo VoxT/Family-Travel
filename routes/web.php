@@ -15,7 +15,7 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('/', 'HomeController@index');
 
 	// Result page
-	Route::get('search', ['as' => 'search', 'uses' => 'SearchResultController@searchResult']);
+	Route::get('search', ['as' => 'search', 'uses' => 'HomeController@searchResult']);
 
 	Route::post('booking/flight', 'BookingController@getDetails')->middleware('checklogin');
 

@@ -1,95 +1,162 @@
 // Get flight list
-$.ajax({
-	type: 'GET',
-	url: 'http://familytravel.com/api/v1/livePriceFlight',
-	data: {
-		originplace: 'HAN-sky',
-		destinationplace: 'SGN-sky',
-		outbounddate: $request.outbounddate,
-		inbounddate: $request.inbounddate,
-		adults: $request.adults,
-		children: $request.children,
-        infants: $request.infants,
-        cabinclass: $request.cabinclass
-	},
-	success: function (data) {
-		var flights = data.data;
-		for(var i in flights) {
-				$('#planeModal .loading').hide();
-				var outbound = flights[i].Outbound;
-				var inbound = flights[i].Inbound;
-				var template = $('#itemsTemplate').html();
-				var outboundTemplate = $('#flightItemTemplate').html();
-				var inboundTemplate = $('#flightItemTemplate').html();
-				$('#planeModal .result-list').append(template.replace('{{outbound}}', 
-										outboundTemplate.replace('{{ImageUrl}}', outbound.ImageUrl).
-														replace('{{ImageName}}', outbound.ImageName).
-														replace('{{Departure}}', outbound.Departure).
-														replace('{{NameOrigin}}', outbound.NameOrigin).
-														replace('{{Duration_h}}', outbound.Duration_h).
-														replace('{{Duration_m}}', outbound.Duration_m).
-														replace('{{Arrival}}', outbound.Arrival).
-														replace('{{NameDestination}}', outbound.NameDestination)
-										).replace('{{inbound}}', 
-										inboundTemplate.replace('{{ImageUrl}}', inbound.ImageUrl).
-														replace('{{ImageName}}', inbound.ImageName).
-														replace('{{Departure}}', inbound.Departure).
-														replace('{{NameOrigin}}', inbound.NameOrigin).
-														replace('{{Duration_h}}', inbound.Duration_h).
-														replace('{{Duration_m}}', inbound.Duration_m).
-														replace('{{Arrival}}', inbound.Arrival).
-														replace('{{NameDestination}}', inbound.NameDestination)
-										).
-										replace('{{price}}', numberWithCommas(flights[i].Price)));			
-		}
-	},
-	error: function () {
-		console.log("flight fails");
-	}
-});
+var allHotels = {};
 
-// Get car list
-$.ajax({
-	type: 'GET',
-	url: 'http://familytravel.com/api/v1/livecarhire',
-	data: {
-		pickupplace: 'HAN-sky',
-		dropoffplace: 'HAN-sky',
-		pickupdatetime: $request.outbounddate +'T12:00',
-		dropoffdatetime: ($request.inbounddate != '')? $request.inbounddate +'T12:00': (new Date($request.inbounddate)).setDate((new Date($request.inbounddate)).getDate() + 7).getDate() +'T12:00'
-	},
-	success: function (data) {
-		var cars = data.data;
-		if(cars.lenght == 0)
-			$('#carModal .loading').html('<b> Không có dịch vụ thuê xe phù hợp!</b>');
-		for(var i in cars) {
-			$('#carModal .loading').hide();
-			var item = cars[i];
-			var template = $('#carItemTemplate').html();
-			$('#carModal .result-list').append(
-				template.replace('{{vehicle}}', item.vehicle)
-						.replace('{{image_url}}', item.image_url)
-						.replace('{{car_class_name}}', item.car_class_name)
-						.replace('{{seats}}', item.seats)
-						.replace('{{doors}}', item.doors)
-						.replace('{{bags}}', item.bags)
-						.replace('{{air_conditioning_icon}}', item.air_conditioning ? " fa-check":" fa-times" )
-						.replace('{{manual_icon}}', item.manual ? " fa-check":"fa-times").
-						replace('{{mandatory_chauffeur_icon}}', item.mandatory_chauffeur ? " fa-check":" fa-times" )
-						.replace('{{pick_up_address}}', item.pick_up_address)
-						.replace('{{free_cancellation_icon}}', item.free_cancellation ? " fa-check-circle ":" fa-times-circle")
-						.replace('{{theft_protection_insurance_icon}}', item.theft_protection_insurance ? " fa-check-circle ":" fa-times-circle")
-						.replace('{{free_collision_waiver_insurance_icon}}', item.free_collision_waiver_insurance ? " fa-check-circle ":" fa-times-circle")
-						.replace('{{free_breakdown_assistance_icon}}', item.free_breakdown_assistance ? " fa-check-circle ":" fa-times-circle")
-						.replace('{{fuel_policy}}', (item.fuel_policy === "full_to_full")? "":"Không ")
-						.replace('{{price_all_days}}', numberWithCommas(item.price_all_days))
-				)
+function Flight(originplace, destinationplace, outbounddate, inbounddate, adults, children, infants, cabinclass) {
+	$('#planeModal .result-list').html('<div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><p>Đang tìm kiếm ...</p></div>');
+
+	$.ajax({
+		type: 'GET',
+		url: '/api/v1/livePriceFlight',
+		data: {
+			originplace: 'HAN-sky',
+			destinationplace: 'SGN-sky',
+			outbounddate: outbounddate,
+			inbounddate: inbounddate,
+			adults: adults,
+			children: children,
+	        infants: infants,
+	        cabinclass: cabinclass
+		},
+		success: function (data) {
+			var flights = data.data;
+
+			if($.isEmptyObject(flights))
+				$('#carModal .loading').html('<b> Không có chuyến bay phù hợp!</b>');
+
+			for(var i in flights) {
+					$('#planeModal .loading').hide();
+					var outbound = flights[i].Outbound;
+					var inbound = flights[i].Inbound;
+					var template = $('#itemsTemplate').html();
+					var outboundTemplate = $('#flightItemTemplate').html();
+					var inboundTemplate = $('#flightItemTemplate').html();
+					$('#planeModal .result-list').append(template.replace('{{outbound}}', 
+											outboundTemplate.replace('{{ImageUrl}}', outbound.ImageUrl).
+															replace('{{ImageName}}', outbound.ImageName).
+															replace('{{Departure}}', outbound.Departure).
+															replace('{{NameOrigin}}', outbound.NameOrigin).
+															replace('{{Duration_h}}', outbound.Duration_h).
+															replace('{{Duration_m}}', outbound.Duration_m).
+															replace('{{Arrival}}', outbound.Arrival).
+															replace('{{NameDestination}}', outbound.NameDestination)
+											).replace('{{inbound}}', 
+											inboundTemplate.replace('{{ImageUrl}}', inbound.ImageUrl).
+															replace('{{ImageName}}', inbound.ImageName).
+															replace('{{Departure}}', inbound.Departure).
+															replace('{{NameOrigin}}', inbound.NameOrigin).
+															replace('{{Duration_h}}', inbound.Duration_h).
+															replace('{{Duration_m}}', inbound.Duration_m).
+															replace('{{Arrival}}', inbound.Arrival).
+															replace('{{NameDestination}}', inbound.NameDestination)
+											).
+											replace('{{price}}', numberWithCommas(flights[i].Price)));			
+			}
+		},
+		error: function () {
+			console.log("flight fails");
 		}
-	},
-	error: function () {
-		console.log(" car fail");
-	}
-})
+	});
+}
+// Get car list
+function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
+	$('#carModal .result-list').html('<div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><p>Đang tìm kiếm ...</p></div>');
+	$.ajax({
+		type: 'GET',
+		url: '/api/v1/livecarhire',
+		crossDomain: true,
+		contentType: "application/json; charset=utf-8",
+		data: {
+			pickupplace: 'HAN-sky',
+			dropoffplace: 'HAN-sky',
+			pickupdatetime: pickupdatetime,
+			dropoffdatetime: dropoffdatetime
+		},
+		success: function (data) {
+			var cars = data.data;
+			if($.isEmptyObject(cars))
+				$('#carModal .loading').html('<b> Không có dịch vụ thuê xe phù hợp!</b>');
+			for(var i in cars) {
+				$('#carModal .loading').hide();
+				var item = cars[i];
+				var template = $('#carItemTemplate').html();
+				$('#carModal .result-list').append(
+					template.replace('{{vehicle}}', item.vehicle)
+							.replace('{{image_url}}', item.image_url)
+							.replace('{{car_class_name}}', item.car_class_name)
+							.replace('{{seats}}', item.seats)
+							.replace('{{doors}}', item.doors)
+							.replace('{{bags}}', item.bags)
+							.replace('{{air_conditioning_icon}}', item.air_conditioning ? " fa-check":" fa-times" )
+							.replace('{{manual_icon}}', item.manual ? " fa-check":"fa-times").
+							replace('{{mandatory_chauffeur_icon}}', item.mandatory_chauffeur ? " fa-check":" fa-times" )
+							.replace('{{pick_up_address}}', item.pick_up_address)
+							.replace('{{free_cancellation_icon}}', item.free_cancellation ? " fa-check-circle ":" fa-times-circle")
+							.replace('{{theft_protection_insurance_icon}}', item.theft_protection_insurance ? " fa-check-circle ":" fa-times-circle")
+							.replace('{{free_collision_waiver_insurance_icon}}', item.free_collision_waiver_insurance ? " fa-check-circle ":" fa-times-circle")
+							.replace('{{free_breakdown_assistance_icon}}', item.free_breakdown_assistance ? " fa-check-circle ":" fa-times-circle")
+							.replace('{{fuel_policy}}', (item.fuel_policy === "full_to_full")? "":"Không ")
+							.replace('{{price_all_days}}', numberWithCommas(item.price_all_days))
+					)
+			}
+		},
+		error: function () {
+			console.log(" car fail");
+		}
+	})
+}
+// Get hotel list
+function Hotel(entityid, checkindate, checkoutdate, guests, rooms) {
+	$('#hotelModal .result-list').html('<div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><p>Đang tìm kiếm ...</p></div>');
+	$.ajax({
+		type: 'GET',
+		url: '/api/v1/livehotelprice',
+		crossDomain: true,
+		contentType: "application/json; charset=utf-8",
+		data: {
+			entityid: "27546329",
+            checkindate: "2016-11-15",
+            checkoutdate: "2016-11-18",
+            guests: "1",
+            rooms: '1'
+		},
+		success: function (data) {
+			$.extend(allHotels, data.data);
+			var hotels = data.data;
+			if($.isEmptyObject(hotels))
+				$('#hotelModal .loading').html('<b> Không có Khách sạn phù hợp!</b>');
+			$('#hotelModal .loading').hide();
+			for(var i in hotels) {
+				var hotel = hotels[i];
+				var template = $('#hotelItemTemplate').html();
+
+				var stars = '';
+				for(var j = 0; j < 5; j++){
+					if(((hotel.hotel.popularity - 20*j)/20) >= 1)
+						stars += '<span><i class="fa fa-star" aria-hidden="true"></i></span>';
+					else if(((hotel.hotel.popularity - 20*j)/20) >= 0.5)
+						stars += '<span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>';
+					else 
+						stars += '<span><i class="fa fa-star-o" aria-hidden="true"></i></span>';
+
+				}
+				$('#hotelModal .result-list').append(
+						template.replace('{{id}}', i)
+								.replace('{{image}}', hotel.hotel.image_url[0].url)
+								.replace(/{{name}}/g, hotel.hotel.name)
+								.replace('{{address}}', hotel.hotel.address)
+								.replace('{{price}}', numberWithCommas(hotel.price_total))
+								.replace('{{popularity}}', hotel.hotel.popularity)
+								.replace('{{review}}', hotel.reviews.reviews_count)
+								.replace('{{stars}}', stars)
+					);
+			}
+			
+		},
+		error: function () {
+			console.log(" hotel fail");
+		}
+	})
+}
 
 
 function numberWithCommas(x) {
@@ -115,3 +182,11 @@ function getRigion() {
 
 }
 
+
+
+Flight('HAN-sky', 'SGN-sky', request.outbounddate, request.inbounddate,
+		 request.adults, request.children, request.infants, request.cabinclass);
+
+Car('HAN-sky', 'HAN-sky', request.outbounddate+'T12:00', request.inbounddate+'T12:00');
+
+Hotel('', '', '', '', '');

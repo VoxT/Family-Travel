@@ -99,39 +99,52 @@
 
 						 </div>
 
+					<form action="/booking/postFlight" method="post" id="flightbook" enctype='application/json'>
+							 {{ csrf_field() }}
+							<input type="hidden" name="flightdetails" value="">
+						
 						<div class="col-md-5" style="padding-left: 30px;">
 							<div class="form-group">
 								<label for="full_name" class="control-label">Họ Tên</label>
 								<div class="">
-									<input class='form-control' data-type="input" type='text' name='full_name' id='full_name' value ='' />
+									<input class='form-control' data-type="input" type='text' name='full_name' id='full_name' value ='{{Auth::user()->full_name}}' required />
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="email" class="control-label">Email</label>
 								<div class="">
-									<input class='form-control' data-type="input" type='text' name='email' id='email' value ='' />
+									<input class='form-control' data-type="input" type='text' name='email' id='email' value ='{{Auth::user()->email}}' required />
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="phone" class="control-label">Số Điện Thoại</label>
 								<div class="">
-									<input class='form-control' data-type="input" type='text' name='phone' id='phone' value ='' />
+									<input class='form-control' data-type="input" type='text' name='phone' id='phone' value ='{{Auth::user()->phone}}' required/>
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="address" class="control-label">Địa Chỉ</label>
 								<div class="">
-									<input class='form-control' data-type="input" type='text' name='address' id='address' value ='' />
+									<input class='form-control' data-type="input" type='text' name='address' id='address' value ='{{Auth::user()->address}}' />
 								</div>
 							</div>
 							<div class="form-group">
 		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12">
-		                                Đặt vé
+		                            <button type="submit" class="btn btn-primary col-md-12" id="book">
+		                                Giữ Chỗ
+		                            </button>
+		                        </div>
+		                    </div>
+							<div class="form-group">
+		                        <div class="">
+		                            <button type="submit" class="btn btn-primary col-md-12" id="payment">
+		                                Đặt và Thanh Toán
 		                            </button>
 		                        </div>
 		                    </div>
 						</div>
+
+					</form>
 		      		</div>
 		     	</div>
 		     </div>

@@ -56,7 +56,7 @@
 		  	<p>2 giờ 30 phút</p>
 		  	<span class="price-right">78$ - 98$</span>
 		  </button>
-		  <button type="button" class="list-group-item" id="hotel">
+		  <button type="button" class="list-group-item" id="hotel" data-toggle="modal" data-target="#hotelModal">
 		  	<span class="badge hotel"><i class="fa fa-bed" aria-hidden="true"></i></span>
 		  	<span class="chevron-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
 		  	<h4>Đặt khách sạn tại Hồ Chí Minh</h2>
@@ -132,21 +132,21 @@
         		<div class="cabinclass">
         			<h4>Loại Ghế</h4>
         			<label class="form-check-label col-md-6">
-			            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1">
-			            Thương gia
+			            <input class="form-check-input" type="radio" name="cabinclass" id="gridRadios1" value="Economy">
+			            Economy
 			         </label>
         			<label class="form-check-label col-md-6">
-		            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-		            Thương gia
-		         </label>
+			            <input class="form-check-input" type="radio" name="cabinclass" id="gridRadios1" value="PremiumEconomy" checked>
+			            Premium Eco
+			        </label>
         			<label class="form-check-label col-md-6">
-			            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" >
-			            Thương gia
-			         </label>
+			            <input class="form-check-input" type="radio" name="cabinclass" id="gridRadios1" value="Business" >
+			            Business
+			        </label>
         			<label class="form-check-label col-md-6">
-		            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" >
-		            Thương gia
-		         </label>
+			            <input class="form-check-input" type="radio" name="cabinclass" id="gridRadios1" value="First" >
+			            First
+			        </label>
         		</div>
         		<div class="clearfix"></div>
         	</div>
@@ -154,10 +154,7 @@
       </div>
       <div class="modal-body">
       	<div class="result-list">
-      		<div class="loading">
-      			<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
-      			<p>Đang tìm kiếm ...</p>
-      		</div>
+      		
       	</div>
       </div>
       <div class="modal-footer">
@@ -245,14 +242,13 @@
     </div>
   </div>
 </div>
-
 <!-- Car Model -->
 <div class="modal fadeLeft fade" id="carModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" data-dismiss="modal" aria-label="Close" class="closeButton"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-        <h2 class="modal-title" id="modalLabel"><i class="fa fa-plane" aria-hidden="true"></i> Thuê xe tại Ho Chi Minh City</h2>
+        <h2 class="modal-title" id="modalLabel"><i class="fa fa-car" aria-hidden="true"></i> Thuê xe tại Ho Chi Minh City</h2>
         <div class="flight-form-modal">
     		<button type="button" class="depart" id="pickupdate"><i class="fa fa-calendar" aria-hidden="true"></i>
         		 <span>27/10/2016</span>
@@ -266,11 +262,11 @@
 			    <option>4</option>
 			</select>
     		<button type="button" class="arrival" id="dropoffdate"><i class="fa fa-calendar" aria-hidden="true"></i> 
-        		<span> 27/10/2016 </span>
+        		<span> --/--/---- </span>
         		<input type="date" name="dropoffdate" id="dropoffdate-input">
     		</button>
 			<i class="fa fa-clock-o" aria-hidden="true"></i>
-    		<select class="picktime" id="pickuptime">
+    		<select class="picktime" id="dropofftime">
 			    <option>1</option>
 			    <option>2</option>
 			    <option>3</option>
@@ -295,6 +291,96 @@
     </div>
   </div>
 </div>
+<!-- Hotel Model -->
+<div class="modal fadeLeft fade" id="hotelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" data-dismiss="modal" aria-label="Close" class="closeButton"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+        <h2 class="modal-title" id="modalLabel"><i class="fa fa-bed" aria-hidden="true"></i> Khách sạn tại Ho Chi Minh City</h2>
+         <div class="flight-form-modal">
+    		<button type="button" class="depart" id="depart"><i class="fa fa-calendar" aria-hidden="true"></i>
+        		 <span>27/10/2016</span>
+        		<input type="date" name="checkindate" id="checkindate">
+    		</button>
+    		<button type="button" class="arrival" id="arrival"><i class="fa fa-calendar" aria-hidden="true"></i> 
+        		<span> --/--/---- </span>
+        		<input type="date" name="checkoutdate" id="checkoutdate">
+    		</button>
+    		<button type="button" class="moreInfo" id="moreHotelInfo">1 Người, 1 Phòng <span class="caret"></span></button>
+    		<button type="button" class="flight-search btn-search" id="flight-search">Tìm Kiếm</button>
+    		<div class="popover-hotel container" style="display: none;">
+        		<div class="form-horizontal">
+        			<div class="form-group">
+					  <label for="guests">Số Người</label>
+					  <select class="form-control" id="guests">
+					    <option>1</option>
+					    <option>2</option>
+					    <option>3</option>
+					    <option>4</option>
+					  </select>
+					</div>
+        			<div class="form-group">
+					  <label for="rooms">Số Phòng</label>
+					  <select class="form-control" id="rooms">
+					    <option>1</option>
+					    <option>2</option>
+					    <option>3</option>
+					    <option>4</option>
+					  </select>
+					</div>
+        		</div>
+        		<div class="clearfix"></div>
+        	</div>
+        </div>
+      </div>	
+      <div class="modal-body">
+      	<div class="result-list">
+      		<div class="loading">
+      			<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+      			<p>Đang tìm kiếm ...</p>
+      		</div>
+          <!-- list item here -->
+      	</div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal flight details -->
+<div class="modal fade" id="hoteldetailsmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3>Thông Tin Khách Sạn</h3>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--begin modal window-->
+<div class="modal fade" id="imageModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+
+      <!--begin carousel-->
+        <div id="myGallery" class="carousel" data-interval="false">
+          <div class="carousel-inner">
+            
+          <!--end carousel-inner--></div>
+          <!--Begin Previous and Next buttons-->
+          <a class="left carousel-control" href="#myGallery" role="button" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#myGallery" role="button" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span></a>
+        <!--end carousel--></div>
+
+      </div><!--end modal-content-->
+  </div><!--end modal-dialoge-->
+</div><!--end myModal-->
 
 <form action="/booking/flight" method="post" target="_blank" id="flightbook" enctype='application/json'>
 	 {{ csrf_field() }}
@@ -345,7 +431,6 @@
 		</div>	
 	</div>
 </script>
-
 <script type="text/template" id="carItemTemplate">
 	<div class="result-item">
 		<div class="car-details">
@@ -396,22 +481,124 @@
 		</div>
 	</div>	
 </script>
-	<script type="text/javascript">
-		// var pac_width = $('.input-group').width();
-		// $(".pac-container").css("width", "325px !important");
-	</script>
-    <script type="text/javascript">
-    var $request = JSON.parse('{{ $request}}'.replace(/&quot;/g,'"'));
-    
-    $('#switch').click(function(){
-    	var originInput = $('#origin-input').val();
-    	$('#origin-input').val($('#destination-input').val());
-    	$('#destination-input').val(originInput);
-    });
-	$('#planeModal').on('hide.bs.modal', function (e) {
+<script type="text/template" id="hotelItemTemplate">
+  
+  <div class="listing-item" data-id=@{{id}}>
+    <div class="listing-details">
+      <div class="listing-details__image">
+        <img src="http://@{{image}}" alt="@{{name}}"  class="img-responsive">
+      </div>
+      <h3 class="listing-details__title" title="@{{name}}">@{{name}}</h3>
+      <div class="listing-details__details">
+        <div class="stars">
+          @{{stars}}
+        </div>
+        <span style="padding-left: 10px;">@{{address}}</span>
+      </div>
+      <div class="listing-details__meta">
+        <div class="listing-details__price">
+          <small>Giá: </small>
+          <span>@{{price}} <sup>đ</sup></span>
+        </div>
+        <div class="listing-details__review">Đánh giá: @{{popularity}} <span>(<strong>@{{review}}</strong> nhận xét)</span></div>
+      </div>
+    </div>
+  </div>
+</script>
+<script type="text/template" id="hotelDetailsTemplate">
+    <div class="details">
+       <div class="image-gallery">
+          <ul>
+            @{{images_li}}
+          <!--end of thumbnails-->
+          </ul>
+        </div>  
+        <div class="listing-details">
+          <h2 title="@{{name}}">@{{name}}</h2>
+          <div class="listing-details__details">
+            <div class="stars">
+              @{{stars}}
+            </div>
+            <p style="padding-top: 10px;">Địa Chỉ: @{{address}}</p>
+          </div>
+          <div class="listing-details__meta">
+            <div class="listing-details__price">
+              <small>Tổng giá: </small>
+              <span>@{{price}}<sup>đ</sup></span>
+            </div>
+           <button type="button" class="flight-search btn-search">Đặt Ngay</button>
+          </div>
+          <div class="clearfix"> </div>
+          <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">Mô Tả</a></li>
+            <li><a data-toggle="tab" href="#menu1">Cơ Sở Vật Chất</a></li>
+            <li><a data-toggle="tab" href="#menu2">Nhận Xét</a></li>
+          </ul>
+        </div>
+        <div class="clearfix"> </div>
+      <div class="container">
 
-	});
-    </script>
+        <div class="tab-content">
+          <div id="home" class="tab-pane fade in active">
+            <h3>Mô Tả</h3>
+            <p>@{{description}}</p>
+          </div>
+          <div id="menu1" class="tab-pane fade">
+            <h3>Cơ Sơ Vật Chất</h3>
+            <div class="row">
+              <div class="col-md-4">
+                <h5>Internet</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. </p>
+              </div>
+              <div class="col-md-4">
+                <h5>Internet</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. </p>
+              </div>
+              <div class="col-md-4">
+                <h5>Internet</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. </p>
+              </div>
+              <div class="col-md-4">
+                <h5>Internet</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. </p>
+              </div>
+              <div class="col-md-4">
+                <h5>Internet</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. </p>
+              </div>
+              <div class="col-md-4">
+                <h5>Internet</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. </p>
+              </div>
+            </div>
+          </div>
+          <div id="menu2" class="tab-pane fade">
+            <h3>Menu 2</h3>
+            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+  var request = JSON.parse('{{ $request}}'.replace(/&quot;/g,'"'));
+
+  $('#switch').click(function(){
+  	var originInput = $('#origin-input').val();
+  	$('#origin-input').val($('#destination-input').val());
+  	$('#destination-input').val(originInput);
+  });
+  $('#planeModal').on('hide.bs.modal', function (e) {
+
+  });
+</script>
 
 	<script src="{{ elixir('js/mapScript.js') }}"></script>	
 	<script src="{{ elixir('js/apiScript.js') }}"></script>	
@@ -420,6 +607,7 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&callback=initMap&language=vi&region=VN&libraries=places">
     </script>
+
 @endsection
 
 @section('footer')

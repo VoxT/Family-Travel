@@ -41,6 +41,8 @@ class HotelController extends Controller
         $hotel_array  = array();
 
         $url = 'http://partners.api.skyscanner.net/' . $array['parsed']['urls']['hotel_details'];
+
+        $count_id = 0;
         foreach ($hotels as $ht) 
         {
             //Id khách sạn
@@ -198,8 +200,8 @@ class HotelController extends Controller
     
             }
            
-            array_push($hotel_array,array(
-
+            $hotel_array['0'.(string) $count_id] =
+                array(
                 'price_per_room_night' => $price_per_room_night,
                 'price_total' => $price_total,
                 'policy' => array(
@@ -229,7 +231,9 @@ class HotelController extends Controller
                     'longitude' => $longitude,
                     'image_url' => $image_url
                     ),
-                ));
+                );
+
+            $count_id++;
 
         }
         return $this->jsonResponse($hotel_array);
