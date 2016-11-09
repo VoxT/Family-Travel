@@ -20,7 +20,7 @@ class HotelController extends Controller
     		'market' => 'VN',
             'locale' =>'vi-VN',
             'entityid' =>"27546329",
-            'checkindate'=>"2016-11-10",
+            'checkindate'=>"2016-11-11",
             'checkoutdate'=> "2016-11-14",
             'guests'=> "1",
             'rooms' => '1'
@@ -47,16 +47,16 @@ class HotelController extends Controller
         {
             //Id khách sạn
             $hotel_id = $ht['hotel_id'];
-
+            print $hotel_id;
             //Lấy chi tiết của 1 khách sạn
             $hotel_details = $hotels_service->getResultHotelDetails(Hotels::GRACEFUL,$url,array('hotelIds'=>$hotel_id));
             $json1 = json_encode($hotel_details);
             $hotel_details = json_decode($json1,true);
-           
+            //printf('<pre>Poll Data  %s</pre>', print_r($hotel_details, true));
             $hotels_prices = $hotel_details['parsed']['hotels_prices'][0];
             
             $amenities_data = $hotel_details['parsed']['amenities'];
-
+            //printf('<pre>Poll Data  %s</pre>', print_r($amenities_data, true));
             $amenities = array();
 
             $amenities_details = array();
@@ -189,13 +189,24 @@ class HotelController extends Controller
             $image_host_url = $hotel_details['parsed']['image_host_url'];
 
             $image_url = array();
+
             foreach ($images as $key => $value) {
                 
                 $url_1 = $key;
+                $width = 0;
+                foreach ($value as $url_key => $size) {
+                    if ($url_key != 'provider' && $url_key != 'order')
+                    {
+                        if ($size[0] > $width )
+                        {
+                            $width = $size[0];
+                            $url_2 = $url_key;
+                        }
+                    }
 
-                $url_2 = array_keys($value);
+                }
                 array_push($image_url,array(
-                    'url'=>$image_host_url . $url_1 . $url_2[0] 
+                    'url'=>$image_host_url . $url_1 . $url_2
                     ));
     
             }
@@ -234,6 +245,7 @@ class HotelController extends Controller
                 );
 
             $count_id++;
+
 
         }
         return $this->jsonResponse($hotel_array);
