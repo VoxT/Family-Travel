@@ -229,9 +229,9 @@ function renderHotelDetails(id) {
 	}
 
 	var amenities = '';
-	var i = 0;
-	for(i in hotel.hotel.amenities) {
-		if (i%3 == 0) {
+
+	for(var i in hotel.hotel.amenities) {
+		if ((i%3) == 0) {
             amenities += '<div class="row">'
 		}
 		amenities += 
@@ -243,16 +243,19 @@ function renderHotelDetails(id) {
         	amenities += hotel.hotel.amenities[i].amenities_details[j].name + ', ';
         }
         amenities += '</p> </div>';
-        if ((i+1)%3 == 0) {
+        if (((i+1)%3) == 0) {
             amenities += '</div>';
-		}
+		} 
 	}
-    if (i%3 == 0) {
+    if ((i%2) != 0) {
         amenities += '</div>';
 	}
 
 	var reviews = '';
 	for(var i in hotel.reviews.categories) {
+		if ((i%2) == 0) {
+            reviews += '<div class="row">'
+		}
 		reviews += 
               '<div class="col-md-6">'
               +'<span class="badge">' + hotel.reviews.categories[i].score/10 +'</span>'
@@ -262,6 +265,13 @@ function renderHotelDetails(id) {
         	reviews += '"' + hotel.reviews.categories[i].entries[j] + '", ';
         }
         reviews += '</p> </div>';
+        
+        if (((i%2) - 1) == 0) {
+            reviews += '</div>';
+		} 
+	}	
+    if (i%2 == 0) {
+        reviews += '</div>';
 	}
 
 	var result = template.replace('{{images_li}}', images_li)
