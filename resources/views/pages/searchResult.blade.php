@@ -308,7 +308,7 @@
         		<input type="date" name="checkoutdate" id="checkoutdate">
     		</button>
     		<button type="button" class="moreInfo" id="moreHotelInfo">1 Người, 1 Phòng <span class="caret"></span></button>
-    		<button type="button" class="flight-search btn-search" id="flight-search">Tìm Kiếm</button>
+    		<button type="button" class="flight-search btn-search" id="hotel-search">Tìm Kiếm</button>
     		<div class="popover-hotel container" style="display: none;">
         		<div class="form-horizontal">
         			<div class="form-group">
