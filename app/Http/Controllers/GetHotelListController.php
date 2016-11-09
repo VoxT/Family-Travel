@@ -79,7 +79,6 @@ class GetHotelListController extends Controller
         $hotel_details = $hotels_service->getResultHotelDetails(Hotels::GRACEFUL,$url,array('hotelIds'=>$hotel_id));
         $json1 = json_encode($hotel_details);
         $hotel_details = json_decode($json1,true);
-        printf('<pre>Poll Data  %s</pre>', print_r($hotel_details, true));
         $hotels_prices = $hotel_details['parsed']['hotels_prices'][0];
         
         $amenities_data = $hotel_details['parsed']['amenities'];
