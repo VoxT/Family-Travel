@@ -53,10 +53,9 @@ class GetHotelListController extends Controller
         {
             $hotel_id  = $ht['hotel_id'];
 
-            array_push($hotel_list,array(
-                'hotel_id' => $hotel_id,
+            $hotel_list['0'.(string) $hotel_id] = array(
                 'url'=> $url
-                ));
+                );
 
         }
        

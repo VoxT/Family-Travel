@@ -20,8 +20,8 @@ class HotelController extends Controller
     		'market' => 'VN',
             'locale' =>'vi-VN',
             'entityid' =>"27546329",
-            'checkindate'=>"2016-11-11",
-            'checkoutdate'=> "2016-11-14",
+            'checkindate'=>"2016-11-15",
+            'checkoutdate'=> "2016-11-18",
             'guests'=> "1",
             'rooms' => '1'
         );
@@ -42,12 +42,11 @@ class HotelController extends Controller
 
         $url = 'http://partners.api.skyscanner.net/' . $array['parsed']['urls']['hotel_details'];
 
-        $count_id = 0;
+       
         foreach ($hotels as $ht) 
         {
             //Id khách sạn
             $hotel_id = $ht['hotel_id'];
-            print $hotel_id;
             //Lấy chi tiết của 1 khách sạn
             $hotel_details = $hotels_service->getResultHotelDetails(Hotels::GRACEFUL,$url,array('hotelIds'=>$hotel_id));
             $json1 = json_encode($hotel_details);
@@ -188,6 +187,10 @@ class HotelController extends Controller
 
             $image_host_url = $hotel_details['parsed']['image_host_url'];
 
+            //$image_background = $ht['image_urls'][0];
+            //print($image_background);
+
+
             $image_url = array();
 
             foreach ($images as $key => $value) {
@@ -210,8 +213,8 @@ class HotelController extends Controller
                     ));
     
             }
-           
-            $hotel_array['0'.(string) $count_id] =
+
+            $hotel_array['0'.(string) $hotel_id] =
                 array(
                 'price_per_room_night' => $price_per_room_night,
                 'price_total' => $price_total,
@@ -243,8 +246,6 @@ class HotelController extends Controller
                     'image_url' => $image_url
                     ),
                 );
-
-            $count_id++;
 
 
         }
