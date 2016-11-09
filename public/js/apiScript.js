@@ -1,4 +1,6 @@
 // Get flight list
+var hotellist = {};
+var hoteldetails = {};
 var allHotels = {};
 
 function Flight(originplace, destinationplace, outbounddate, inbounddate, adults, children, infants, cabinclass) {
@@ -109,7 +111,7 @@ function Hotel(entityid, checkindate, checkoutdate, guests, rooms) {
 	$('#hotelModal .result-list').html('<div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><p>Đang tìm kiếm ...</p></div>');
 	$.ajax({
 		type: 'GET',
-		url: '/api/v1/livehotelprice',
+		url: '/api/v1/getlisthotel',
 		crossDomain: true,
 		contentType: "application/json; charset=utf-8",
 		data: {
@@ -120,35 +122,12 @@ function Hotel(entityid, checkindate, checkoutdate, guests, rooms) {
             rooms: '1'
 		},
 		success: function (data) {
-			$.extend(allHotels, data.data);
+			$.extend(hotellist, data.data);
 			var hotels = data.data;
-			if($.isEmptyObject(hotels))
-				$('#hotelModal .loading').html('<b> Không có Khách sạn phù hợp!</b>');
-			$('#hotelModal .loading').hide();
-			for(var i in hotels) {
-				var hotel = hotels[i];
-				var template = $('#hotelItemTemplate').html();
 
-				var stars = '';
-				for(var j = 0; j < 5; j++){
-					if(((hotel.hotel.popularity - 20*j)/20) >= 1)
-						stars += '<span><i class="fa fa-star" aria-hidden="true"></i></span>';
-					else if(((hotel.hotel.popularity - 20*j)/20) >= 0.5)
-						stars += '<span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>';
-					else 
-						stars += '<span><i class="fa fa-star-o" aria-hidden="true"></i></span>';
-
-				}
-				$('#hotelModal .result-list').append(
-						template.replace('{{id}}', i)
-								.replace('{{image}}', hotel.hotel.image_url[0].url)
-								.replace(/{{name}}/g, hotel.hotel.name)
-								.replace('{{address}}', hotel.hotel.address)
-								.replace('{{price}}', numberWithCommas(hotel.price_total))
-								.replace('{{popularity}}', hotel.hotel.popularity)
-								.replace('{{review}}', hotel.reviews.reviews_count)
-								.replace('{{stars}}', stars)
-					);
+			for(var hotel_id in hotels) {
+				var hotel_param = hotels[hotel_id];
+				HotelDetails(hotel_param.url, hotel_id);
 			}
 			
 		},
@@ -158,6 +137,48 @@ function Hotel(entityid, checkindate, checkoutdate, guests, rooms) {
 	})
 }
 
+function HotelDetails(url, hotel_id) {
+	$.ajax({
+		type: 'GET',
+		url: '/api/v1/gethoteldetails',
+		crossDomain: true,
+		contentType: "application/json; charset=utf-8",
+		data: {
+			url: url,
+			hotel_id: hotel_id
+		},
+		success: function (data) {			
+			$.extend(hoteldetails, data.data);
+			var hotel = hoteldetails[hotel_id];
+			var template = $('#hotelItemTemplate').html();
+
+			if($.isEmptyObject(hotellist))
+				$('#hotelModal .loading').html('<b> Không có Khách sạn phù hợp!</b>');
+			$('#hotelModal .loading').hide();
+
+			var stars = '';
+			for(var j = 0; j < 5; j++){
+				if(((hotel.hotel.popularity - 20*j)/20) >= 1)
+					stars += '<span><i class="fa fa-star" aria-hidden="true"></i></span>';
+				else if(((hotel.hotel.popularity - 20*j)/20) >= 0.5)
+					stars += '<span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>';
+				else 
+					stars += '<span><i class="fa fa-star-o" aria-hidden="true"></i></span>';
+
+			}
+			$('#hotelModal .result-list').append(
+					template.replace('{{id}}', hotel_id)
+							.replace('{{image}}', hotel.hotel.image_url[0].url)
+							.replace(/{{name}}/g, hotel.hotel.name)
+							.replace('{{address}}', hotel.hotel.address)
+							.replace('{{price}}', numberWithCommas(hotel.price_total))
+							.replace('{{popularity}}', hotel.hotel.popularity)
+							.replace('{{review}}', hotel.reviews.reviews_count)
+							.replace('{{stars}}', stars)
+				);
+		}
+	})
+}
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");

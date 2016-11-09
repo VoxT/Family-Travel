@@ -53,7 +53,7 @@ class GetHotelListController extends Controller
         {
             $hotel_id  = $ht['hotel_id'];
 
-            $hotel_list['0'.(string) $hotel_id] = array(
+            $hotel_list[(string) $hotel_id] = array(
                 'url'=> $url
                 );
 
@@ -82,7 +82,7 @@ class GetHotelListController extends Controller
         $hotels_prices = $hotel_details['parsed']['hotels_prices'][0];
         
         $amenities_data = $hotel_details['parsed']['amenities'];
-        //printf('<pre>Poll Data  %s</pre>', print_r($amenities_data, true));
+        
         $amenities = array();
 
         $amenities_details = array();
@@ -241,7 +241,7 @@ class GetHotelListController extends Controller
 
         }
 
-        $hotel_array['0'.(string) $hotel_id] =
+        $hotel_array[(string) $hotel_id] =
             array(
             'price_per_room_night' => $price_per_room_night,
             'price_total' => $price_total,

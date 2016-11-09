@@ -208,7 +208,7 @@ function renderFlightDetails(dom) {
 
 // render hotel details
 function renderHotelDetails(id) {
-	var hotel = allHotels[id];
+	var hotel = hoteldetails[id];
 	var template = $('#hotelDetailsTemplate').html();
 
 	var stars = '';
