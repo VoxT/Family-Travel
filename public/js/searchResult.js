@@ -228,12 +228,50 @@ function renderHotelDetails(id) {
 					+ i + '"><img class="img-responsive first" src="http://' + hotel.hotel.image_url[i].url + '" alt="' + hotel.hotel.name + '"></a></li>';
 	}
 
+	var amenities = '';
+	var i = 0;
+	for(i in hotel.hotel.amenities) {
+		if (i%3 == 0) {
+            amenities += '<div class="row">'
+		}
+		amenities += 
+              '<div class="col-md-4">'
+                +'<img src="'+ hotel.hotel.amenities[i].image_url + '">'
+                +'<h5>' + hotel.hotel.amenities[i].name +'</h5>'
+                +'<p>';
+        for(var j in hotel.hotel.amenities[i].amenities_details){
+        	amenities += hotel.hotel.amenities[i].amenities_details[j].name + ', ';
+        }
+        amenities += '</p> </div>';
+        if ((i+1)%3 == 0) {
+            amenities += '</div>';
+		}
+	}
+    if (i%3 == 0) {
+        amenities += '</div>';
+	}
+
+	var reviews = '';
+	for(var i in hotel.reviews.categories) {
+		reviews += 
+              '<div class="col-md-6">'
+              +'<span class="badge">' + hotel.reviews.categories[i].score/10 +'</span>'
+                +'<h5>' + hotel.reviews.categories[i].name +'</h5>'
+                +'<p>';
+        for(var j in hotel.reviews.categories[i].entries){
+        	reviews += '"' + hotel.reviews.categories[i].entries[j] + '", ';
+        }
+        reviews += '</p> </div>';
+	}
+
 	var result = template.replace('{{images_li}}', images_li)
 			.replace(/{{name}}/g, hotel.hotel.name)
 			.replace('{{address}}', hotel.hotel.address)
 			.replace('{{price}}', numberWithCommas(hotel.price_total))
 			.replace('{{stars}}', stars)
-			.replace('{{description}}', hotel.hotel.description);
+			.replace('{{amenities}}', amenities)
+			.replace('{{reviews}}', reviews)
+			.replace('{{description}}', hotel.hotel.description.replace(/\n\n/g, '</p><p>'));
 
 	$('#hoteldetailsmodal .modal-body').html(result);
 

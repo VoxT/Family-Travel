@@ -36,3 +36,6 @@ Route::get('livehotelprice', 'HotelController@getHotelPrice');
 Route::get('getuser', 'Auth\LoginController@getUser');
 
 Route::get('getDataByRequestURL', 'HomeController@getDataByRequestURL');
+
+Route::get('getlisthotel', 'GetHotelListController@getHotelList');
+Route::get('gethoteldetails', 'GetHotelListController@getHotelDetails');
