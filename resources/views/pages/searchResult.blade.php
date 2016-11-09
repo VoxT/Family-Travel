@@ -409,7 +409,7 @@
 	<div class="journey-row">
 		<div class="journey-row-item">
 			<div class="flight-logo">
-				<img src="@{{ImageUrl}}" atl="@{{ImageName}}">
+				<img src="@{{ImageUrl}}" atl="@{{ImageName}}" title="@{{ImageName}}">
 			</div>
 			<div class="origin-place">
 				<div class="journey-time">@{{Departure}}</div>

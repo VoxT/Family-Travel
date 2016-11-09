@@ -10,8 +10,8 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 		type: 'GET',
 		url: '/api/v1/livePriceFlight',
 		data: {
-			originplace: 'HAN-sky',
-			destinationplace: 'SGN-sky',
+			originplace: originplace,
+			destinationplace: destinationplace,
 			outbounddate: outbounddate,
 			inbounddate: inbounddate,
 			adults: adults,
@@ -34,7 +34,7 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 					var inboundTemplate = $('#flightItemTemplate').html();
 					$('#planeModal .result-list').append(template.replace('{{outbound}}', 
 											outboundTemplate.replace('{{ImageUrl}}', outbound.ImageUrl).
-															replace('{{ImageName}}', outbound.ImageName).
+															replace(/{{ImageName}}/g, outbound.ImageName).
 															replace('{{Departure}}', outbound.Departure).
 															replace('{{NameOrigin}}', outbound.NameOrigin).
 															replace('{{Duration_h}}', outbound.Duration_h).
@@ -43,7 +43,7 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 															replace('{{NameDestination}}', outbound.NameDestination)
 											).replace('{{inbound}}', 
 											inboundTemplate.replace('{{ImageUrl}}', inbound.ImageUrl).
-															replace('{{ImageName}}', inbound.ImageName).
+															replace(/{{ImageName}}/g, inbound.ImageName).
 															replace('{{Departure}}', inbound.Departure).
 															replace('{{NameOrigin}}', inbound.NameOrigin).
 															replace('{{Duration_h}}', inbound.Duration_h).
@@ -68,8 +68,8 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 		crossDomain: true,
 		contentType: "application/json; charset=utf-8",
 		data: {
-			pickupplace: 'HAN-sky',
-			dropoffplace: 'HAN-sky',
+			pickupplace: destinationplace,
+			dropoffplace: destinationplace,
 			pickupdatetime: pickupdatetime,
 			dropoffdatetime: dropoffdatetime
 		},
@@ -203,11 +203,57 @@ function getRigion() {
 
 }
 
-
-
-Flight('HAN-sky', 'SGN-sky', request.outbounddate, request.inbounddate,
-		 request.adults, request.children, request.infants, request.cabinclass);
-
-Car('HAN-sky', 'HAN-sky', request.outbounddate+'T12:00', request.inbounddate+'T12:00');
-
 Hotel('', '', '', '', '');
+
+
+// Rome to rio
+function getAirPortCode() {
+	var originAirCode = '';
+	var destinationAirCode = '';
+	$.ajax({
+		type: 'GET',
+		url: 'http://free.rome2rio.com/api/1.4/json/Search',
+		crossDomain: true,
+		data: {
+			oName: request.originplace,
+			dName: request.destinationplace,
+			key: '5GMByjBa'
+		},
+		success: function (data) {		
+			var places = data.places;
+			var routes = data.routes;
+			var depPlace = '';
+			var arrPlace = '';
+			var breakable = false;
+
+			for(var i in routes){
+				var item = routes[i];
+				if((item.name.indexOf("fly") !== -1) || (item.name.indexOf("Fly") !== -1) ){
+					var segments = item.segments;
+					for(var j in segments){
+						if(segments[j].segmentKind === "air"){
+							depPlace = segments[j].depPlace;
+							arrPlace = segments[j].arrPlace;
+							breakable = true;
+							break;
+						}
+					}
+				}
+				if(breakable) break;
+			}
+
+			originAirCode = places[depPlace].code;
+			destinationAirCode = places[arrPlace].code;
+			
+			Flight(originAirCode + '-sky', destinationAirCode + '-sky', request.outbounddate, request.inbounddate,
+					 request.adults, request.children, request.infants, request.cabinclass);
+
+			Car(destinationAirCode + '-sky', destinationAirCode + '-sky', request.outbounddate+'T12:00', request.inbounddate+'T12:00');
+		},
+		fail: function(e) {
+
+		}
+	});
+
+}
+getAirPortCode();
