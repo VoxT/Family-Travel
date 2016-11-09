@@ -540,47 +540,16 @@
 
         <div class="tab-content">
           <div id="home" class="tab-pane fade in active">
-            <h3>Mô Tả</h3>
+            <h3>Mô Tả</h3> 
             <p>@{{description}}</p>
           </div>
           <div id="menu1" class="tab-pane fade">
             <h3>Cơ Sơ Vật Chất</h3>
-            <div class="row">
-              <div class="col-md-4">
-                <h5>Internet</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. </p>
-              </div>
-              <div class="col-md-4">
-                <h5>Internet</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. </p>
-              </div>
-              <div class="col-md-4">
-                <h5>Internet</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. </p>
-              </div>
-              <div class="col-md-4">
-                <h5>Internet</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. </p>
-              </div>
-              <div class="col-md-4">
-                <h5>Internet</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. </p>
-              </div>
-              <div class="col-md-4">
-                <h5>Internet</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. </p>
-              </div>
-            </div>
+              @{{amenities}}
           </div>
           <div id="menu2" class="tab-pane fade">
-            <h3>Menu 2</h3>
-            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+            <h3>Nhận Xét</h3>
+            @{{reviews}}
           </div>
         </div>
       </div>
