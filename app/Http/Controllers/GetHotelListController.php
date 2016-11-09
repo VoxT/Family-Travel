@@ -82,7 +82,7 @@ class GetHotelListController extends Controller
         $hotels_prices = $hotel_details['parsed']['hotels_prices'][0];
         
         $amenities_data = $hotel_details['parsed']['amenities'];
-        //printf('<pre>Poll Data  %s</pre>', print_r($amenities_data, true));
+        
         $amenities = array();
 
         $amenities_details = array();
