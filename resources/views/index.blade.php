@@ -184,6 +184,13 @@
 			    	<i class="fa fa-search" aria-hidden="true"></i>
 				</button>
 			</div>
+			
+            <input type="hidden" name="oPlaceId" value="" id="oPlaceId">
+            <input type="hidden" name="dPlaceId" value="" id="dPlaceId">
+            <input type="hidden" name="olat" value="" id="olat">
+            <input type="hidden" name="olng" value="" id="olng">
+            <input type="hidden" name="dlat" value="" id="dlat">
+            <input type="hidden" name="dlng" value="" id="dlng">
 			</form>
 	 	</section>
 	 </div>

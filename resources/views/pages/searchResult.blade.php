@@ -12,7 +12,7 @@
   			<label class="sr-only" for="origin-input">Nhập địa điểm</label>
   			<div class="input-group">
 		      <div class="input-group-addon" id="from-label">Đi</div>
-		      <input type="text" class="form-control" name="originplace" id="origin-input" placeholder="Nhập điểm đi">
+		      <input type="text" class="form-control" name="originplace" id="origin-input" placeholder="Nhập điểm đi" required="Vui lòng nhập điểm đi">
 		      <div class="input-group-addon"><i class="fa fa-times" aria-hidden="true"></i></div>
 		    </div>
   			<div id="switch" class="form-control"><i class="fa fa-exchange" aria-hidden="true"></i></div>
@@ -21,7 +21,7 @@
   			<label class="sr-only" for="destination-input">Nhập địa điểm</label>
   			<div class="input-group">
 		      <div class="input-group-addon">Đến</div>
-		      <input type="text" class="form-control" name="destinationplace" id="destination-input" placeholder="Nhập điểm đến">
+		      <input type="text" class="form-control" name="destinationplace" id="destination-input" placeholder="Nhập điểm đến" required="Vui lòng nhập điểm đến">
 		      <div class="input-group-addon"><i class="fa fa-times" aria-hidden="true"></i></div>
 		    </div>
   		</div>
@@ -45,7 +45,14 @@
                </div>
             </div>       
         </div>
-    </div>    
+    </div>   
+    <div  id="iw-reviews-row">
+      <div id="review-image"></div><br>
+      <div id= "review-url" class="review-url"></div>
+      <br>
+      <div id ="reviews"></div>
+      
+    </div> 
 
     <div class="fixed list-result">
     	<div class="list-group">
@@ -68,8 +75,8 @@
 		  	<h4>Thuê xe tại Hồ Chí Minh</h2>
 		  	<p>Theo giá hợp lý nhất</p>
 		  </button>
-		  <button type="button" class="list-group-item" id="things">
-		  	<span class="badge things"><i class="fa fa-university" aria-hidden="true"></i></i></span>
+		  <button type="button" class="list-group-item" id="things" data-toggle="modal" data-target="#thingsModal">
+		  	<span class="badge things"><i class="fa fa-university" aria-hidden="true"></i></span>
 		  	<span class="chevron-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
 		  	<h4>Địa điểm vui chơi tại Hồ Chí Minh</h2>
 		  	<p>Những địa điểm hấp dẫn nhất</p>
@@ -97,14 +104,14 @@
         		<span> --/--/---- </span>
         		<input type="date" name="inbounddate" id="inbounddate">
     		</button>
-    		<button type="button" class="moreInfo" id="moreInfo">1 người, ghế thương gia <span class="caret"></span></button>
+    		<button type="button" class="moreInfo" id="moreInfo"><span> 1 người, ghế thương gia</span> <span class="caret"></span></button>
     		<button type="button" class="flight-search btn-search" id="flight-search">Tìm Kiếm</button>
     		<div class="popover-flight container" style="display: none;">
         		<div class="form-horizontal">
         			<div class="form-group">
 					  <label for="adults">Người lớn</label>
 					  <select class="form-control" id="adults">
-					    <option>1</option>
+					    <option selected>1</option>
 					    <option>2</option>
 					    <option>3</option>
 					    <option>4</option>
@@ -113,6 +120,7 @@
         			<div class="form-group">
 					  <label for="childrens">Trẻ trên 12</label>
 					  <select class="form-control" id="childrens">
+              <option selected>0</option>
 					    <option>1</option>
 					    <option>2</option>
 					    <option>3</option>
@@ -122,6 +130,7 @@
         			<div class="form-group">
 					  <label for="kid">Trẻ dưới 12</label>
 					  <select class="form-control" id="kid">
+              <option selected>0</option>
 					    <option>1</option>
 					    <option>2</option>
 					    <option>3</option>
@@ -132,11 +141,11 @@
         		<div class="cabinclass">
         			<h4>Loại Ghế</h4>
         			<label class="form-check-label col-md-6">
-			            <input class="form-check-input" type="radio" name="cabinclass" id="gridRadios1" value="Economy">
+			            <input class="form-check-input" type="radio" name="cabinclass" id="gridRadios1" value="Economy" checked>
 			            Economy
 			         </label>
         			<label class="form-check-label col-md-6">
-			            <input class="form-check-input" type="radio" name="cabinclass" id="gridRadios1" value="PremiumEconomy" checked>
+			            <input class="form-check-input" type="radio" name="cabinclass" id="gridRadios1" value="PremiumEconomy" >
 			            Premium Eco
 			        </label>
         			<label class="form-check-label col-md-6">
@@ -156,8 +165,6 @@
       	<div class="result-list">
       		
       	</div>
-      </div>
-      <div class="modal-footer">
       </div>
     </div>
   </div>
@@ -237,8 +244,6 @@
         	</div>
         </div>
       </div>
-      <div class="modal-footer">
-      </div>
     </div>
   </div>
 </div>
@@ -256,10 +261,10 @@
     		</button>
 			<i class="fa fa-clock-o" aria-hidden="true"></i>
     		<select class="picktime" id="pickuptime">
-			    <option>1:00</option>
-			    <option>1:30</option>
-			    <option>3</option>
-			    <option>4</option>
+			    <option>8:00</option>
+			    <option>8:30</option>
+			    <option>9:00</option>
+			    <option>9:30</option>
 			</select>
     		<button type="button" class="arrival" id="dropoffdate"><i class="fa fa-calendar" aria-hidden="true"></i> 
         		<span> --/--/---- </span>
@@ -267,13 +272,13 @@
     		</button>
 			<i class="fa fa-clock-o" aria-hidden="true"></i>
     		<select class="picktime" id="dropofftime">
-			    <option>1</option>
-			    <option>2</option>
-			    <option>3</option>
-			    <option>4</option>
+          <option>8:00</option>
+          <option>8:30</option>
+          <option>9:00</option>
+          <option>9:30</option>
 			</select>
-        	<input type="date" name="outbounddate" id="pickupdatetime">
-        	<input type="date" name="outbounddate" id="dropoffdatetime">
+        	<input type="date" name="pickupdatetime" id="pickupdatetime">
+        	<input type="date" name="dropoffdatetime" id="dropoffdatetime">
     		<button type="button" class="flight-search btn-search" id="car-search">Tìm Kiếm</button>
         </div>
       </div>	
@@ -285,8 +290,6 @@
       		</div>
       		
       	</div>
-      </div>
-      <div class="modal-footer">
       </div>
     </div>
   </div>
@@ -307,14 +310,14 @@
         		<span> --/--/---- </span>
         		<input type="date" name="checkoutdate" id="checkoutdate">
     		</button>
-    		<button type="button" class="moreInfo" id="moreHotelInfo">1 Người, 1 Phòng <span class="caret"></span></button>
+    		<button type="button" class="moreInfo" id="moreHotelInfo"><span>1 Người, 1 Phòng</span> <span class="caret"></span></button>
     		<button type="button" class="flight-search btn-search" id="hotel-search">Tìm Kiếm</button>
     		<div class="popover-hotel container" style="display: none;">
         		<div class="form-horizontal">
         			<div class="form-group">
 					  <label for="guests">Số Người</label>
 					  <select class="form-control" id="guests">
-					    <option>1</option>
+					    <option selected>1</option>
 					    <option>2</option>
 					    <option>3</option>
 					    <option>4</option>
@@ -323,7 +326,7 @@
         			<div class="form-group">
 					  <label for="rooms">Số Phòng</label>
 					  <select class="form-control" id="rooms">
-					    <option>1</option>
+					    <option selected>1</option>
 					    <option>2</option>
 					    <option>3</option>
 					    <option>4</option>
@@ -343,8 +346,6 @@
           <!-- list item here -->
       	</div>
       </div>
-      <div class="modal-footer">
-      </div>
     </div>
   </div>
 </div>
@@ -362,7 +363,42 @@
     </div>
   </div>
 </div>
+<!-- Hotel Model -->
+<div class="modal fadeLeft fade" id="thingsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" data-dismiss="modal" aria-label="Close" class="closeButton"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+        <h2 class="modal-title" id="modalLabel"><i class="fa fa-university" aria-hidden="true"></i> Địa điểm vui chơi, ăn uống</h2>
+      </div>  
+      <div class="modal-body">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#restaurants">Mô Tả</a></li>
+            <li><a data-toggle="tab" href="#parks">Cơ Sở Vật Chất</a></li>
+            <li><a data-toggle="tab" href="#museum">Nhận Xét</a></li>
+        </ul>
+         <div class="clearfix"> </div>
+      <div class="container">
 
+        <div class="tab-content">
+          <div id="restaurants" class="tab-pane fade in active">
+            <h3>Mô Tả</h3> 
+            <p>@{{description}}</p>
+          </div>
+          <div id="parks" class="tab-pane fade">
+            <h3>Cơ Sơ Vật Chất</h3>
+              @{{amenities}}
+          </div>
+          <div id="museum" class="tab-pane fade">
+            <h3>Nhận Xét</h3>
+            @{{reviews}}
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!--begin modal window-->
 <div class="modal fade" id="imageModal">
   <div class="modal-dialog">
@@ -573,9 +609,9 @@
 	<script src="{{ elixir('js/apiScript.js') }}"></script>	
 	<script src="{{ elixir('js/homeScript.js') }}"></script>
 	<script src="{{ elixir('js/searchResult.js') }}"></script>
-    <script async defer
+   <!--  <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&callback=initMap&language=vi&region=VN&libraries=places">
-    </script>
+    </script> -->
 
 @endsection
 

@@ -146,6 +146,9 @@ function autocompletePlace() {
       window.alert("Autocomplete's returned place contains no geometry");
       return;
     }
+    $('#oPlaceId').val(place.place_id);    
+    $('#olat').val(place.geometry.location.lat());
+    $('#olng').val(place.geometry.location.lng());
     // $('#origin_place_id').val(place.place_id);
     // $('#origin_place_name').val(place.name);
   })
@@ -157,6 +160,9 @@ function autocompletePlace() {
       window.alert("Autocomplete's returned place contains no geometry");
       return;
     }
+    $('#dPlaceId').val(place.place_id);
+    $('#dlat').val(place.geometry.location.lat());
+    $('#dlng').val(place.geometry.location.lng());
     // $('#destination_place_id').val(place.place_id);
     // $('#destination_place_name').val(place.name);
   })
@@ -174,7 +180,7 @@ function showPosition(position) {
   var lng = position.coords.longitude;
   console.log(lat);
 }
-getLocation();
+//getLocation();
 
 
 $(function(){
@@ -182,12 +188,12 @@ $(function(){
     $(document).on('click', '#login',function() {
         $('#registerModal').modal('hide');
         $('#message').html('');
-        setTimeout(function(){$('#loginModal').modal(); }, 500);
+        setTimeout(function(){$('#loginModal').modal(); }, 200);
     });
     $(document).on('click', '#register',function() {
         $('#loginModal').modal('hide');
         $('#message').html('');
-        setTimeout(function(){$('#registerModal').modal(); }, 500);
+        setTimeout(function(){$('#registerModal').modal(); }, 200);
     });
     $(document).on('submit', '#formRegister', function(e) {  
         e.preventDefault();

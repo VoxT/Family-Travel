@@ -22,3 +22,4 @@ Route::group(['middleware' => ['web']], function () {
 	Auth::routes();
 });
 // Route::get('/home', 'HomeController@index');
+Route::get('livePriceFlight', 'FlightController1@getLivePriceFlight');

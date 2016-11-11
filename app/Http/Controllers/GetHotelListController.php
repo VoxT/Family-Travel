@@ -26,11 +26,11 @@ class GetHotelListController extends Controller
             'currency' => 'VND',
     		'market' => 'VN',
             'locale' =>'vi-VN',
-            'entityid' =>"27546329",
-            'checkindate'=>"2016-11-15",
-            'checkoutdate'=> "2016-11-18",
-            'guests'=> "1",
-            'rooms' => '1'
+            'entityid' => $request->entityid,
+            'checkindate'=> $request->checkindate,
+            'checkoutdate'=> $request->checkoutdate,
+            'guests'=> $request->guests,
+            'rooms' => $request->rooms
         );
 
     	$result = $hotels_service->getResult(Hotels::GRACEFUL,$params);

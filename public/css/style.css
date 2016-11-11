@@ -1019,6 +1019,7 @@ ul li {
   padding: 0 10px;
   border: 1px solid #68a19a;
   border-radius: 0;
+  z-index: 5000;
 }
 .pac-container:after {
     background-image: none !important;
@@ -1037,13 +1038,13 @@ ul li {
   width: 752px !important;
   padding-right: 10px;
 }
-#hotelModal {
+#hotelModal, #thingsModal {
   top: calc(43px + 60px) !important;
   padding-left: 0px !important;
   width: 600px !important;
   padding-right: 10px;
 }
-#hotelModal .modal-dialog, #planeModal .modal-dialog, #carModal .modal-dialog {
+#thingsModal .modal-dialog, #hotelModal .modal-dialog, #planeModal .modal-dialog, #carModal .modal-dialog {
   margin: 0px 0px 0px 10px !important;
   width: calc(100% ) !important;
 }
@@ -1056,7 +1057,7 @@ ul li {
 }
 
 .modal-dialog .modal-content .modal-body {
-  min-height: 500px; 
+  min-height: 600px; 
 }
 .modal-header {
   padding: 20px 20px 20px 40px;
@@ -1069,6 +1070,9 @@ ul li {
 }
 #hotelModal .modal-header {
   background: #0b91d8;
+}
+#thingsModal .modal-header {
+  background: #e47225;
 }
 .modal-header .closeButton {
     position: absolute;
@@ -2216,7 +2220,7 @@ p.car-class {
     font-size: 12px;
     margin-right: 4px;
 }
-#hotelModal .modal-body {
+#hotelModal .modal-body,#thingsModal .modal-body {
   padding: 0;
 }
 
@@ -2365,4 +2369,29 @@ p.car-class {
 }
 #menu1 div > div {
   margin-top: 10px;
+}
+#thingsModal ul {
+  border: none;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 15px 20px ;
+}
+#thingsModal ul li {
+  margin-right: 10px;
+}
+#thingsModal ul li a{
+  border: none;
+  color: black;
+  padding-top: 0px;
+  padding-bottom: 5px;
+}
+#thingsModal ul li a:hover{
+  color: black;
+  background: white;
+  border-bottom: 2px solid #e47225;
+}
+#thingsModal ul li.active a{
+  border: none;
+  color: black;
+  background: white;
+  border-bottom: 2px solid #e47225;
 }

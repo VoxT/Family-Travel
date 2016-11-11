@@ -1,6 +1,8 @@
 
 var key = 'AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40';
 
+var olat = request.olat, olng = request.olng, dlat = request.dlat, dlng = request.dlng;
+
 // begin result search map
 var map, placeService, infoWindow;
 var markers = [];
@@ -41,30 +43,12 @@ function initMap() {
   var origin_input = document.getElementById('origin-input');
   var destination_input = document.getElementById('destination-input');
 
-  $.when(
-    $.ajax({
-      type: 'GET',
-      url: "https://maps.googleapis.com/maps/api/place/textsearch/json",
-      data: {
-        query: request.originplace,
-        key: key
-      },
-      success: function(data){
-          origin_place_id = data.results[0]['place_id'];
-          origin_input.value = data.results[0]['name'];
-    }}),
-    $.ajax({
-      type: 'GET',
-      url: "https://maps.googleapis.com/maps/api/place/textsearch/json",
-      data: {
-        query: request.destinationplace,
-        key: key
-      },
-      success: function(data){
-          destination_place_id = data.results[0]['place_id'];
-          destination_input.value = data.results[0]['name'];
-    }})
-  ).done(function (ajax1, ajax2) {
+  origin_input.value = (request.originplace);
+  destination_input.value = (request.destinationplace);
+
+  origin_place_id = request.oPlaceId;
+  destination_place_id = request.dPlaceId;
+
     var travel_mode = 'DRIVING';
     var mapOptions = {
       center: {lat: -33.8688, lng: 151.2195},
@@ -109,6 +93,9 @@ function initMap() {
         return;
       }
 
+      olat = place.geometry.location.lat();
+      olng = place.geometry.location.lng();
+
       // If the place has a geometry, store its place ID and route if we have
       // the other place ID
       origin_place_id = place.place_id;
@@ -123,6 +110,8 @@ function initMap() {
         return;
       }
 
+      dlat = place.geometry.location.lat();
+      dlng = place.geometry.location.lng();
       // If the place has a geometry, store its place ID and route if we have
       // the other place ID
       destination_place_id = place.place_id;
@@ -137,7 +126,6 @@ function initMap() {
     $('#things').click( function() {
       showInterestingThings(destination_place_id);
     });
-  })
 
 }
 
@@ -168,7 +156,6 @@ function route(origin_place_id, destination_place_id, travel_mode, directionsSer
 }
 
 function showInterestingThings(place_id) {
-  placeService = new google.maps.places.PlacesService(map);
   placeService.getDetails({
         placeId: place_id
       }, function(place, status) {
@@ -251,8 +238,11 @@ function addMarker(place) {
       }); 
       google.maps.event.addListener(marker, 'mouseout', function() {
           infoWindow.close();
-          
       }); 
+      google.maps.event.addListener(marker, 'click', function() {
+          PlaceReviews(result);
+      });    
+
     }); 
 }
 
@@ -322,6 +312,25 @@ function buildIWContent(place) {
       document.getElementById('iw-rating').innerHTML = ratingHtml;
          
       }  
- 
 
 }
+
+function PlaceReviews(place) {
+      document.getElementById('review-image').innerHTML = '<img class=" image_describe"' +
+            'src="' + place.photos[1].getUrl({'maxWidth': 300, 'maxHeight': 200}) + '"/>';
+        document.getElementById('review-url').innerHTML = '<b><a   href="' + place.url +
+            '">' + place.name + '</a></b>';
+          var reviewsHtml = '';
+          for (var j = 0; j < place.reviews.length; j++) {
+           
+              reviewsHtml += '<p class="review-content">' + place.reviews[j].text + '</p>'
+              reviewsHtml += '<p class="review-content">' + place.reviews[j].author_name + '</p>'
+              reviewsHtml += '<p class="review-rating">' + place.reviews[j].rating + '</p>'
+
+          document.getElementById('iw-reviews-row').style.display = '';
+          document.getElementById('reviews').innerHTML = reviewsHtml;
+
+          }
+
+          console.log (reviewsHtml);
+        }

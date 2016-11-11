@@ -5,7 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Skyscanner\Transport\Flights;
 use App\Skyscanner\Transport\FlightsCache;
-class FlightController extends Controller
+class FlightController1 extends Controller
 {
 
     public function getPlace(array $places,$id)

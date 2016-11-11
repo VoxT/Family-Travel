@@ -3,6 +3,9 @@ var hotellist = {};
 var hoteldetails = {};
 var allHotels = {};
 
+var originAirCode = '';
+var destinationAirCode = '';
+
 function Flight(originplace, destinationplace, outbounddate, inbounddate, adults, children, infants, cabinclass) {
 	$('#planeModal .result-list').html('<div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><p>Đang tìm kiếm ...</p></div>');
 
@@ -68,8 +71,8 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 		crossDomain: true,
 		contentType: "application/json; charset=utf-8",
 		data: {
-			pickupplace: destinationplace,
-			dropoffplace: destinationplace,
+			pickupplace: originplace + '-sky',
+			dropoffplace:  destinationplace + '-sky',
 			pickupdatetime: pickupdatetime,
 			dropoffdatetime: dropoffdatetime
 		},
@@ -107,7 +110,7 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 	})
 }
 // Get hotel list
-function Hotel(entityid, checkindate, checkoutdate, guests, rooms) {
+function Hotel(checkindate, checkoutdate, guests, rooms) {
 	$('#hotelModal .result-list').html('<div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><p>Đang tìm kiếm ...</p></div>');
 	$.ajax({
 		type: 'GET',
@@ -115,11 +118,11 @@ function Hotel(entityid, checkindate, checkoutdate, guests, rooms) {
 		crossDomain: true,
 		contentType: "application/json; charset=utf-8",
 		data: {
-			entityid: "27546329",
-            checkindate: "2016-11-15",
-            checkoutdate: "2016-11-18",
-            guests: "1",
-            rooms: '1'
+			entityid: dlat + ',' + dlng + '-latlong',
+            checkindate: checkindate,
+            checkoutdate: checkoutdate,
+            guests: guests,
+            rooms: rooms
 		},
 		success: function (data) {
 			$.extend(hotellist, data.data);
@@ -203,20 +206,19 @@ function getRigion() {
 
 }
 
-Hotel('', '', '', '', '');
+Hotel(request.outbounddate, request.inbounddate, 2, 1);
 
 
 // Rome to rio
-function getAirPortCode() {
-	var originAirCode = '';
-	var destinationAirCode = '';
+function getAirPortCode(outbounddate, inbounddate,
+					 adults, children, infants, cabinclass, car = false) {
 	$.ajax({
 		type: 'GET',
 		url: 'http://free.rome2rio.com/api/1.4/json/Search',
 		crossDomain: true,
 		data: {
-			oName: request.originplace,
-			dName: request.destinationplace,
+			oPos: olat + ', ' + olng,
+			dPos: dlat + ', ' + dlng,
 			key: '5GMByjBa'
 		},
 		success: function (data) {		
@@ -245,10 +247,11 @@ function getAirPortCode() {
 			originAirCode = places[depPlace].code;
 			destinationAirCode = places[arrPlace].code;
 			
-			Flight(originAirCode + '-sky', destinationAirCode + '-sky', request.outbounddate, request.inbounddate,
-					 request.adults, request.children, request.infants, request.cabinclass);
+			Flight(originAirCode + '-sky', destinationAirCode + '-sky', outbounddate, inbounddate,
+					 adults, children, infants, cabinclass);
 
-			Car(destinationAirCode + '-sky', destinationAirCode + '-sky', request.outbounddate+'T12:00', request.inbounddate+'T12:00');
+			if(car) 
+				Car(destinationAirCode, destinationAirCode, request.outbounddate+'T12:00', request.inbounddate+'T12:00');
 		},
 		fail: function(e) {
 
@@ -256,4 +259,5 @@ function getAirPortCode() {
 	});
 
 }
-getAirPortCode();
+getAirPortCode(request.outbounddate, request.inbounddate,
+					 request.adults, request.children, request.infants, request.cabinclass, true);

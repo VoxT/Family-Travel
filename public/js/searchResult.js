@@ -16,7 +16,7 @@ function outbounddatepicker() {
 	    $('#planeModal .depart span').text(day + '/' + month + '/' + year);
 	    $('#inbounddate').datepicker('option', 'minDate', new Date($('#outbounddate').val()));
 	    if($('#inbounddate').val() != '')
-      		$('#planeModal .arrival span').text(day + '/' + month + '/' + year);
+      		changeOubountDate();
 	  }
 	}).datepicker("setDate", request.outbounddate);
 }
@@ -38,9 +38,18 @@ function inbounddatepicker() {
 outbounddatepicker();
 inbounddatepicker();
 
+function changeOubountDate(){
+	var date = new Date($('#inbounddate').val()),
+	    	day = date.getDate(),
+	    	month = date.getMonth() + 1,
+	    	year = date.getFullYear();
+	    $('#planeModal .arrival span').text(day + '/' + month + '/' + year);
+}
+
 $('#depart').click(function() {
 	$('#outbounddate').show().focus().hide();
 });
+
 $('#arrival').click(function() {
 	$('#inbounddate').show().focus().hide();
 });
@@ -50,10 +59,56 @@ $('#moreInfo').popover({
 	html: true,
 	content: $('.popover-flight').html()
 });
+var check = '';
+$('#moreInfo').on('show.bs.popover', function () {
+	check = $('.popover-flight .cabinclass input[name="cabinclass"]:checked').val();
+});
+$('#moreInfo').on('shown.bs.popover', function () {
+	$('#' + $(this).attr('aria-describedby') + ' .popover-content input[name="cabinclass"]'+ '[value="' + check +'"]').prop('checked', true);
+    $('#' + $(this).attr('aria-describedby') + ' .popover-content #adults').val($('.popover-flight #adults').val());
+    $('#' + $(this).attr('aria-describedby') + ' .popover-content #childrens').val($('.popover-flight #childrens').val());
+    $('#' + $(this).attr('aria-describedby') + ' .popover-content #kid').val($('.popover-flight #kid').val());
+});
+
+$('#moreInfo').on('hide.bs.popover', function () {
+    $('.popover-flight #adults').val($('#' + $(this).attr('aria-describedby') + ' .popover-content #adults').val());
+    $('.popover-flight #childrens').val($('#' + $(this).attr('aria-describedby') + ' .popover-content #childrens').val());
+    $('.popover-flight #kid').val($('#' + $(this).attr('aria-describedby') + ' .popover-content #kid').val());
+    $('.popover-flight .cabinclass input[name="cabinclass"]' + '[value="' + $('#' + $(this).attr('aria-describedby') + ' .popover-content input[name="cabinclass"]:checked').val() +'"]').prop('checked', true);
+});
+
+$(document).on('change', '#adults, #childrens, #kid, .cabinclass input[name="cabinclass"]', function(){
+	$('#moreInfo > span:first-child').text(parseInt($('#adults').val()) + parseInt($('#childrens').val()) + parseInt($('#kid').val()) + ' Người, Ghế ' + $('.cabinclass input[name="cabinclass"]:checked').val());
+});
+
+$(document).on('change', '#guests, #rooms', function(){
+	$('#moreHotelInfo > span:first-child').text(parseInt($('#guests').val()) + ' Người, ' + parseInt($('#rooms').val()) + ' Phòng');
+});
+
+$('#adults').val(request.adults);
+$('#childrens').val(request.children);
+$('#kid').val(request.infants);
+$('.cabinclass input[name="cabinclass"][value="'+ request.cabinclass +'"]').prop('checked', true);
+$('#moreInfo > span:first-child').text(parseInt(request.adults) + parseInt(request.children) + parseInt(request.infants) + ' Người, Ghế ' + request.cabinclass);
+
+$('#rooms').val(Math.round((parseInt(request.adults) + parseInt(request.children))/2));
+$('#guests').val(parseInt(request.adults) + parseInt(request.children));
+$('#moreHotelInfo > span:first-child').text(parseInt(request.adults) + parseInt(request.children) + ' Người, ' + Math.round((parseInt(request.adults) + parseInt(request.children))/2) + ' Phòng');
+
 $('#moreHotelInfo').popover({
 	placement: 'bottom',
 	html: true,
 	content: $('.popover-hotel').html()
+});
+
+$('#moreHotelInfo').on('shown.bs.popover', function () {
+    $('#' + $(this).attr('aria-describedby') + ' .popover-content #guests').val($('.popover-hotel #guests').val());
+    $('#' + $(this).attr('aria-describedby') + ' .popover-content #rooms').val($('.popover-hotel #rooms').val());
+});
+
+$('#moreHotelInfo').on('hide.bs.popover', function () {
+    $('.popover-hotel #guests').val($('#' + $(this).attr('aria-describedby') + ' .popover-content #guests').val());
+    $('.popover-hotel #rooms').val($('#' + $(this).attr('aria-describedby') + ' .popover-content #rooms').val());
 });
 
 $(".fadeLeft").on('show.bs.modal', function () {
@@ -80,8 +135,10 @@ $('#pickupdate-input').datepicker({
 	    	year = date.getFullYear();
 	    $('#pickupdate span').text(day + '/' + month + '/' + year);
 	    $('#dropoffdate-input').datepicker('option', 'minDate', new Date($('#pickupdate-input').val()));
+	    changeDropOffDate();
 	  }
 	}).datepicker("setDate", request.outbounddate);
+
 $('#dropoffdate-input').datepicker({
 	  dateFormat: "yy-mm-dd",
 	  minDate: $('#pickupdate-input').val(),
@@ -95,9 +152,18 @@ $('#dropoffdate-input').datepicker({
 	  }
 	}).datepicker("setDate", request.outbounddate);
 
+function changeDropOffDate() {
+	var date = new Date($('#dropoffdate-input').val()),
+	    	day = date.getDate(),
+	    	month = date.getMonth() + 1,
+	    	year = date.getFullYear();
+	    $('#dropoffdate span').text(day + '/' + month + '/' + year);
+}
+
 $('#dropoffdate').click(function() {
 	$('#dropoffdate-input').show().focus().hide();
 })
+
 $('#pickupdate').click(function() {
 	$('#pickupdate-input').show().focus().hide();
 });
@@ -113,8 +179,7 @@ $('#checkindate').datepicker({
     	year = date.getFullYear();
     $('#hotelModal .depart span').text(day + '/' + month + '/' + year);
     $('#checkoutdate').datepicker('option', 'minDate', new Date($('#checkindate').val()));
-    if($('#checkoutdate').val() != '')
-  		$('#hotelModal .arrival span').text(day + '/' + month + '/' + year);
+    changeCheckOutDate();
   }
 }).datepicker("setDate", request.outbounddate);
 
@@ -132,10 +197,18 @@ $('#checkoutdate').datepicker({
   }
 }).datepicker("setDate", request.inbounddate);
 
+function changeCheckOutDate() {
+	var date = new Date($('#checkoutdate').val()),
+    	day = date.getDate(),
+    	month = date.getMonth() + 1,
+    	year = date.getFullYear();
+    $('#hotelModal .arrival span').text(day + '/' + month + '/' + year);
+}
 
 $('#hotelModal .depart').click(function() {
 	$('#checkindate').show().focus().hide();
 })
+
 $('#hotelModal .arrival').click(function() {
 	$('#checkoutdate').show().focus().hide();
 });
@@ -168,13 +241,17 @@ $(document).on('click', '#flightdetailsmodal .item-select-button', function(e){
 
 
 $(document).on('click', '#flight-search', function(e) {
-	Flight('HAN-sky', 'SGN-sky', $('#outbounddate').val(), $('#inbounddate').val(),
+	getAirPortCode($('#outbounddate').val(), $('#inbounddate').val(),
 		 $('#adults').val(), $('#childrens').val(), $('#kid').val(), $('.cabinclass input[name="gender"]:checked').val());
 });
 
 $(document).on('click', '#car-search', function(e) {
-	Car('SGN-sky', 'SGN-sky', $('#pickupdate-input').val() + 'T' + $('#pickuptime').val(), $('#dropoffdate-input').val() + 'T' + $('#dropofftime').val());
+	Car(destinationAirCode, destinationAirCode, $('#pickupdate-input').val() + 'T' + $('#pickuptime').val(), $('#dropoffdate-input').val() + 'T' + $('#dropofftime').val());
 });
+
+$(document).on('click', '#hotel-search', function(e){
+	Hotel($('#checkindate').val(), $('#checkoutdate').val(), $('#guests').val(), $('#rooms').val());
+})
 
 function renderFlightDetails(dom) {
 	var sum = dom.children('.item-summary');
@@ -354,3 +431,4 @@ if(request.inbounddate != '') {
 	$('#carModal .arrival span').text(day + '/' + month + '/' + year);
 	$('#hotelModal .arrival span').text(day + '/' + month + '/' + year);
 }
+
