@@ -236,7 +236,7 @@ class Transport
         if (!$status) {
             throw new RuntimeException('Unable to get poll response status.');
         }
-        if($status == 'UpdatesComplete'|| $status == 'COMPLETE'|| $status == True)
+        if(($status === 'UpdatesComplete')|| ($status ==='COMPLETE')|| ($status === True))
              return true;
          else
             return false;
@@ -250,7 +250,7 @@ class Transport
      */
     public function getResult($errors = self::STRICT, array $params = [], array $addParams = [])
     {
-        return $this->poll($this->createSession($params), null, 2, 10, $errors, $addParams);
+        return $this->poll($this->createSession($params), null, 2, 20, $errors, $addParams);
     }
     public function getResultHotelDetails($errors = self::STRICT, $sessionKey, array $addParams = [])
     {
