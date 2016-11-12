@@ -28,16 +28,7 @@ class FlightController extends Controller
             'pageindex' => 0,
             'pagesize' => 10);
 
-        $time_start = microtime(true);
-        
         $result = $flights_service->getResult(Flights::GRACEFUL,$params, $addParams);
-
-
-        $time_end = microtime(true);
-
-        $time = $time_end - $time_start;
-
-        echo $time;
 
         $json = json_encode($result);
         $array = json_decode($json,true);

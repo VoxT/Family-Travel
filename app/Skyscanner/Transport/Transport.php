@@ -135,6 +135,7 @@ class Transport
         // use our own httpRequest function if HttpRequest class is not available.
         $r = NetworkUtils::httpRequest($serviceUrl, $headers, $method, $data);
         
+
         if('HTTP/1.1 200'== substr($r,0,12)||'HTTP/1.1 201'== substr($r,0,12)||'HTTP/1.1 302'== substr($r,0,12)){
              return call_user_func($callback, $r);
         }
@@ -236,7 +237,7 @@ class Transport
         if (!$status) {
             throw new RuntimeException('Unable to get poll response status.');
         }
-        if(($status === 'UpdatesComplete')|| ($status ==='COMPLETE')|| ($status === True))
+        if(($status === 'UpdatesComplete')|| ($status ==='COMPLETE')|| ($status === True)||($status === 'UpdatesPending'))
              return true;
          else
             return false;
@@ -250,11 +251,11 @@ class Transport
      */
     public function getResult($errors = self::STRICT, array $params = [], array $addParams = [])
     {
-        return $this->poll($this->createSession($params), null, 1, 10, $errors, $addParams);
+        return $this->poll($this->createSession($params), null, 2, 10, $errors, $addParams);
     }
     public function getResultHotelDetails($errors = self::STRICT, $sessionKey, array $addParams = [])
     {
-        return $this->poll($this->createHotelDetails($sessionKey,$addParams), null, 1, 10, $errors);
+        return $this->poll($this->createHotelDetails($sessionKey,$addParams), null, 2, 10, $errors);
     }
 
     public function getResultWithSession($errors = self::STRICT, $sessionKey, array $addParams = [])

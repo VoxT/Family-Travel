@@ -8,6 +8,13 @@ use App\Skyscanner\Transport\FlightsCache;
 class FlightController1 extends Controller
 {
 
+    protected $sessionKey;
+
+    protected $flights_service;
+
+    protected $apiKey;
+
+
     public function getPlace(array $places,$id)
     {
         foreach($places as $place)
@@ -119,7 +126,7 @@ class FlightController1 extends Controller
                 $carriersId = $segment['Carrier'];
 
                 $flightNumber = $segment['FlightNumber'];
-                
+
                 break;
 
            }
@@ -146,7 +153,8 @@ class FlightController1 extends Controller
     }
     public function getLivePriceFlight(Request $request)
     {
-        $flights_service = new Flights('ab388326561270749029492042586956');
+        $this->apiKey = 'ab388326561270749029492042586956';
+        $this->flights_service = new Flights($this->apiKey);
         $params = array(
             'country'=>'VN',
             'currency'=>'VND',
@@ -162,32 +170,66 @@ class FlightController1 extends Controller
         if($request->inbounddate != null) $params['inbounddate'] = $request->inbounddate;
         
         $addParams = array(
+            'sorttype' => 'price',
+            'sortorder' =>'asc',
             'pageindex' => 0,
             'pagesize' => 10);
-        $time_start = microtime(true);
 
-        $result = $flights_service->getResult(Flights::GRACEFUL,$params, $addParams);
+        $result = $this->flights_service->getResult(Flights::GRACEFUL,$params, $addParams);
 
-        $time_end = microtime(true);
-
-        $time = $time_end - $time_start;
-
-        echo $time;
-
-        $time_start1 = microtime(true);
         $json = json_encode($result);
 
         $array = json_decode($json,true);
 
+        $data  = $this->responeData($array);
+        //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
+        //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
+        return $this->jsonResponse($data);
+
+    }  
+
+    public function getLivePriceFlightByIndex($index)
+    {
+        $addParams1 = array(
+            'apiKey' => $this->apiKey,
+            'sorttype' => 'price',
+            'sortorder' =>'asc',
+            'pageindex' => $index,
+            'pagesize' => 10);
+        $url = 'http://partners.api.skyscanner.net/apiservices/pricing/v1.0/' . $this->sessionKey;
+        $r = $this->flights_service->getResultWithSession(Flights::GRACEFUL,$url,$addParams1);
+
+        $json = json_encode($r);
+
+        $array = json_decode($json,true);
+
+        $data = $this->responeData($array);
+
+        return $this->jsonResponse($data);
+    }
+
+    public function responeData(array $array)
+    {
         $SessionKey = $array['parsed']['SessionKey'];
+
+        $this->sessionKey = $SessionKey;
+
         $Query =    $array['parsed']['Query'];
+
         $Status = $array['parsed']['Status'];
+
         $Itineraries =  $array['parsed']['Itineraries'];
+
         $Legs = $array['parsed']['Legs'];
+
         $Carriers  = $array['parsed']['Carriers'];
+
         $Agents = $array['parsed']['Agents'];
+
         $Places= $array['parsed']['Places'];
+
         $Currencies = $array['parsed']['Currencies'];
+
         $Segments = $array['parsed']['Segments'];
        //
         
@@ -197,13 +239,25 @@ class FlightController1 extends Controller
 
         $countId = 0;
 
+        $adults = $Query['Adults'];
+
+        $children = $Query['Children'];
+
+        $infants = $Query['Infants'];
+
+        $outboundDate = $Query['OutboundDate'];
+        if (array_key_exists('InboundDare', $Query))
+            $inboundDate = $Query['InboundDate'];
+        else
+            $inboundDate = null;
+        $cabinClass = $Query['CabinClass'];
         $input = array(
-            'Adults' => $Query['Adults'],
-            'Children'=>$Query['Children'],
-            'Infants' =>$Query['Infants'],
-            'OutboundDate' => $Query['OutboundDate'],
-            'InboundDate' => $Query['InboundDate'],
-            'CabinClass' => $Query['CabinClass']
+            'adults' => $adults,
+            'children'=>$children,
+            'infants' => $infants,
+            'outboundDate' => $outboundDate,
+            'inboundDate' => $inboundDate,
+            'cabinClass' => $cabinClass
             );
 
         foreach ($Itineraries as $result) 
@@ -212,21 +266,44 @@ class FlightController1 extends Controller
             $segment_outbound_list = array();
 
             $segment_inbound_list = array();
+
+            $inbound_overall = array();
+
+            $outbound_overall = array();
+          
            //Id chuyến bay đi
             $OutboundLegId = $result['OutboundLegId'];
-             //Id chuyến bay đến
-            $InboundLegId  = $result['InboundLegId'];
-             //Giá
+             //Id chuyến bay về
+            if (array_key_exists('InboundLegId',$result))
+            {
+                $InboundLegId  = $result['InboundLegId'];
+
+                $inbound = $this->getItineraries($Legs,$Places,$Carriers,$InboundLegId);
+
+                $inbound_segmentIds = $inbound['segmentIds'];
+
+                foreach ($inbound_segmentIds as $segmentId) 
+                {
+                    $segment_inbound = $this->getSegment($Segments,$Places,$Carriers,$segmentId);
+                    array_push($segment_inbound_list, $segment_inbound);
+                }
+
+                $inbound_overall = $inbound['overall'];
+            }
+
+            else 
+            {
+                $inbound_overall = array();
+
+                $segment_inbound_list = array();
+            }
+            //Giá
             $PricingOptions = $result['PricingOptions'];
             $price = $PricingOptions[0]['Price'];
             
             $outbound = $this->getItineraries($Legs,$Places,$Carriers,$OutboundLegId);
-            
-            $inbound = $this->getItineraries($Legs,$Places,$Carriers,$InboundLegId);
 
             $outbound_segmentIds = $outbound['segmentIds'];
-
-            $inbound_segmentIds = $inbound['segmentIds'];
 
             foreach ($outbound_segmentIds as $segmentId) 
             {
@@ -234,20 +311,16 @@ class FlightController1 extends Controller
                 array_push($segment_outbound_list, $segment_oubount);
 
             }
-            foreach ($inbound_segmentIds as $segmentId) 
-            {
-                $segment_inbound = $this->getSegment($Segments,$Places,$Carriers,$segmentId);
-                array_push($segment_inbound_list, $segment_inbound);
-
-            }
+            
+            $outbound_overall = $outbound['overall'];
 
             $flightArray["0".(string)$countId] = array(
                     'Outbound' => array(
-                        'overall' =>$outbound['overall'],
+                        'overall' =>$outbound_overall,
                         'segment' =>$segment_outbound_list
                         ) ,
                     'Inbound' => array(
-                        'overall' => $inbound['overall'],
+                        'overall' => $inbound_overall,
                         'segment' => $segment_inbound_list
                         ),
                     'Price' => $price
@@ -259,17 +332,7 @@ class FlightController1 extends Controller
             'input' => $input,
             'flight' => $flightArray,
             );
-        //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
-        //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
-         $time_end1 = microtime(true);
 
-        $time1 = $time_end1 - $time_start1;
-
-        echo $time1;
-        return $this->jsonResponse($flightsResult);
-
+        return $flightsResult ;
     }
-
-    
-    
 }
