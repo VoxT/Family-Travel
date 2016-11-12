@@ -17,7 +17,8 @@ Route::group(['middleware' => ['web']], function () {
 	// Result page
 	Route::get('search', ['as' => 'search', 'uses' => 'HomeController@searchResult']);
 
-	Route::post('booking/flight', 'BookingController@getDetails')->middleware('checklogin');
+	Route::post('booking/flight', 'BookingController@redirectToBookingFlight')->middleware('checklogin');
+	Route::post('booking/hotel', 'BookingController@redirectToBookingHotel')->middleware('checklogin');
 
 	Auth::routes();
 });
