@@ -17,6 +17,7 @@ class FlightController1 extends Controller
                 {
                     $code = $place['Code'];
                     $name = $place['Name'];
+                    break;
                 }   
             }
         return array(
@@ -47,6 +48,7 @@ class FlightController1 extends Controller
                 $carriersId = $leg['Carriers'][0];
 
                 $segmentIds = $leg['SegmentIds'];
+                break;
             }
         }
         $originplace = $this->getPlace($places,$originStationId);
@@ -84,6 +86,7 @@ class FlightController1 extends Controller
                 $name = $value['Name'];
                 $src = $value['ImageUrl'];
                 $flightCode = $value['Code'];
+                break;
             }
         }
         return array(
@@ -116,6 +119,8 @@ class FlightController1 extends Controller
                 $carriersId = $segment['Carrier'];
 
                 $flightNumber = $segment['FlightNumber'];
+                
+                break;
 
            }
         }
@@ -159,8 +164,19 @@ class FlightController1 extends Controller
         $addParams = array(
             'pageindex' => 0,
             'pagesize' => 10);
+        $time_start = microtime(true);
+
         $result = $flights_service->getResult(Flights::GRACEFUL,$params, $addParams);
+
+        $time_end = microtime(true);
+
+        $time = $time_end - $time_start;
+
+        echo $time;
+
+        $time_start1 = microtime(true);
         $json = json_encode($result);
+
         $array = json_decode($json,true);
 
         $SessionKey = $array['parsed']['SessionKey'];
@@ -245,6 +261,11 @@ class FlightController1 extends Controller
             );
         //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
         //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
+         $time_end1 = microtime(true);
+
+        $time1 = $time_end1 - $time_start1;
+
+        echo $time1;
         return $this->jsonResponse($flightsResult);
 
     }

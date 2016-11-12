@@ -250,11 +250,11 @@ class Transport
      */
     public function getResult($errors = self::STRICT, array $params = [], array $addParams = [])
     {
-        return $this->poll($this->createSession($params), null, 2, 20, $errors, $addParams);
+        return $this->poll($this->createSession($params), null, 1, 10, $errors, $addParams);
     }
     public function getResultHotelDetails($errors = self::STRICT, $sessionKey, array $addParams = [])
     {
-        return $this->poll($this->createHotelDetails($sessionKey,$addParams), null, 2, 10, $errors);
+        return $this->poll($this->createHotelDetails($sessionKey,$addParams), null, 1, 10, $errors);
     }
 
     public function getResultWithSession($errors = self::STRICT, $sessionKey, array $addParams = [])
