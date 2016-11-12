@@ -123,6 +123,7 @@ class FlightController extends Controller
                 $hour = round(intval($duration)/60);
                 $min = intval($duration)%60;
                 //Id hảng máy bay
+
                 $carriersId = $segment['Carrier'];
 
                 $flightNumber = $segment['FlightNumber'];
@@ -148,6 +149,7 @@ class FlightController extends Controller
                 'duration_m'=> $min,
                 'imageUrl' => $carrier['src'],
                 'imageName' => $carrier['name'],
+                'flightCode' => $carrier['flightCode'],
                 'flightNumber' => $flightNumber
                 );
     }
@@ -182,7 +184,7 @@ class FlightController extends Controller
         $array = json_decode($json,true);
 
         $data  = $this->responeData($array);
-        //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
+        printf('<pre>Poll Data  %s</pre>', print_r($array, true));
         //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
         return $this->jsonResponse($data);
 
@@ -202,6 +204,7 @@ class FlightController extends Controller
         $json = json_encode($r);
 
         $array = json_decode($json,true);
+
 
         $data = $this->responeData($array);
 

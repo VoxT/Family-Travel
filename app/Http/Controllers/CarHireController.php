@@ -212,7 +212,7 @@ class CarHireController extends Controller
                     $included = $included_mileage['included'];
                 else
                     $included_mileage = null;
-                if (array_key_exists("unit", $included_mileage))
+                if (($included_mileage!=null) && array_key_exists("unit", $included_mileage))
                     $unit = $included_mileage['unit'];
                 else
                     $unit = null;
