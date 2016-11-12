@@ -43,10 +43,14 @@ class FlightController extends Controller
                 $originStationId = $leg['OriginStation'];
                 //Id Điểm đến
                 $destinationStationId = $leg['DestinationStation'];
+                //Ngày đi
+                $departureDate = substr($leg['Departure'],0,10);
+                //Ngày đến
+                $arrivalDate = substr($leg['Arrival'],0,10);
                 //Thời gian đi
-                $departure = substr($leg['Departure'],11,15);
+                $departureTime = substr($leg['Departure'],11,15);
                 //Thời gian đến
-                $arrival = substr($leg['Arrival'],11,15);
+                $arrivalTime = substr($leg['Arrival'],11,15);
                 //Thời gian bay
                 $duration = $leg['Duration'];
                 $hour = round(intval($duration)/60);
@@ -70,8 +74,10 @@ class FlightController extends Controller
                 'originCode' => $originplace['code'],
                 'destinationName' =>$destinationplace['name'],
                 'destinationCode' =>$destinationplace['code'],
-                'departure' => $departure,
-                'arrival' => $arrival,
+                'departureDate' => $departureDate,
+                'arrivalDate' => $arrivalDate,
+                'departureTime' => $departureTime,
+                'arrivalTime' => $arrivalTime,
                 'duration_h' => $hour,
                 'duration_m'=> $min,
                 'imageUrl' => $carrier['src'],
@@ -114,10 +120,14 @@ class FlightController extends Controller
                 $originStationId = $segment['OriginStation'];
                 //Id Điểm đến
                 $destinationStationId = $segment['DestinationStation'];
+                //Ngày đi
+                $departureDate = substr($segment['DepartureDateTime'],0,10);
+                //Ngày đến
+                $arrivalDate = substr($segment['ArrivalDateTime'],0,10);
                 //Thời gian đi
-                $departure = substr($segment['DepartureDateTime'],11,15);
+                $departureTime = substr($segment['DepartureDateTime'],11,15);
                 //Thời gian đến
-                $arrival = substr($segment['ArrivalDateTime'],11,15);
+                $arrivalTime = substr($segment['ArrivalDateTime'],11,15);
                 //Thời gian bay
                 $duration = $segment['Duration'];
                 $hour = round(intval($duration)/60);
@@ -143,8 +153,10 @@ class FlightController extends Controller
                 'originCode' => $originplace['code'],
                 'destinationName' =>$destinationplace['name'],
                 'destinationCode' =>$destinationplace['code'],
-                'departure' => $departure,
-                'arrival' => $arrival,
+                'departureDate' => $departureDate,
+                'arrivalDate' => $arrivalDate,
+                'departureTime' => $departureTime,
+                'arrivalTime' => $arrivalTime,
                 'duration_h' => $hour,
                 'duration_m'=> $min,
                 'imageUrl' => $carrier['src'],
@@ -184,7 +196,8 @@ class FlightController extends Controller
         $array = json_decode($json,true);
 
         $data  = $this->responeData($array);
-        //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
+        
+        //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
         return $this->jsonResponse($data);
 
     }  
