@@ -7,6 +7,10 @@ var olat = request.olat, olng = request.olng, dlat = request.dlat, dlng = reques
 var map, placeService, infoWindow;
 var markers = [];
 var iconType = {
+          'restaurant':
+                {
+                  icon : "images/icons/restaurant.png"
+                },
          
           'museum':
                { 
@@ -123,9 +127,13 @@ function initMap() {
             directionsService, directionsDisplay);
 
     // handler result item
-    $('#things').click( function() {
-      showInterestingThings(destination_place_id);
+    // $('#things').click( function() {
+     //showInterestingThings(destination_place_id);
+    //});
+     $('#things').click( function() {
+      ShowRestaurant(destination_place_id);
     });
+
 
 }
 
@@ -315,22 +323,71 @@ function buildIWContent(place) {
 
 }
 
+
+//REVIEW PLACE 
 function PlaceReviews(place) {
-      document.getElementById('review-image').innerHTML = '<img class=" image_describe"' +
-            'src="' + place.photos[1].getUrl({'maxWidth': 300, 'maxHeight': 200}) + '"/>';
-        document.getElementById('review-url').innerHTML = '<b><a   href="' + place.url +
-            '">' + place.name + '</a></b>';
-          var reviewsHtml = '';
-          for (var j = 0; j < place.reviews.length; j++) {
-           
-              reviewsHtml += '<p class="review-content">' + place.reviews[j].text + '</p>'
-              reviewsHtml += '<p class="review-content">' + place.reviews[j].author_name + '</p>'
-              reviewsHtml += '<p class="review-rating">' + place.reviews[j].rating + '</p>'
 
-          document.getElementById('iw-reviews-row').style.display = '';
-          document.getElementById('reviews').innerHTML = reviewsHtml;
-
+   var imageHtml='';
+  if (place.photos) {
+     for (var i = 0; i<place.photos.length ; i++){
+   
+      imageHtml +=  '<img class="views"' +
+            'src="' + place.photos[i].getUrl({'maxWidth': 500, 'maxHeight': 500}) + '"/>' 
+    // document.getElementById('review-image').innerHTML= imageHtml;
           }
+  
+     console.log(imageHtml);
+  }
+     document.getElementById('review-url').innerHTML = '<b><a   href="' + place.url +
+     '">' + place.name + '</a></b>';
 
-          console.log (reviewsHtml);
+    document.getElementById('review-address').textContent = place.vicinity;
+      
+    var reviewsHtml = '', user_idHtml='';
+    if(place.reviews){
+        for (var j = 0; j < place.reviews.length; j++) {
+          reviewsHtml += '<p class="review-text">' + place.reviews[j].text + '</p>'
+          reviewsHtml += '<p class="review-author">' + place.reviews[j].author_name + '</p>'
+          reviewsHtml += '<span class="review-rating">' + place.reviews[j].rating + '</span>'
+         // user_idHtml +=  (place.reviews[j].author_url) 
+         // avartaHtml = user_idHtml.substr(24);
+    //  document.getElementById('iw-reviews').style.display = '';
+   //   document.getElementById('reviews').innerHTML = reviewsHtml;
+
+      }
+   //console.log(avartaHtml);
+     console.log (reviewsHtml);
+   }
+ }
+
+//function get_avatar_from_service(userid, size) {
+ // var url = '';
+ // url = "http://profiles.google.com/s2/photos/profile/" + userid + "?sz=" + size;
+  // return url;
+//}
+
+ // RESTAURANT
+function ShowRestaurant(place_id){
+    placeService = new google.maps.places.PlacesService(map);
+    placeService.getDetails({
+        placeId: place_id
+      }, function(place, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          map.panTo(place.geometry.location);
+          map.setZoom(13);
+          map.addListener('idle', searchRestaurant);
         }
+      });
+}
+function searchRestaurant() {
+ 
+  var search = {
+    bounds: map.getBounds(),
+    types: ['restaurant'],
+    keyword:   " (restaurant) OR (food)"
+  };
+   placeService.radarSearch(search, callback);
+}
+
+    
+
