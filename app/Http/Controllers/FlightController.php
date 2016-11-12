@@ -246,7 +246,7 @@ class FlightController extends Controller
         $infants = $Query['Infants'];
 
         $outboundDate = $Query['OutboundDate'];
-        if (array_key_exists('InboundDare', $Query))
+        if (array_key_exists('InboundDate', $Query))
             $inboundDate = $Query['InboundDate'];
         else
             $inboundDate = null;
