@@ -210,129 +210,145 @@ class FlightController extends Controller
 
     public function responeData(array $array)
     {
-        $SessionKey = $array['parsed']['SessionKey'];
-
-        $this->sessionKey = $SessionKey;
-
-        $Query =    $array['parsed']['Query'];
-
-        $Status = $array['parsed']['Status'];
-
-        $Itineraries =  $array['parsed']['Itineraries'];
-
-        $Legs = $array['parsed']['Legs'];
-
-        $Carriers  = $array['parsed']['Carriers'];
-
-        $Agents = $array['parsed']['Agents'];
-
-        $Places= $array['parsed']['Places'];
-
-        $Currencies = $array['parsed']['Currencies'];
-
-        $Segments = $array['parsed']['Segments'];
-       //
-        
-        $flightArray = array();
-
-        $flightsResult = array();
-
-        $countId = 0;
-
-        $adults = $Query['Adults'];
-
-        $children = $Query['Children'];
-
-        $infants = $Query['Infants'];
-
-        $outboundDate = $Query['OutboundDate'];
-        if (array_key_exists('InboundDate', $Query))
-            $inboundDate = $Query['InboundDate'];
-        else
-            $inboundDate = null;
-        $cabinClass = $Query['CabinClass'];
-        $input = array(
-            'adults' => $adults,
-            'children'=>$children,
-            'infants' => $infants,
-            'outboundDate' => $outboundDate,
-            'inboundDate' => $inboundDate,
-            'cabinClass' => $cabinClass
-            );
-
-        foreach ($Itineraries as $result) 
+        if ($array != null)
         {
+            $SessionKey = $array['parsed']['SessionKey'];
 
-            $segment_outbound_list = array();
+            $this->sessionKey = $SessionKey;
 
-            $segment_inbound_list = array();
+            $Query =    $array['parsed']['Query'];
 
-            $inbound_overall = array();
+            $Status = $array['parsed']['Status'];
 
-            $outbound_overall = array();
-          
-           //Id chuyến bay đi
-            $OutboundLegId = $result['OutboundLegId'];
-             //Id chuyến bay về
-            if (array_key_exists('InboundLegId',$result))
+            $Itineraries =  $array['parsed']['Itineraries'];
+
+            $Legs = $array['parsed']['Legs'];
+
+            $Carriers  = $array['parsed']['Carriers'];
+
+            $Agents = $array['parsed']['Agents'];
+
+            $Places= $array['parsed']['Places'];
+
+            $Currencies = $array['parsed']['Currencies'];
+
+            $Segments = $array['parsed']['Segments'];
+           //
+            
+            $flightArray = array();
+
+            $flightsResult = array();
+
+            $countId = 0;
+
+            $adults = $Query['Adults'];
+
+            $children = $Query['Children'];
+
+            $infants = $Query['Infants'];
+
+            $outboundDate = $Query['OutboundDate'];
+            if (array_key_exists('InboundDate', $Query))
+                $inboundDate = $Query['InboundDate'];
+            else
+                $inboundDate = null;
+            $cabinClass = $Query['CabinClass'];
+            $input = array(
+                'adults' => $adults,
+                'children'=>$children,
+                'infants' => $infants,
+                'outboundDate' => $outboundDate,
+                'inboundDate' => $inboundDate,
+                'cabinClass' => $cabinClass
+                );
+
+            foreach ($Itineraries as $result) 
             {
-                $InboundLegId  = $result['InboundLegId'];
 
-                $inbound = $this->getItineraries($Legs,$Places,$Carriers,$InboundLegId);
-
-                $inbound_segmentIds = $inbound['segmentIds'];
-
-                foreach ($inbound_segmentIds as $segmentId) 
-                {
-                    $segment_inbound = $this->getSegment($Segments,$Places,$Carriers,$segmentId);
-                    array_push($segment_inbound_list, $segment_inbound);
-                }
-
-                $inbound_overall = $inbound['overall'];
-            }
-
-            else 
-            {
-                $inbound_overall = array();
+                $segment_outbound_list = array();
 
                 $segment_inbound_list = array();
+
+                $inbound_overall = array();
+
+                $outbound_overall = array();
+
+                  //Giá
+                $PricingOptions = $result['PricingOptions'];
+
+                $price = $PricingOptions[0]['Price'];
+              
+               
+                 //Id chuyến bay về
+                if (array_key_exists('InboundLegId',$result))
+                {
+                    $InboundLegId  = $result['InboundLegId'];
+
+                    $inbound = $this->getItineraries($Legs,$Places,$Carriers,$InboundLegId);
+
+                    $inbound_segmentIds = $inbound['segmentIds'];
+
+                    foreach ($inbound_segmentIds as $segmentId) 
+                    {
+                        $segment_inbound = $this->getSegment($Segments,$Places,$Carriers,$segmentId);
+                        array_push($segment_inbound_list, $segment_inbound);
+                    }
+
+                    $inbound_overall = $inbound['overall'];
+                }
+
+                else 
+                {
+                    $inbound_overall = array();
+
+                    $segment_inbound_list = array();
+                }
+                //Id chuyến bay đi
+                if (array_key_exists('OutboundLegId', $result))
+                {
+                    $OutboundLegId = $result['OutboundLegId'];
+
+                    $outbound = $this->getItineraries($Legs,$Places,$Carriers,$OutboundLegId);
+
+                    $outbound_segmentIds = $outbound['segmentIds'];
+
+                    foreach ($outbound_segmentIds as $segmentId) 
+                    {
+                        $segment_oubount = $this->getSegment($Segments,$Places,$Carriers,$segmentId);
+                        array_push($segment_outbound_list, $segment_oubount);
+
+                    }
+                    
+                    $outbound_overall = $outbound['overall'];
+                }
+                else
+                {
+                    $outbound_overall = array();
+
+                    $segment_outbound_list = array();
+                }
+
+                $flightArray["0".(string)$countId] = array(
+                        'Outbound' => array(
+                            'overall' =>$outbound_overall,
+                            'segment' =>$segment_outbound_list
+                            ) ,
+                        'Inbound' => array(
+                            'overall' => $inbound_overall,
+                            'segment' => $segment_inbound_list
+                            ),
+                        'Price' => $price
+                        );
+                $countId++;
             }
-            //Giá
-            $PricingOptions = $result['PricingOptions'];
-            $price = $PricingOptions[0]['Price'];
             
-            $outbound = $this->getItineraries($Legs,$Places,$Carriers,$OutboundLegId);
-
-            $outbound_segmentIds = $outbound['segmentIds'];
-
-            foreach ($outbound_segmentIds as $segmentId) 
-            {
-                $segment_oubount = $this->getSegment($Segments,$Places,$Carriers,$segmentId);
-                array_push($segment_outbound_list, $segment_oubount);
-
-            }
-            
-            $outbound_overall = $outbound['overall'];
-
-            $flightArray["0".(string)$countId] = array(
-                    'Outbound' => array(
-                        'overall' =>$outbound_overall,
-                        'segment' =>$segment_outbound_list
-                        ) ,
-                    'Inbound' => array(
-                        'overall' => $inbound_overall,
-                        'segment' => $segment_inbound_list
-                        ),
-                    'Price' => $price
-                    );
-            $countId++;
+            $flightsResult = array(
+                'input' => $input,
+                'flight' => $flightArray,
+                );
         }
-        
-        $flightsResult = array(
-            'input' => $input,
-            'flight' => $flightArray,
-            );
-
+        else
+           $flightsResult = array();
         return $flightsResult ;
     }
 }
