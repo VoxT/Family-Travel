@@ -219,7 +219,7 @@ $('#hotelModal .arrival').click(function() {
 // open flight details modal
 $(document).on('click', '.details-link', function(e){
 	var dom = $(e.target).closest('div[class^="result-item"]');
-	renderFlightDetails(dom);
+	renderFlightDetails(dom.attr('data-id'));
 	$('#flightdetailsmodal').modal('show');
 });
 
@@ -258,34 +258,68 @@ $(document).on('click', '#hotel-search', function(e){
 	Hotel($('#checkindate').val(), $('#checkoutdate').val(), $('#guests').val(), $('#rooms').val());
 })
 
-function renderFlightDetails(dom) {
-	var sum = dom.children('.item-summary');
-	var i = 2;
-	dom.children('.item-details').children('.journey-row').each(function() {
-		var logo = $(this).children().children('.flight-logo'),
-			origin = $(this).children().children('.origin-place'),
-			destination = $(this).children().children('.destination-place'),
-			stop = $(this).children().children('.stop-map');
+function renderFlightDetails(id) {
+	var flight = flightlist.flight[id];
+	var outbound = flight.Outbound;
+	var oSegment = outbound.segment;
+	var inbound = flight.Inbound;
+	var dSegment = inbound.segment;
 
-		var row = $('#flightdetailsmodal .details-row:nth-child(' + i + ')').children('.details-content');
-		var info_0 = row.children('.content-info').children('.info-cell').eq(0),
-			info_1 = row.children('.content-info').children('.info-cell').eq(1),
-			info_2 = row.children('.content-info').children('.info-cell').eq(2),
-			carrier = row.children('.carrier');
+	var flightDetailsTemplate = $('#flightdetailitem').html();
+	var detailsrowTemplate =  $('#details-row').html();
 
-		info_0.children('h4').text(origin.children('.journey-station').text());
-		info_0.children('h5').text(origin.children('.journey-time').text());
-		info_1.children('h4').text(destination.children('.journey-station').text());
-		info_1.children('h5').text(destination.children('.journey-time').text());
-		info_2.children('h5').last().text(stop.children('.journey-duration').text());
-		carrier.children('.flight-logo').html(logo.html());
-		carrier.children('span').text('chưa trả về');
+	var outboundTemp = '';
+	for(var i in oSegment){
+		outboundTemp += detailsrowTemplate.replace('{{origin}}', oSegment[i].originName)
+										.replace('{{depart}}', oSegment[i].departureTime)
+										.replace('{{destination}}', oSegment[i].destinationName)
+										.replace('{{arrival}}', oSegment[i].arrivalTime)
+										.replace('{{dcode}}', oSegment[i].destinationCode)
+										.replace('{{ocode}}', oSegment[i].originCode)
+										.replace('{{duration}}', oSegment[i].duration_h + ' giờ : ' + oSegment[i].duration_m + ' phút')
+										.replace('{{carrierImage}}', oSegment[i].imageUrl)
+										.replace('{{carrierName}}', oSegment[i].imageName)
+										.replace('{{flightNumber}}', oSegment[i].imageName + ' - ' + oSegment[i].flightCode + oSegment[i].flightNumber);
+		if((parseInt(i)+1) < oSegment.length) {
+			var stoptime = (new Date(oSegment[parseInt(i) + 1].departureDate + ' ' + oSegment[parseInt(i) + 1].departureTime) 
+						- new Date(oSegment[i].arrivalDate + ' ' + oSegment[i].arrivalTime))/3600000;
+			outboundTemp += '<div class="stop-time">Điểm dừng chờ: <strong>' + oSegment[i].destinationName + '</strong> <span>' 
+						+ parseInt(stoptime) + ' giờ : ' + parseInt((stoptime%1)*60) + ' Phút </span></div>';
+		}
+	}
 
-		i++;
-	})
+	var inboundTemp = '';
+	for(var i in dSegment){
+		inboundTemp += detailsrowTemplate.replace('{{origin}}', dSegment[i].originName)
+										.replace('{{depart}}', dSegment[i].departureTime)
+										.replace('{{destination}}', dSegment[i].destinationName)
+										.replace('{{arrival}}', dSegment[i].arrivalTime)
+										.replace('{{ocode}}', dSegment[i].originCode)
+										.replace('{{dcode}}', dSegment[i].destinationCode)
+										.replace('{{duration}}', dSegment[i].duration_h + ' giờ : ' + dSegment[i].duration_m + ' phút')
+										.replace('{{carrierImage}}', dSegment[i].imageUrl)
+										.replace('{{carrierName}}', dSegment[i].imageName)
+										.replace('{{flightNumber}}', dSegment[i].imageName + ' - '+ dSegment[i].flightCode + dSegment[i].flightNumber);
+		if((parseInt(i)+1) < dSegment.length) {
+			var stoptime = (new Date(dSegment[parseInt(i) + 1].departureDate + ' ' + dSegment[parseInt(i) + 1].departureTime) 
+						- new Date(dSegment[i].arrivalDate + ' ' + dSegment[i].arrivalTime))/3600000;
+			inboundTemp += '<div class="stop-time">Điểm dừng chờ: <strong>' + dSegment[i].destinationName + '</strong> <span>' 
+						+ parseInt(stoptime) + ' giờ : ' + parseInt((stoptime%1)*60) + ' Phút </span></div>';
+		}
+	}
 
-	$('#flightdetailsmodal .summary').children('h5').text(sum.children('.summary-details').text());
-	$('#flightdetailsmodal .summary').children('.best-price').html(sum.children('.price-select-block').html());
+	$('#flightdetailsmodal .modal-body').html(
+			flightDetailsTemplate.replace('{{originName}}', outbound.overall.originName)
+								.replace('{{destinationName}}', outbound.overall.destinationName)
+								.replace('{{departdate}}', flightlist.input.outboundDate)
+								.replace('{{returndate}}', flightlist.input.inboundDate)
+								.replace('{{outbound}}', outboundTemp)
+								.replace('{{inbound}}', inboundTemp)
+								.replace('{{passenger}}', parseInt(flightlist.input.adults) + parseInt(flightlist.input.children) + parseInt(flightlist.input.infants))
+								.replace('{{cabinclass}}', flightlist.input.cabinClass)
+								.replace('{{price}}', flight.Price)
+								.replace('{{data-target}}', id)
+		);
 }
 
 // render hotel details

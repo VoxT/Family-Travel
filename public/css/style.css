@@ -1201,7 +1201,7 @@ ul li {
     position: relative;
     border: solid 1px #e1e1e1;
     border-radius: 3px;
-    padding: 15px;
+    padding: 5px 15px 15px 15px;
     border-left: solid 2px #ddd;
     border-left-color: #04c9a6;
 }
@@ -1309,7 +1309,7 @@ ul li {
     position: absolute;
     left: 0;
     right: 0;
-    top: -3.5px;
+    top: -2px;
     font-size: 0;
 }
 .stop-dot:after {
@@ -2420,4 +2420,13 @@ p.car-class {
 }
 #hotel-booking .listing-details p{
   font-size: 18px;
+}
+.stop-dot {
+  cursor: pointer;
+}
+.stop-dot:hover {
+  transform: scale(2);
+}
+.hop-location {
+    color: #797979;
 }

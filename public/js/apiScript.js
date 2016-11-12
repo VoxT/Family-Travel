@@ -1,13 +1,15 @@
-// Get flight list
+// Get hotel list
 var hotellist = {};
 var hoteldetails = {};
 var allHotels = {};
+
+// get flight list
+var flightlist = {"input": {}, "flight": {}};
 
 var originAirCode = '';
 var destinationAirCode = '';
 
 function Flight(originplace, destinationplace, outbounddate, inbounddate, adults, children, infants, cabinclass) {
-	$('#planeModal .result-list').html('<div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><p>Đang tìm kiếm ...</p></div>');
 
 	$.ajax({
 		type: 'GET',
@@ -23,45 +25,82 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 	        cabinclass: cabinclass
 		},
 		success: function (data) {
-			var flights = data.data;
+			var flights = data.data.flight;
 
 			if($.isEmptyObject(flights))
 				$('#carModal .loading').html('<b> Không có chuyến bay phù hợp!</b>');
 
-			for(var i in flights) {
-					$('#planeModal .loading').hide();
-					var outbound = flights[i].Outbound;
-					var inbound = flights[i].Inbound;
-					var template = $('#itemsTemplate').html();
-					var outboundTemplate = $('#flightItemTemplate').html();
-					var inboundTemplate = $('#flightItemTemplate').html();
-					$('#planeModal .result-list').append(template.replace('{{outbound}}', 
-											outboundTemplate.replace('{{ImageUrl}}', outbound.ImageUrl).
-															replace(/{{ImageName}}/g, outbound.ImageName).
-															replace('{{Departure}}', outbound.Departure).
-															replace('{{NameOrigin}}', outbound.NameOrigin).
-															replace('{{Duration_h}}', outbound.Duration_h).
-															replace('{{Duration_m}}', outbound.Duration_m).
-															replace('{{Arrival}}', outbound.Arrival).
-															replace('{{NameDestination}}', outbound.NameDestination)
-											).replace('{{inbound}}', 
-											inboundTemplate.replace('{{ImageUrl}}', inbound.ImageUrl).
-															replace(/{{ImageName}}/g, inbound.ImageName).
-															replace('{{Departure}}', inbound.Departure).
-															replace('{{NameOrigin}}', inbound.NameOrigin).
-															replace('{{Duration_h}}', inbound.Duration_h).
-															replace('{{Duration_m}}', inbound.Duration_m).
-															replace('{{Arrival}}', inbound.Arrival).
-															replace('{{NameDestination}}', inbound.NameDestination)
-											).
-											replace('{{price}}', numberWithCommas(flights[i].Price)));			
-			}
+			$.extend(flightlist.input, data.data.input);
+			$.extend(flightlist.flight, flights);
+			
+			renderFlight();
 		},
 		error: function () {
 			console.log("flight fails");
 		}
 	});
 }
+
+function renderFlight() {
+	var flights = flightlist.flight;
+	for(var i in flights) {
+		$('#planeModal .loading').hide();
+		var outbound = flights[i].Outbound.overall;
+		var inbound = flights[i].Inbound.overall;
+		var template = $('#itemsTemplate').html();
+		var osegment = flights[i].Outbound.segment;
+		var dsegment = flights[i].Inbound.segment;
+
+		var ostop = '';
+		if(osegment.length > 1) {
+			for(var j = 0; j < osegment.length; j++) {
+				ostop += '<span class="line-stop">'
+						+'<span class="stop-dot" title="' + osegment[j].destinationName + '"></span></span>';
+				if((j+2) == osegment.length) break;
+			}
+		}
+		else ostop = '<span class="line-stop"></span>';
+
+		var dstop = '';
+		if(dsegment.length > 1) {
+			for(var j = 0; j < dsegment.length; j++) {
+				dstop += '<span class="line-stop">'
+						+'<span class="stop-dot" title="' + dsegment[j].destinationName + '"></span></span>';
+				if((j+2) == dsegment.length) break;
+			}
+		}
+		else dstop = '<span class="line-stop"></span>';
+
+		var outboundTemplate = $('#flightItemTemplate').html();
+		var inboundTemplate = $('#flightItemTemplate').html();
+		$('#planeModal .result-list').append(template.replace('{{outbound}}', 
+								outboundTemplate.replace('{{ImageUrl}}', outbound.imageUrl).
+												replace(/{{ImageName}}/g, outbound.imageName).
+												replace('{{Departure}}', outbound.departureTime).
+												replace('{{NameOrigin}}', outbound.originName + ' ('+ outbound.originCode + ')').
+												replace('{{Duration_h}}', outbound.duration_h).
+												replace('{{Duration_m}}', outbound.duration_m).
+												replace('{{stop}}', ostop).
+												replace('{{Arrival}}', outbound.arrivalTime).
+												replace('{{stop_title}}', (osegment.length > 1)? osegment.length - 1 + ' Chặng dừng': 'Bay Thẳng').
+												replace('{{NameDestination}}', outbound.destinationName + ' ('+ outbound.destinationCode + ')')
+								).replace('{{inbound}}', 
+								inboundTemplate.replace('{{ImageUrl}}', inbound.imageUrl).
+												replace(/{{ImageName}}/g, inbound.imageName).
+												replace('{{Departure}}', inbound.departureTime).
+												replace('{{NameOrigin}}', inbound.originName + ' ('+ outbound.originCode + ')').
+												replace('{{Duration_h}}', inbound.duration_h).
+												replace('{{Duration_m}}', inbound.duration_m).
+												replace('{{stop}}', dstop).
+												replace('{{stop_title}}', (dsegment.length > 1)? dsegment.length - 1 + ' Chặng dừng': 'Bay Thẳng').
+												replace('{{Arrival}}', inbound.arrivalTime).
+												replace('{{NameDestination}}', inbound.destinationName + ' ('+ outbound.destinationCode + ')')
+								).
+								replace('{{price}}', numberWithCommas(flights[i].Price))
+								.replace('{{data-id}}', i));			
+}
+}
+
 // Get car list
 function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 	$('#carModal .result-list').html('<div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><p>Đang tìm kiếm ...</p></div>');
@@ -152,7 +191,13 @@ function HotelDetails(url, hotel_id) {
 		},
 		success: function (data) {			
 			$.extend(hoteldetails, data.data);
-			var hotel = hoteldetails[hotel_id];
+			renderHotel(hotel_id);
+		}
+	})
+}
+
+function renderHotel(hotel_id) {
+	var hotel = hoteldetails[hotel_id];
 			var template = $('#hotelItemTemplate').html();
 
 			if($.isEmptyObject(hotellist))
@@ -179,8 +224,6 @@ function HotelDetails(url, hotel_id) {
 							.replace('{{review}}', hotel.reviews.reviews_count)
 							.replace('{{stars}}', stars)
 				);
-		}
-	})
 }
 
 function numberWithCommas(x) {
@@ -212,6 +255,7 @@ Hotel(request.outbounddate, request.inbounddate, 2, 1);
 // Rome to rio
 function getAirPortCode(outbounddate, inbounddate,
 					 adults, children, infants, cabinclass, car = false) {
+	$('#planeModal .result-list').html('<div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><p>Đang tìm kiếm ...</p></div>');
 	$.ajax({
 		type: 'GET',
 		url: 'http://free.rome2rio.com/api/1.4/json/Search',
