@@ -9,8 +9,12 @@ use App\Http\Controllers\Controller;
 
 class BookingController extends Controller
 {
-    public function getDetails(Request $request)
+    public function redirectToBookingFlight(Request $request)
     {
-    	return View('pages.flightbooking')->with('flightDetails', ((array) json_decode($request->flightdetails)));
+    	return View('pages.flightbooking')->with('flightDetails', ((array) json_decode($request->details)));
+    }
+    public function redirectToBookingHotel(Request $request)
+    {
+    	return View('pages.hotelbooking')->with('hotelDetails', ((array) json_decode($request->details)));
     }
 }

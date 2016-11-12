@@ -7,9 +7,154 @@ use App\Skyscanner\Transport\Flights;
 use App\Skyscanner\Transport\FlightsCache;
 class FlightController extends Controller
 {
+
+    protected $sessionKey;
+
+    protected $flights_service;
+
+    protected $apiKey;
+
+
+    public function getPlace(array $places,$id)
+    {
+        foreach($places as $place)
+            {  
+                //Lấy tên và code 
+                if($place['Id'] == $id )
+                {
+                    $code = $place['Code'];
+                    $name = $place['Name'];
+                    break;
+                }   
+            }
+        return array(
+            'code' => $code,
+            'name' => $name
+            );
+    }
+    //Lấy thông tin tổng thể của chuyến bay đi hoặc về
+    public function getItineraries(array $legs,$places,$carriers,$id)
+    {
+        foreach($legs as $leg)
+        {
+            if($leg['Id'] == $id)
+            {
+                //Id Điểm đi
+                $originStationId = $leg['OriginStation'];
+                //Id Điểm đến
+                $destinationStationId = $leg['DestinationStation'];
+                //Thời gian đi
+                $departure = substr($leg['Departure'],11,15);
+                //Thời gian đến
+                $arrival = substr($leg['Arrival'],11,15);
+                //Thời gian bay
+                $duration = $leg['Duration'];
+                $hour = round(intval($duration)/60);
+                $min = intval($duration)%60;
+                //Id hảng máy bay
+                $carriersId = $leg['Carriers'][0];
+
+                $segmentIds = $leg['SegmentIds'];
+                break;
+            }
+        }
+        $originplace = $this->getPlace($places,$originStationId);
+
+        $destinationplace = $this->getPlace($places,$destinationStationId);
+
+        $carrier = $this->getCarrier($carriers,$carriersId);
+
+        return array(
+            'overall'=> array(
+                'originName' => $originplace['name'],
+                'originCode' => $originplace['code'],
+                'destinationName' =>$destinationplace['name'],
+                'destinationCode' =>$destinationplace['code'],
+                'departure' => $departure,
+                'arrival' => $arrival,
+                'duration_h' => $hour,
+                'duration_m'=> $min,
+                'imageUrl' => $carrier['src'],
+                'imageName' => $carrier['name'],
+                'flightCode' => $carrier['flightCode']
+                ),
+            'segmentIds' =>$segmentIds
+            );
+
+    }
+
+    public function getCarrier(array $carriers,$id)
+    {
+        foreach($carriers as $value)
+        {
+            //Lấy src,name,code của hảng máy bay 
+            if($value['Id'] == $id)
+            {
+                $name = $value['Name'];
+                $src = $value['ImageUrl'];
+                $flightCode = $value['Code'];
+                break;
+            }
+        }
+        return array(
+            'name'=> $name,
+            'src' => $src,
+            'flightCode' => $flightCode
+            );
+
+    }
+
+    public function getSegment(array $segments,$places,$carriers,$id)
+    {
+        foreach ($segments as $segment) 
+        {
+           if($segment['Id'] == $id)
+           {
+                //Id Điểm đi
+                $originStationId = $segment['OriginStation'];
+                //Id Điểm đến
+                $destinationStationId = $segment['DestinationStation'];
+                //Thời gian đi
+                $departure = substr($segment['DepartureDateTime'],11,15);
+                //Thời gian đến
+                $arrival = substr($segment['ArrivalDateTime'],11,15);
+                //Thời gian bay
+                $duration = $segment['Duration'];
+                $hour = round(intval($duration)/60);
+                $min = intval($duration)%60;
+                //Id hảng máy bay
+                $carriersId = $segment['Carrier'];
+
+                $flightNumber = $segment['FlightNumber'];
+
+                break;
+
+           }
+        }
+        $originplace = $this->getPlace($places,$originStationId);
+
+        $destinationplace = $this->getPlace($places,$destinationStationId);
+
+        $carrier = $this->getCarrier($carriers,$carriersId);
+
+        return array(
+                'originName' => $originplace['name'],
+                'originCode' => $originplace['code'],
+                'destinationName' =>$destinationplace['name'],
+                'destinationCode' =>$destinationplace['code'],
+                'departure' => $departure,
+                'arrival' => $arrival,
+                'duration_h' => $hour,
+                'duration_m'=> $min,
+                'imageUrl' => $carrier['src'],
+                'imageName' => $carrier['name'],
+                'flightNumber' => $flightNumber
+                );
+    }
     public function getLivePriceFlight(Request $request)
     {
-        $flights_service = new Flights('ab388326561270749029492042586956');
+        $this->apiKey = 'ab388326561270749029492042586956';
+        $this->flights_service = new Flights($this->apiKey);
         $params = array(
             'country'=>'VN',
             'currency'=>'VND',
@@ -25,152 +170,169 @@ class FlightController extends Controller
         if($request->inbounddate != null) $params['inbounddate'] = $request->inbounddate;
         
         $addParams = array(
+            'sorttype' => 'price',
+            'sortorder' =>'asc',
             'pageindex' => 0,
             'pagesize' => 10);
 
-        $result = $flights_service->getResult(Flights::GRACEFUL,$params, $addParams);
+        $result = $this->flights_service->getResult(Flights::GRACEFUL,$params, $addParams);
 
         $json = json_encode($result);
+
         $array = json_decode($json,true);
-        
+
+        $data  = $this->responeData($array);
+        //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
+        //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
+        return $this->jsonResponse($data);
+
+    }  
+
+    public function getLivePriceFlightByIndex($index)
+    {
+        $addParams1 = array(
+            'apiKey' => $this->apiKey,
+            'sorttype' => 'price',
+            'sortorder' =>'asc',
+            'pageindex' => $index,
+            'pagesize' => 10);
+        $url = 'http://partners.api.skyscanner.net/apiservices/pricing/v1.0/' . $this->sessionKey;
+        $r = $this->flights_service->getResultWithSession(Flights::GRACEFUL,$url,$addParams1);
+
+        $json = json_encode($r);
+
+        $array = json_decode($json,true);
+
+        $data = $this->responeData($array);
+
+        return $this->jsonResponse($data);
+    }
+
+    public function responeData(array $array)
+    {
         $SessionKey = $array['parsed']['SessionKey'];
+
+        $this->sessionKey = $SessionKey;
+
         $Query =    $array['parsed']['Query'];
+
         $Status = $array['parsed']['Status'];
+
         $Itineraries =  $array['parsed']['Itineraries'];
+
         $Legs = $array['parsed']['Legs'];
+
         $Carriers  = $array['parsed']['Carriers'];
+
         $Agents = $array['parsed']['Agents'];
+
         $Places= $array['parsed']['Places'];
+
         $Currencies = $array['parsed']['Currencies'];
+
+        $Segments = $array['parsed']['Segments'];
        //
         
         $flightArray = array();
+
+        $flightsResult = array();
+
+        $countId = 0;
+
+        $adults = $Query['Adults'];
+
+        $children = $Query['Children'];
+
+        $infants = $Query['Infants'];
+
+        $outboundDate = $Query['OutboundDate'];
+        if (array_key_exists('InboundDare', $Query))
+            $inboundDate = $Query['InboundDate'];
+        else
+            $inboundDate = null;
+        $cabinClass = $Query['CabinClass'];
+        $input = array(
+            'adults' => $adults,
+            'children'=>$children,
+            'infants' => $infants,
+            'outboundDate' => $outboundDate,
+            'inboundDate' => $inboundDate,
+            'cabinClass' => $cabinClass
+            );
+
         foreach ($Itineraries as $result) 
         {
+
+            $segment_outbound_list = array();
+
+            $segment_inbound_list = array();
+
+            $inbound_overall = array();
+
+            $outbound_overall = array();
+          
            //Id chuyến bay đi
             $OutboundLegId = $result['OutboundLegId'];
-             //Id chuyến bay đến
-            $InboundLegId  = $result['InboundLegId'];
-             //Giá
+             //Id chuyến bay về
+            if (array_key_exists('InboundLegId',$result))
+            {
+                $InboundLegId  = $result['InboundLegId'];
+
+                $inbound = $this->getItineraries($Legs,$Places,$Carriers,$InboundLegId);
+
+                $inbound_segmentIds = $inbound['segmentIds'];
+
+                foreach ($inbound_segmentIds as $segmentId) 
+                {
+                    $segment_inbound = $this->getSegment($Segments,$Places,$Carriers,$segmentId);
+                    array_push($segment_inbound_list, $segment_inbound);
+                }
+
+                $inbound_overall = $inbound['overall'];
+            }
+
+            else 
+            {
+                $inbound_overall = array();
+
+                $segment_inbound_list = array();
+            }
+            //Giá
             $PricingOptions = $result['PricingOptions'];
             $price = $PricingOptions[0]['Price'];
-            $LinkBooking = $PricingOptions[0]['DeeplinkUrl'];
-            foreach($Legs as $r1)
+            
+            $outbound = $this->getItineraries($Legs,$Places,$Carriers,$OutboundLegId);
+
+            $outbound_segmentIds = $outbound['segmentIds'];
+
+            foreach ($outbound_segmentIds as $segmentId) 
             {
-                if($r1['Id'] == $OutboundLegId)
-                {
-                    //Id Điểm đi
-                    $IdOriginStation = $r1['OriginStation'];
-                    //Id Điểm đến
-                    $IdDestinationStation = $r1['DestinationStation'];
-                    //Thời gian đi
-                    $Departure = substr($r1['Departure'],11,18);
-                    //Thời gian đến
-                    $Arrival = substr($r1['Arrival'],11,18);
-                    //Thời gian bay
-                    $Duration = $r1['Duration'];
-                    $h = round(intval($Duration)/60);
-                    $min = intval($Duration)%60;
-                    //Id hảng máy bay
-                    $IdCarriers = $r1['Carriers'][0];
-                }
-                if($r1['Id'] == $InboundLegId)
-                {
-                    //Id Điểm đi
-                    $IdOriginStation1 = $r1['OriginStation'];
-                    //Id Điểm đến
-                    $IdDestinationStation1= $r1['DestinationStation'];
-                    //Thời gian đi
-                    $Departure1 = substr($r1['Departure'],11,18);
-                    //Thời gian đến
-                    $Arrival1 = substr($r1['Arrival'],11,18);
-                    //Thời gian bay
-                    $Duration1 = $r1['Duration'];
-                    $h1 = round(intval($Duration)/60);
-                    $min1 = intval($Duration)%60;
-                    //Id hảng máy bay
-                    $IdCarriers1 = $r1['Carriers'][0];
-                }
+                $segment_oubount = $this->getSegment($Segments,$Places,$Carriers,$segmentId);
+                array_push($segment_outbound_list, $segment_oubount);
+
             }
-            foreach($Carriers as $r2)
-            {
-                //Lấy src của hảng máy bay đi
-                if($r2['Id'] == $IdCarriers)
-                {
-                    $Name = $r2['Name'];
-                    $src = $r2['ImageUrl'];
-                }
-                //Lấy src của hảng máy bay về
-                if($r2['Id'] == $IdCarriers1)
-                {
-                    $Name1 = $r2['Name'];
-                    $src1 = $r2['ImageUrl'];
-                }
-            }
-            foreach($Places as $r3)
-            {  
-                //Lấy tên và code điểm đi
-                if($r3['Id'] == $IdOriginStation )
-                {
-                    $CodeOrigin = $r3['Code'];
-                    $TypeOrigin = $r3['Type'];
-                    $NameOrigin = $r3['Name'];
-                }   
-                //Lấy tên và code điểm đến
-                if($r3['Id'] == $IdDestinationStation )
-                {
-                    $CodeDestination = $r3['Code'];
-                    $TypeDestination = $r3['Type'];
-                    $NameDestination = $r3['Name'];
-                }   
-                //Lấy tên và code điểm đi
-                if($r3['Id'] == $IdOriginStation1 )
-                {
-                    $CodeOrigin1 = $r3['Code'];
-                    $TypeOrigin1 = $r3['Type'];
-                    $NameOrigin1 = $r3['Name'];
-                }   
-                //Lấy tên và code điểm đến
-                if($r3['Id'] == $IdDestinationStation1 )
-                {
-                    $CodeDestination1 = $r3['Code'];
-                    $TypeDestination1 = $r3['Type'];
-                    $NameDestination1 = $r3['Name'];
-                }   
-            }
-            array_push($flightArray,array(
+            
+            $outbound_overall = $outbound['overall'];
+
+            $flightArray["0".(string)$countId] = array(
                     'Outbound' => array(
-                        'NameOrigin' => $NameOrigin,
-                        'CodeOrigin' => $CodeOrigin,
-                        'NameDestination' => $NameDestination,
-                        'CodeDestination' => $CodeDestination,
-                        'Departure' => $Departure,
-                        'Arrival' => $Arrival,
-                        'ImageUrl' => $src,
-                        'ImageName' => $Name,
-                        'Duration_h' => $h,
-                        'Duration_m' =>$min
+                        'overall' =>$outbound_overall,
+                        'segment' =>$segment_outbound_list
                         ) ,
                     'Inbound' => array(
-                        'NameOrigin' => $NameOrigin1,
-                        'CodeOrigin' => $CodeOrigin1,
-                        'NameDestination' => $NameDestination1,
-                        'CodeDestination' => $CodeDestination1,
-                        'Departure' => $Departure1,
-                        'Arrival' => $Arrival1,
-                        'ImageUrl' => $src1,
-                        'ImageName' => $Name1,
-                        'Duration_h' => $h1,
-                        'Duration_m' =>$min1
+                        'overall' => $inbound_overall,
+                        'segment' => $segment_inbound_list
                         ),
                     'Price' => $price
-                    )
-                );
+                    );
+            $countId++;
         }
         
-        //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
-        //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
-        return $this->jsonResponse($flightArray);
+        $flightsResult = array(
+            'input' => $input,
+            'flight' => $flightArray,
+            );
+
+        return $flightsResult ;
     }
-    
 }

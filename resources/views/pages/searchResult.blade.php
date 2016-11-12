@@ -418,10 +418,12 @@
   </div><!--end modal-dialoge-->
 </div><!--end myModal-->
 
-<form action="/booking/flight" method="post" target="_blank" id="flightbook" enctype='application/json'>
-	 {{ csrf_field() }}
-	<input type="hidden" name="flightdetails" value="">
+<!-- booking flight -->
+<form action="/booking/" method="post" target="_blank" id="book" enctype='application/json'>
+   {{ csrf_field() }}
+  <input type="hidden" name="details" value="">
 </form>
+
 <!-- --------------------------------------------------- -->
 <script type="text/template" id="itemsTemplate">
     <div class="result-item">
@@ -542,7 +544,7 @@
   </div>
 </script>
 <script type="text/template" id="hotelDetailsTemplate">
-    <div class="details">
+    <div class="details" data-target='@{{data-target}}'>
        <div class="image-gallery">
           <ul>
             @{{images_li}}
@@ -562,7 +564,7 @@
               <small>Tổng giá: </small>
               <span>@{{price}}<sup>đ</sup></span>
             </div>
-           <button type="button" class="flight-search btn-search">Đặt Ngay</button>
+           <button type="button" class="flight-search btn-search" id="hotelbooking">Đặt Ngay</button>
           </div>
           <div class="clearfix"> </div>
           <ul class="nav nav-tabs">

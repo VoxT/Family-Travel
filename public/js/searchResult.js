@@ -232,11 +232,16 @@ $(document).on('click', '#hotelModal .listing-item', function(e){
 $(document).on('click', '.result-item .item-select-button', function(e){
 	var dom = $(e.target).closest('div[class^="result-item"]');
 	renderFlightDetails(dom);
-	redirectToBook();
+	redirectToBook(JSON.stringify(createFlightJson()), 'booking/flight');
 });
 
 $(document).on('click', '#flightdetailsmodal .item-select-button', function(e){
-	redirectToBook();
+	redirectToBook(JSON.stringify(createFlightJson()), 'booking/flight');
+});
+
+$(document).on('click', '#hoteldetailsmodal #hotelbooking', function(e){
+	var details = hoteldetails[$('#hoteldetailsmodal .details').attr('data-target')];
+	redirectToBook(details, 'booking/hotel');
 });
 
 
@@ -324,7 +329,7 @@ function renderHotelDetails(id) {
             amenities += '</div>';
 		} 
 	}
-    if ((i%2) != 0) {
+    if (((i%3) -2) != 0) {
         amenities += '</div>';
 	}
 
@@ -352,6 +357,7 @@ function renderHotelDetails(id) {
 	}
 
 	var result = template.replace('{{images_li}}', images_li)
+			.replace('{{data-target}}', id)
 			.replace(/{{name}}/g, hotel.hotel.name)
 			.replace('{{address}}', hotel.hotel.address)
 			.replace('{{price}}', numberWithCommas(hotel.price_total))
@@ -401,13 +407,14 @@ function createFlightJson() {
 	return jsonObj;
 }
 
-function redirectToBook() {
-	$('#flightbook input[name="flightdetails"]').val(JSON.stringify(createFlightJson()));
+function redirectToBook(details, action) {
+	$('#book input[name="details"]').val(JSON.stringify(details));
+	$('#book').attr('action', action);
 	$.ajax({
 		url: 'api/v1/getuser',
 		method: 'get'
 	}).done(function(status) {
-		status.login? $('#flightbook').submit(): $('#loginModal').modal();
+		status.login? $('#book').submit(): $('#loginModal').modal();
 	}).fail(function(){
 	});
 }
