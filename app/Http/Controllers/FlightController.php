@@ -184,7 +184,6 @@ class FlightController extends Controller
         $array = json_decode($json,true);
 
         $data  = $this->responeData($array);
-        printf('<pre>Poll Data  %s</pre>', print_r($array, true));
         //printf('<pre>Poll Data  %s</pre>', print_r($flightArray, true));
         return $this->jsonResponse($data);
 
