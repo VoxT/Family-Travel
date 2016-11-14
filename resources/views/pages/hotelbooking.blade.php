@@ -20,7 +20,8 @@
 							    <div class="panel-heading" role="tab" id="headingOne">
 							      	<div class="row">
 							          	<div class="col-md-6">
-							          	<?php $hotel_details = $hotelDetails['hotel'] ?>
+							          	@php( $input = ((array) json_decode($hotelDetails))['input'])
+							          	@php( $hotel_details = ((array) json_decode($hotelDetails))['hotel'] )
 
 							          		<h4>{{ $hotel_details->hotel->name }}</h4>
 							          	</div>
@@ -40,7 +41,7 @@
 								    </div>
 								    <div class="row">
 							          <div class="col-md-8">
-							          		<h4>Tổng giá <span>{{number_format($hotel_details->price_total,0,",",".")}}<sup>đ</sup></span> <span style="color: grey; font-size: 14px;">({{$hotelDetails['input']->rooms}} x {{$hotel_details->room->type_room}})</span></h4>
+							          		<h4>Tổng giá <span>{{number_format($hotel_details->price_total,0,",",".")}}<sup>đ</sup></span> <span style="color: grey; font-size: 14px;">({{$input->rooms}} x {{$hotel_details->room->type_room}})</span></h4>
 							          </div>
 								      <div class="col-md-4"><h4 style="color: grey; text-align: right;">{{$hotel_details->reviews->reviews_count}} nhận xét</h4></div>
 							        </div>
@@ -48,6 +49,7 @@
 					        </a>
 						    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 						      <div class="panel-body">
+						      	
 							      <div class="details" data-target='@{{data-target}}'>
 								       <div class="image-gallery">
 								          <ul>
@@ -124,9 +126,9 @@
 
 						 </div>
 
-					<form action="/booking/postHotel" method="post" enctype='application/json'>
+					<form action="postHotel" method="post" id="postHotel" enctype='application/json'>
 							 {{ csrf_field() }}
-							<input type="hidden" name="flightdetails" value="">
+						<input type="hidden" name="hoteldetails" value="">
 						
 						<div class="col-md-5" style="padding-left: 30px;">
 							<div class="form-group">
@@ -155,14 +157,14 @@
 							</div>
 							<div class="form-group">
 		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="book">
+		                            <button type="button" class="btn btn-primary col-md-12" id="book">
 		                                Giữ Chỗ
 		                            </button>
 		                        </div>
 		                    </div>
 							<div class="form-group">
 		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="payment">
+		                            <button type="button" class="btn btn-primary col-md-12" id="payment">
 		                                Đặt và Thanh Toán
 		                            </button>
 		                        </div>
@@ -200,4 +202,19 @@
 @endsection
 @section('footer')
 	@include('layouts.footer')
+@endsection
+
+
+@section('scripts')
+  @parent
+
+<script type="text/javascript">
+	var json = @php echo $hotelDetails; @endphp;
+	var hotelJson = JSON.stringify(json);
+	$(document).on('click', '#book', function() {
+		$('input[name="hoteldetails"').val(hotelJson);
+		$('#postHotel').submit();
+	});
+</script>
+
 @endsection

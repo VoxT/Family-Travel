@@ -48,7 +48,7 @@ function renderFlight() {
 		$('#planeModal .loading').hide();
 		var outbound = flights[i].Outbound.overall;
 		var inbound = flights[i].Inbound.overall;
-		var template = $('#itemsTemplate').html();
+		var template = itemsTemplate;
 		var osegment = flights[i].Outbound.segment;
 		var dsegment = flights[i].Inbound.segment;
 
@@ -72,8 +72,8 @@ function renderFlight() {
 		}
 		else dstop = '<span class="line-stop"></span>';
 
-		var outboundTemplate = $('#flightItemTemplate').html();
-		var inboundTemplate = $('#flightItemTemplate').html();
+		var outboundTemplate = flightItemTemplate;
+		var inboundTemplate = flightItemTemplate;
 		$('#planeModal .result-list').append(template.replace('{{outbound}}', 
 								outboundTemplate.replace('{{ImageUrl}}', outbound.imageUrl).
 												replace(/{{ImageName}}/g, outbound.imageName).
@@ -86,6 +86,7 @@ function renderFlight() {
 												replace('{{stop_title}}', (osegment.length > 1)? osegment.length - 1 + ' Chặng dừng': 'Bay Thẳng').
 												replace('{{NameDestination}}', outbound.destinationName + ' ('+ outbound.destinationCode + ')')
 								).replace('{{inbound}}', 
+								dsegment.length?
 								inboundTemplate.replace('{{ImageUrl}}', inbound.imageUrl).
 												replace(/{{ImageName}}/g, inbound.imageName).
 												replace('{{Departure}}', inbound.departureTime).
@@ -96,8 +97,8 @@ function renderFlight() {
 												replace('{{stop_title}}', (dsegment.length > 1)? dsegment.length - 1 + ' Chặng dừng': 'Bay Thẳng').
 												replace('{{Arrival}}', inbound.arrivalTime).
 												replace('{{NameDestination}}', inbound.destinationName + ' ('+ inbound.destinationCode + ')')
-								).
-								replace('{{price}}', numberWithCommas(flights[i].Price))
+								: '')
+								.replace('{{price}}', numberWithCommas(flights[i].Price))
 								.replace('{{data-id}}', i));			
 }
 }
@@ -123,7 +124,7 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 			for(var i in cars) {
 				$('#carModal .loading').hide();
 				var item = cars[i];
-				var template = $('#carItemTemplate').html();
+				var template = carItemTemplate;
 				$('#carModal .result-list').append(
 					template.replace('{{vehicle}}', item.vehicle)
 							.replace('{{image_url}}', item.image_url)
@@ -200,7 +201,7 @@ function HotelDetails(url, hotel_id) {
 
 function renderHotel(hotel_id) {
 	var hotel = hoteldetails[hotel_id];
-			var template = $('#hotelItemTemplate').html();
+			var template = hotelItemTemplate;
 
 			if($.isEmptyObject(hotellist))
 				$('#hotelModal .loading').html('<b> Không có Khách sạn phù hợp!</b>');

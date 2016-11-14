@@ -292,8 +292,8 @@ function renderFlightDetails(id) {
 	var inbound = flight.Inbound;
 	var dSegment = inbound.segment;
 
-	var flightDetailsTemplate = $('#flightdetailitem').html();
-	var detailsrowTemplate =  $('#details-row').html();
+	var flightDetailsTemplate = flightdetailitem;
+	var detailsrowTemplate = detailsrow;
 
 	var outboundTemp = '';
 	for(var i in oSegment){
@@ -339,7 +339,7 @@ function renderFlightDetails(id) {
 			flightDetailsTemplate.replace('{{originName}}', outbound.overall.originName)
 								.replace('{{destinationName}}', outbound.overall.destinationName)
 								.replace('{{departdate}}', flightinput.outboundDate)
-								.replace('{{returndate}}', flightinput.inboundDate)
+								.replace('{{returndate}}', (flightinput.inboundDate != null)? '<b>Lượt Về: </b>' + flightinput.inboundDate : '' )
 								.replace('{{outbound}}', outboundTemp)
 								.replace('{{inbound}}', inboundTemp)
 								.replace('{{passenger}}', parseInt(flightinput.adults) + parseInt(flightinput.children) + parseInt(flightinput.infants))
@@ -352,7 +352,7 @@ function renderFlightDetails(id) {
 // render hotel details
 function renderHotelDetails(id) {
 	var hotel = hoteldetails[id];
-	var template = $('#hotelDetailsTemplate').html();
+	var template = hotelDetailsTemplate;
 
 	var stars = '';
 	for(var i = 0; i < 5; i++){
@@ -450,5 +450,6 @@ function redirectToBook(details, action) {
 	}).done(function(status) {
 		status.login? $('#book').submit(): $('#loginModal').modal();
 	}).fail(function(){
+
 	});
 }

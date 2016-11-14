@@ -21,4 +21,6 @@ Route::group(['middleware' => ['web']], function () {
 	Route::post('booking/hotel', 'BookingController@redirectToBookingHotel')->middleware('checklogin');
 
 	Auth::routes();
+
+	Route::post('booking/postHotel', 'BookingController@postBookingHotel')->middleware('checklogin');
 });

@@ -34,10 +34,13 @@
     @include('auth.login')
     @include('auth.register')
 
+  
     @section('footer')
             This is the master footer.
     @show
 
+    @section('scripts')
+    @show
 </body>
 
 </html>

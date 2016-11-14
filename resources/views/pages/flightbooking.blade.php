@@ -2,6 +2,11 @@
 @section('title', 'Trang Đặt Chỗ')
 
 @section('content')
+
+@php
+	$flight_details = ((array) json_decode($flightDetails))['flight'];
+	$input = ((array) json_decode($flightDetails))['input'];
+@endphp
 <div class="container" style="padding-top: 62px;">
 
 	<div class="page-header">
@@ -20,10 +25,10 @@
 							    <div class="panel-heading" role="tab" id="headingOne">
 							      <h4 class="panel-title clearfix">
 							          <div class="col-md-12">
-							          		<h4>Bay từ {{$flightDetails['flight']->Outbound->overall->originName}} tới {{$flightDetails['flight']->Outbound->overall->destinationName}}</h4>
+							          		<h4>Bay từ {{$flight_details->Outbound->overall->originName}} tới {{$flight_details->Outbound->overall->destinationName}}</h4>
 							          </div>
 							          <div class="col-md-12">
-							          		<h4>Tổng giá <span>{{number_format($flightDetails['flight']->Price,0,",",".")}}<sup>đ</sup></span></h4>
+							          		<h4>Tổng giá <span>{{number_format($flight_details->Price,0,",",".")}}<sup>đ</sup></span></h4>
 							          </div>
 							      </h4>
 							    </div>
@@ -34,8 +39,8 @@
 							    <div class="details" id="flightdetailsmodal">
 							    	<br/>
 									<div class="details-row">
-										<h3 class="row-title"><b>Lượt đi</b> {{$flightDetails['input']->outboundDate}}</h3>
-										@php ( $oSegment = $flightDetails['flight']->Outbound->segment )
+										<h3 class="row-title"><b>Lượt đi</b> {{$input->outboundDate}}</h3>
+										@php ( $oSegment = $flight_details->Outbound->segment )
 										@foreach($oSegment as $i => $flight)
 										<div class="details-content">
 											<div class="content-info">
@@ -77,8 +82,10 @@
 							    	<br/>
 									
 									<div class="details-row">
-										<h3 class="row-title"><b>Lượt về</b> {{$flightDetails['input']->inboundDate}}</h3>
-										@php ( $iSegment = $flightDetails['flight']->Inbound->segment )
+										@php ( $iSegment = $flight_details->Inbound->segment )
+										@if(count($iSegment))
+										<h3 class="row-title"><b>Lượt về</b> {{$input->inboundDate}}</h3>
+										@endif
 										@foreach($iSegment as $i => $flight)
 										<div class="details-content">
 											<div class="content-info">
@@ -124,7 +131,7 @@
 						   	</div>
 						 </div>
 
-					<form action="/booking/postFlight" method="post" id="flightbook" enctype='application/json'>
+					<form action="postFlight" method="post" id="postHotel" enctype='application/json'>
 							 {{ csrf_field() }}
 							<input type="hidden" name="flightdetails" value="">
 						
@@ -178,7 +185,22 @@
 </div>
 
 
+
 @endsection
 @section('footer')
 	@include('layouts.footer')
+@endsection
+
+
+@section('scripts')
+  @parent
+
+<script type="text/javascript">
+	var json = @php echo $flightDetails; @endphp;
+	var flightJson = JSON.stringify(json);
+	$(document).on('click', '#book', function() {
+		$('input[name="hoteldetails"').val(flightJson);
+		$('#postHotel').submit();
+	});
+</script>
 @endsection
