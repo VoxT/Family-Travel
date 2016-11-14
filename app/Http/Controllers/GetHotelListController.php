@@ -12,6 +12,13 @@ use App\Skyscanner\Transport\Hotels;
 
 class GetHotelListController extends Controller
 {
+
+    protected $sessionKey;
+
+    protected $hotels_service;
+
+    protected $apiKey;
+
     //Request
 
     //entityid
@@ -21,7 +28,9 @@ class GetHotelListController extends Controller
     //rooms
     public function getHotelList(Request $request)
     {
-    	$hotels_service = new Hotels('prtl6749387986743898559646983194');
+        $this->apiKey = 'prtl6749387986743898559646983194';
+
+    	$this->hotels_service = new Hotels($this->apiKey);
     	$params = array(
             'currency' => 'VND',
     		'market' => 'VN',
@@ -33,11 +42,11 @@ class GetHotelListController extends Controller
             'rooms' => $request->rooms
         );
 
-    	$result = $hotels_service->getResult(Hotels::GRACEFUL,$params);
+    	$result = $this->hotels_service->getResult(Hotels::GRACEFUL,$params);
     	$json = json_encode($result);
     	$array = json_decode($json,true);
        // printf('<pre>Poll Data  %s</pre>', print_r($array, true));
-
+        print $this->hotels_service->getSessionUrl();
         //danh sách khách sạn
         $hotels = $array['parsed']['hotels'];
 
@@ -69,14 +78,13 @@ class GetHotelListController extends Controller
     //url
     public function getHotelDetails(Request $request)
     {
-        $hotels_service = new Hotels('prtl6749387986743898559646983194');
 
         $hotel_id = $request->hotel_id;
 
         $url = $request->url;
 
         //Lấy chi tiết của 1 khách sạn
-        $hotel_details = $hotels_service->getResultHotelDetails(Hotels::GRACEFUL,$url,array('hotelIds'=>$hotel_id));
+        $hotel_details = $this->hotels_service->getResultHotelDetails(Hotels::GRACEFUL,$url,array('hotelIds'=>$hotel_id));
         $json1 = json_encode($hotel_details);
         $hotel_details = json_decode($json1,true);
         $hotels_prices = $hotel_details['parsed']['hotels_prices'][0];
@@ -243,8 +251,8 @@ class GetHotelListController extends Controller
 
         $hotel_array[(string) $hotel_id] =
             array(
-            'price_per_room_night' => $price_per_room_night,
-            'price_total' => $price_total,
+            'price_per_room_night' => number_format($price_per_room_night, 0, '.', ''),
+            'price_total' => number_format($price_total, 0, '.', ''),
             'policy' => array(
                 'meal_plan' => $meal_plan,
                 'cancellation' => $cancellation_policy
