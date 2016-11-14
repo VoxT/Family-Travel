@@ -81,6 +81,7 @@ class GetHotelListController extends Controller
 
         $hotel_details = json_decode($json,true);
 
+       // printf('<pre>Poll Data  %s</pre>', print_r($hotel_details, true));
         if (array_key_exists('hotels_prices', $hotel_details['parsed']))
             $hotels_prices = $hotel_details['parsed']['hotels_prices'][0];
         else
@@ -158,7 +159,7 @@ class GetHotelListController extends Controller
             if (array_key_exists('count', $reviews))
                 $reviews_count = $reviews['count'];
             else
-                $reviews_count = null;
+                $reviews_count = 0;
 
             if(array_key_exists('summary', $reviews))
                 $summary = $reviews['summary'];
@@ -177,7 +178,7 @@ class GetHotelListController extends Controller
         }   
         else
         {
-            $reviews_count = null;
+            $reviews_count = 0;
             $summary = null;
             $guest_types = null;
             $categories = null;
@@ -213,7 +214,7 @@ class GetHotelListController extends Controller
             if (array_key_exists('number_of_rooms', $hotel))
                 $number_of_rooms = $hotel['number_of_rooms'];
             else
-                $number_of_rooms = null;
+                $number_of_rooms = 0;
 
             if (array_key_exists('popularity', $hotel))
                 $popularity = $hotel['popularity'];
@@ -289,8 +290,8 @@ class GetHotelListController extends Controller
             $description = null;
             $address = null;
             $district = null;
-            $number_of_rooms = null;
-            $popularity = null;
+            $number_of_rooms = 0;
+            $popularity = 0;
             $popularity_desc = null;
             $$amenities = null;
 
@@ -309,7 +310,10 @@ class GetHotelListController extends Controller
             $images = $hotel['images'];
         else
             $images = null;
-
+        if (array_key_exists('star_rating', $hotel))
+            $star_rating = $hotel['star_rating'];
+        else
+            $star_rating = 0;
         $image_host_url = $hotel_details['parsed']['image_host_url'];
 
         $image_url = array();
@@ -368,6 +372,7 @@ class GetHotelListController extends Controller
                 'amenities' => $amenities,
                 'latitude' => $latitude,
                 'longitude' => $longitude,
+                'star_rating' => $star_rating,
                 'image_url' => $image_url
                 ),
             );
@@ -425,15 +430,14 @@ class GetHotelListController extends Controller
                 $hotel_id  = $ht['hotel_id'];
 
                 $hotel_array[(string) $hotel_id] = array(
-                    'url'=> $url,
-                    'total_hotels'=>$total_hotels,
-                    'total_available_hotels' => $total_available_hotels,
-                    'star_rating' => $ht['star_rating']
+                    'url'=> $url
                     );
 
             }
             $hotel_list =  array(
                 'Hotels' =>$hotel_array,
+                'total_hotels'=>$total_hotels,
+                'total_available_hotels' => $total_available_hotels,
                 'SessionUrl' => $sessionUrl
                 );   
        }
