@@ -24,7 +24,7 @@ Route::get('livePriceFlight', [
 		'as' => 'liveprice',
 		'uses' => 'FlightController@getLivePriceFlight'
 	]);
-
+Route::get('getLivePriceFlightByIndex', 'FlightController@getLivePriceFlightByIndex');
 // Get Car Hire
 // api/v1/livecarhire
 Route::get('livecarhire', 'CarHireController@getCarPrice');
@@ -39,3 +39,4 @@ Route::get('getDataByRequestURL', 'HomeController@getDataByRequestURL');
 
 Route::get('getlisthotel', 'GetHotelListController@getHotelList');
 Route::get('gethoteldetails', 'GetHotelListController@getHotelDetails');
+Route::get('getHotelListByIndex', 'GetHotelListController@getHotelListByIndex');
