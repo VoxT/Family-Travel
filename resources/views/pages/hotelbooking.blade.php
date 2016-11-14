@@ -20,14 +20,17 @@
 							    <div class="panel-heading" role="tab" id="headingOne">
 							      	<div class="row">
 							          	<div class="col-md-6">
-							          		<h4>{{$hotelDetails['hotel']->name}}</h4>
+							          	@php( $input = ((array) json_decode($hotelDetails))['input'])
+							          	@php( $hotel_details = ((array) json_decode($hotelDetails))['hotel'] )
+
+							          		<h4>{{ $hotel_details->hotel->name }}</h4>
 							          	</div>
 							          	<div class="col-md-6">
 								            <h4 style="color: #ffad00; text-align: right;"><div class="stars">
 								            @for ($i = 0; $i < 5; $i++)
-								              	@if((($hotelDetails['hotel']->popularity - 20*$i)/20) >= 1)
+								              	@if(( ($hotel_details->hotel->popularity - 20*$i)/20) >= 1)
 													<span><i class="fa fa-star" aria-hidden="true"></i></span>
-												@elseif((($hotelDetails['hotel']->popularity - 20*$i)/20) >= 0.5)
+												@elseif( (($hotel_details->hotel->popularity - 20*$i)/20) >= 0.5)
 													<span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
 												@else 
 													<span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -37,21 +40,22 @@
 								    	</div>
 								    </div>
 								    <div class="row">
-							          <div class="col-md-6">
-							          		<h4>Tổng giá <span>{{number_format($hotelDetails['price_total'],0,",",".")}}<sup>đ</sup></span></h4>
+							          <div class="col-md-8">
+							          		<h4>Tổng giá <span>{{number_format($hotel_details->price_total,0,",",".")}}<sup>đ</sup></span> <span style="color: grey; font-size: 14px;">({{$input->rooms}} x {{$hotel_details->room->type_room}})</span></h4>
 							          </div>
-								      <div class="col-md-6"><h4 style="color: grey; text-align: right;">{{$hotelDetails['reviews']->reviews_count}} nhận xét</h4></div>
+								      <div class="col-md-4"><h4 style="color: grey; text-align: right;">{{$hotel_details->reviews->reviews_count}} nhận xét</h4></div>
 							        </div>
 							    </div>
 					        </a>
 						    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 						      <div class="panel-body">
+						      	
 							      <div class="details" data-target='@{{data-target}}'>
 								       <div class="image-gallery">
 								          <ul>
-								            @foreach ($hotelDetails['hotel']->image_url as $i => $value)
+								            @foreach ($hotel_details->hotel->image_url as $i => $value)
 								            	@if($i == 7) @break; @endif
-											    <li data-toggle="modal" data-target="#imageModal"><a href="#myGallery" data-slide-to="{{$i}}"><img class="img-responsive first" src="http://{{$value->url}}" alt="{{$hotelDetails['hotel']->name}}"></a></li>
+											    <li data-toggle="modal" data-target="#imageModal"><a href="#myGallery" data-slide-to="{{$i}}"><img class="img-responsive first" src="http://{{$value->url}}" alt="{{$hotel_details->hotel->name}}"></a></li>
 											@endforeach
 								          <!--end of thumbnails-->
 								          </ul>
@@ -66,12 +70,12 @@
 								        <div class="tab-content">
 								          <div id="home" class="tab-pane fade in active">
 								            <h3>Mô Tả</h3> 								            
-								            <p style="padding-top: 10px;">Địa Chỉ: {{$hotelDetails['hotel']->address}}</p>
-								            <p>{{$hotelDetails['hotel']->description}}</p>
+								            <p style="padding-top: 10px;">Địa Chỉ: {{$hotel_details->hotel->address}}</p>
+								            <p>{{$hotel_details->hotel->description}}</p>
 								          </div>
 								          <div id="menu1" class="tab-pane fade">
 								            <h3>Cơ Sơ Vật Chất</h3>
-								              @foreach($hotelDetails['hotel']->amenities as $i => $value) 
+								              @foreach($hotel_details->hotel->amenities as $i => $value) 
 												@if (($i%2) == 0)
 										            <div class="row">
 												@endif
@@ -87,13 +91,13 @@
 										           </div>
 												@endif 
 											@endforeach
-										    @if ((count($hotelDetails['hotel']->amenities))%2 != 0)
+										    @if ((count($hotel_details->hotel->amenities))%2 != 0)
 										        </div>
 											@endif
 								          </div>
 								          <div id="menu2" class="tab-pane fade">
 								            <h3>Nhận Xét</h3>
-								            @foreach($hotelDetails['reviews']->categories as $i => $value)
+								            @foreach($hotel_details->reviews->categories as $i => $value)
 												@if (($i%2) == 0) 
 											       <div class="row">
 												@endif
@@ -110,7 +114,7 @@
 											        </div>
 												@endif
 											@endforeach
-										    @if ((count($hotelDetails['reviews']->categories))%2 != 0)
+										    @if ((count($hotel_details->reviews->categories))%2 != 0)
 										        </div>
 											@endif
 								          </div>
@@ -122,9 +126,9 @@
 
 						 </div>
 
-					<form action="/booking/postHotel" method="post" enctype='application/json'>
+					<form action="postHotel" method="post" id="postHotel" enctype='application/json'>
 							 {{ csrf_field() }}
-							<input type="hidden" name="flightdetails" value="">
+						<input type="hidden" name="hoteldetails" value="">
 						
 						<div class="col-md-5" style="padding-left: 30px;">
 							<div class="form-group">
@@ -153,14 +157,14 @@
 							</div>
 							<div class="form-group">
 		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="book">
+		                            <button type="button" class="btn btn-primary col-md-12" id="book">
 		                                Giữ Chỗ
 		                            </button>
 		                        </div>
 		                    </div>
 							<div class="form-group">
 		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="payment">
+		                            <button type="button" class="btn btn-primary col-md-12" id="payment">
 		                                Đặt và Thanh Toán
 		                            </button>
 		                        </div>
@@ -182,8 +186,8 @@
       <!--begin carousel-->
         <div id="myGallery" class="carousel" data-interval="false">
           <div class="carousel-inner">
-          @foreach($hotelDetails['hotel']->image_url as $i => $image)
-            <div class="item {{!$i? 'active': ''}}"> <img src="http://{{$image->url}}" alt="{{$hotelDetails['hotel']->name}}" class="img-responsive"></div>
+          @foreach($hotel_details->hotel->image_url as $i => $image)
+            <div class="item {{!$i? 'active': ''}}"> <img src="http://{{$image->url}}" alt="{{$hotel_details->hotel->name}}" class="img-responsive"></div>
            @endforeach
           <!--end carousel-inner--></div>
           <!--Begin Previous and Next buttons-->
@@ -198,4 +202,19 @@
 @endsection
 @section('footer')
 	@include('layouts.footer')
+@endsection
+
+
+@section('scripts')
+  @parent
+
+<script type="text/javascript">
+	var json = @php echo $hotelDetails; @endphp;
+	var hotelJson = JSON.stringify(json);
+	$(document).on('click', '#book', function() {
+		$('input[name="hoteldetails"').val(hotelJson);
+		$('#postHotel').submit();
+	});
+</script>
+
 @endsection

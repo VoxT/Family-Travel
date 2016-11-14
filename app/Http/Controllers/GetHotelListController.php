@@ -12,6 +12,20 @@ use App\Skyscanner\Transport\Hotels;
 
 class GetHotelListController extends Controller
 {
+
+    protected $sessionKey;
+
+    protected $apiKey ;
+    protected $hotels_service ;
+
+
+    public function __construct()
+    {
+        $this->apiKey = 'prtl6749387986743898559646983194';
+
+        $this->hotels_service = new Hotels($this->apiKey);
+
+    }
     //Request
 
     //entityid
@@ -21,7 +35,6 @@ class GetHotelListController extends Controller
     //rooms
     public function getHotelList(Request $request)
     {
-    	$hotels_service = new Hotels('prtl6749387986743898559646983194');
     	$params = array(
             'currency' => 'VND',
     		'market' => 'VN',
@@ -32,88 +45,102 @@ class GetHotelListController extends Controller
             'guests'=> $request->guests,
             'rooms' => $request->rooms
         );
-
-    	$result = $hotels_service->getResult(Hotels::GRACEFUL,$params);
+        $addParams = array(
+            'sortColumn' => 'rating',
+            'sortorder' =>'desc',
+            'pageindex' => 0,
+            'pagesize' => 10);
+        
+    	$result = $this->hotels_service->getResult(Hotels::GRACEFUL,$params,$addParams);
     	$json = json_encode($result);
     	$array = json_decode($json,true);
        // printf('<pre>Poll Data  %s</pre>', print_r($array, true));
-
         //danh sách khách sạn
-        $hotels = $array['parsed']['hotels'];
+        $sessionUrl  = $this->hotels_service->getSessionUrl();
+        $data = $this->responseData($array,$sessionUrl);
 
-        $total_hotels = $array['parsed']['total_hotels'];
-
-        $total_available_hotels = $array['parsed']['total_available_hotels'];
-        
-        $hotel_list  = array();
-
-        $url = 'http://partners.api.skyscanner.net/' . $array['parsed']['urls']['hotel_details'];
-
-        foreach ($hotels as $ht) 
-        {
-            $hotel_id  = $ht['hotel_id'];
-
-            $hotel_list[(string) $hotel_id] = array(
-                'url'=> $url
-                );
-
-        }
-       
-
-        return $this->jsonResponse($hotel_list);
+        return $this->jsonResponse($data);
 
     }
+
+
     //Request
 
     //hotel_id
     //url
     public function getHotelDetails(Request $request)
     {
-        $hotels_service = new Hotels('prtl6749387986743898559646983194');
 
         $hotel_id = $request->hotel_id;
 
         $url = $request->url;
 
         //Lấy chi tiết của 1 khách sạn
-        $hotel_details = $hotels_service->getResultHotelDetails(Hotels::GRACEFUL,$url,array('hotelIds'=>$hotel_id));
-        $json1 = json_encode($hotel_details);
-        $hotel_details = json_decode($json1,true);
-        $hotels_prices = $hotel_details['parsed']['hotels_prices'][0];
-        
-        $amenities_data = $hotel_details['parsed']['amenities'];
-        
+        $hotel_details = $this->hotels_service->getResultHotelDetails(Hotels::GRACEFUL,$url,array('hotelIds'=>$hotel_id));
+        $json = json_encode($hotel_details);
+
+        $hotel_details = json_decode($json,true);
+
+       // printf('<pre>Poll Data  %s</pre>', print_r($hotel_details, true));
+        if (array_key_exists('hotels_prices', $hotel_details['parsed']))
+            $hotels_prices = $hotel_details['parsed']['hotels_prices'][0];
+        else
+            $hotels_prices = array();
+        if (array_key_exists('amenities', $hotel_details['parsed']))
+            $amenities_data = $hotel_details['parsed']['amenities'];
+        else
+            $amenities_data = array();
+
         $amenities = array();
 
         $amenities_details = array();
         
-        $agent_prices = $hotels_prices['agent_prices'];
-
+        if (array_key_exists('agent_prices', $hotels_prices))
+            $agent_prices = $hotels_prices['agent_prices'];
+        else
+            $agent_prices = array();
         if ($agent_prices != null)
         {
             $agent_prices = $agent_prices[0];
-            $price_per_room_night = $agent_prices['price_per_room_night'];
-
-            $price_total = $agent_prices['price_total'];
-
-            $room_offers = $agent_prices['room_offers'][0];
-
+             if (array_key_exists('price_per_room_night', $agent_prices))
+                $price_per_room_night = $agent_prices['price_per_room_night'];
+            else
+                $price_per_room_night = null;
+            if (array_key_exists('price_total', $agent_prices))
+                $price_total = $agent_prices['price_total'];
+            else
+                $price_total = null;
+            if (array_key_exists('room_offers', $agent_prices) && $agent_prices['room_offers'] != null)
+                $room_offers = $agent_prices['room_offers'][0];
+            else
+                 $room_offers = array();
             if(array_key_exists('meal_plan',$room_offers))
                 $meal_plan = $room_offers['meal_plan'];
             else
                 $meal_plan = null;
-            $policy_dto = $room_offers['policy_dto'];
+            if (array_key_exists('policy_dto', $room_offers))
+                $policy_dto = $room_offers['policy_dto'];
+            else
+                $policy_dto = array();
 
             if (array_key_exists('cancellation', $policy_dto))
-            {
+ 
                 $cancellation_policy = $policy_dto['cancellation'];
-            }
+
             else
                $cancellation_policy = null; 
+            if ($room_offers['rooms'] != null)
+            {
+                $rooms =   $room_offers['rooms'][0];
+                $type_room = $rooms['type'];
+                $available = $room_offers['available'];
+            }
+            else
+            {
+                $type_room = null;
+                $available = null;
 
-            $rooms =   $room_offers['rooms'][0];
-            $type_room = $rooms['type'];
-            $available = $room_offers['available'];
+            }
         }
         else
         {
@@ -125,126 +152,201 @@ class GetHotelListController extends Controller
             $available = null;
 
         }
-        $reviews = $hotels_prices['reviews'];
+        if (array_key_exists('reviews', $hotels_prices))
+        {
+            $reviews = $hotels_prices['reviews'];
+        
+            if (array_key_exists('count', $reviews))
+                $reviews_count = $reviews['count'];
+            else
+                $reviews_count = 0;
 
-        $reviews_count = $reviews['count'];
+            if(array_key_exists('summary', $reviews))
+                $summary = $reviews['summary'];
+            else
+                $summary = null;
 
-        $summary = $reviews['summary'];
+            if (array_key_exists('guest_types', $reviews))
+                $guest_types = $reviews['guest_types'];
+            else
+                $guest_types = null;
 
-        $guest_types = $reviews['guest_types'];
-
-        $categories = $reviews['categories'];
-
+            if (array_key_exists('categories', $reviews))
+                $categories = $reviews['categories'];
+            else
+                $categories = null;
+        }   
+        else
+        {
+            $reviews_count = 0;
+            $summary = null;
+            $guest_types = null;
+            $categories = null;
+        }
 
 
         //Chi tiết hotel
-        $hotel = $hotel_details['parsed']['hotels'][0];
-
-        $name = $hotel['name'];
-
-        $description = $hotel['description'];
-
-        $address = $hotel['address'];
-
-        $district  = $hotel['district'];
-
-        $number_of_rooms = $hotel['number_of_rooms'];
-
-        $popularity = $hotel['popularity'];
-
-        $popularity_desc = $hotel['popularity_desc'];
-
-        $amenities_id = $hotel['amenities'];
-
-        foreach ($amenities_data as $data) 
+        if (array_key_exists('hotels', $hotel_details['parsed']))
         {
-            if(array_key_exists('image',$data))
+            if ($hotel_details['parsed']['hotels'] != null)
+                $hotel = $hotel_details['parsed']['hotels'][0];
+
+            if (array_key_exists('name',$hotel))
+                $name = $hotel['name'];
+            else
+                $name = null;
+
+            if (array_key_exists('description',$hotel))
+                $description = $hotel['description'];
+            else
+                $description = null;
+
+            if (array_key_exists('address',$hotel))
+                $address = $hotel['address'];
+            else
+                $address = null;
+
+            if (array_key_exists('district',$hotel))
+                $district  = $hotel['district'];
+            else
+                $district = null;
+
+            if (array_key_exists('number_of_rooms', $hotel))
+                $number_of_rooms = $hotel['number_of_rooms'];
+            else
+                $number_of_rooms = 0;
+
+            if (array_key_exists('popularity', $hotel))
+                $popularity = $hotel['popularity'];
+            else
+                $popularity = null;
+
+            if (array_key_exists('popularity_desc', $hotel))
+                $popularity_desc = $hotel['popularity_desc'];
+            else
+                $popularity_desc = null;
+            
+            if (array_key_exists('amenities', $hotel))
+                $amenities_id = $hotel['amenities'];
+            else
+                $amenities_id = null;
+            if ($amenities_id != null)
             {
-                $amenities_details = array();
-                $check = true;
-                foreach ($amenities_id as $value) 
+                foreach ($amenities_data as $data) 
                 {
-                    $id = $value ;  
-
-                    foreach ($amenities_data as $data1) 
+                    if(array_key_exists('image',$data))
                     {
-                        if($id == $data1['id'])
+                        $amenities_details = array();
+                        $check = true;
+                        foreach ($amenities_id as $value) 
                         {
-                            if($data['id'] == $data1['parent'])
+                            $id = $value ;  
+
+                            foreach ($amenities_data as $data1) 
                             {
-                                if($amenities_details != null)
+                                if($id == $data1['id'])
                                 {
-                                    foreach ($amenities_details as $key)
+                                    if($data['id'] == $data1['parent'])
                                     {
-                                       if($key['name'] == $data1['name'])
-                                           $check = false;
-                                    }
-                                    if ($check == true)
-                                        array_push($amenities_details,array(
-                                            'name'=>$data1['name']
-                                        )); 
+                                        if($amenities_details != null)
+                                        {
+                                            foreach ($amenities_details as $key)
+                                            {
+                                               if($key['name'] == $data1['name'])
+                                                   $check = false;
+                                            }
+                                            if ($check == true)
+                                                array_push($amenities_details,array(
+                                                    'name'=>$data1['name']
+                                                )); 
+                                        }
+                                        else
+                                            array_push($amenities_details,array(
+                                                    'name'=>$data1['name']
+                                                ));
+                                    }   
                                 }
-                                else
-                                    array_push($amenities_details,array(
-                                            'name'=>$data1['name']
-                                        ));
-                            }   
+                            }                
+
                         }
-                    }                
 
+                        array_push($amenities,array(
+                            'id'=>$data['id'],
+                            'name'=>$data['name'],
+                            'image_url'=>$data['image'],
+                            'amenities_details' => $amenities_details
+                            ));
+                    }
+
+               
                 }
-
-                array_push($amenities,array(
-                    'id'=>$data['id'],
-                    'name'=>$data['name'],
-                    'image_url'=>$data['image'],
-                    'amenities_details' => $amenities_details
-                    ));
             }
-
-           
+            else
+                $amenities = null;
+        }
+        else
+        {
+            $name = null;
+            $description = null;
+            $address = null;
+            $district = null;
+            $number_of_rooms = 0;
+            $popularity = 0;
+            $popularity_desc = null;
+            $$amenities = null;
 
         }
+        if (array_key_exists('latitude', $hotel))
+            $latitude = $hotel['latitude'];
+        else
+            $latitude = null;
 
-        $latitude = $hotel['latitude'];
+        if (array_key_exists('longitude', $hotel))
+            $longitude = $hotel['longitude'];
+        else
+            $longitude = null;
 
-        $longitude = $hotel['longitude'];
-
-        $images = $hotel['images'];
-
+        if (array_key_exists('images', $hotel))
+            $images = $hotel['images'];
+        else
+            $images = null;
+        if (array_key_exists('star_rating', $hotel))
+            $star_rating = $hotel['star_rating'];
+        else
+            $star_rating = 0;
         $image_host_url = $hotel_details['parsed']['image_host_url'];
 
-        //$image_background = $ht['image_urls'][0];
-        //print($image_background);
-
-
         $image_url = array();
-
-        foreach ($images as $key => $value) {
-            
-            $url_1 = $key;
-            $width = 0;
-            foreach ($value as $url_key => $size) {
-                if ($url_key != 'provider' && $url_key != 'order')
-                {
-                    if ($size[0] > $width )
+        if ($images != null)
+        {
+            foreach ($images as $key => $value)
+            {
+                
+                $url_1 = $key;
+                $width = 0;
+                foreach ($value as $url_key => $size) {
+                    if ($url_key != 'provider' && $url_key != 'order')
                     {
-                        $width = $size[0];
-                        $url_2 = $url_key;
+                        if ($size[0] > $width )
+                        {
+                            $width = $size[0];
+                            $url_2 = $url_key;
+                        }
                     }
+
                 }
+                array_push($image_url,array(
+                    'url'=>$image_host_url . $url_1 . $url_2
+                    ));
 
             }
-            array_push($image_url,array(
-                'url'=>$image_host_url . $url_1 . $url_2
-                ));
-
         }
-
+        else
+            $image_url = array();
         $hotel_array[(string) $hotel_id] =
             array(
-            'price_per_room_night' => $price_per_room_night,
-            'price_total' => $price_total,
+            'price_per_room_night' => number_format($price_per_room_night, 0, '.', ''),
+            'price_total' => number_format($price_total, 0, '.', ''),
             'policy' => array(
                 'meal_plan' => $meal_plan,
                 'cancellation' => $cancellation_policy
@@ -270,10 +372,79 @@ class GetHotelListController extends Controller
                 'amenities' => $amenities,
                 'latitude' => $latitude,
                 'longitude' => $longitude,
+                'star_rating' => $star_rating,
                 'image_url' => $image_url
                 ),
             );
         return $this->jsonResponse($hotel_array);
 
+    }
+    //Request
+
+    //index
+
+    //url = SessionUrl
+
+    public function getHotelListByIndex(Request $request)
+    {
+        $addParams = array(
+            'sortColumn' => 'rating',
+            'sortorder' =>'desc',
+            'pageindex' => $request->index,
+            'pagesize' => 10);
+
+        $sessionUrl = $request->url;
+
+        $result = $this->hotels_service->getResultWithSession(Hotels::GRACEFUL,$sessionUrl,$addParams);
+        $json = json_encode($result);
+        $array = json_decode($json,true);
+
+       // printf('<pre>Poll Data  %s</pre>', print_r($array, true));
+        //danh sách khách sạn
+       
+        $data = $this->responseData($array,$sessionUrl);
+
+        return $this->jsonResponse($data);
+
+
+    }
+
+    public function responseData(array $array,$sessionUrl)
+    {
+        if ($array != null)
+        {
+            $hotels = $array['parsed']['hotels'];
+
+            $total_hotels = $array['parsed']['total_hotels'];
+
+            $total_available_hotels = $array['parsed']['total_available_hotels'];
+            
+            $hotel_list  = array();
+
+            $hotel_array  = array();
+
+            $url = 'http://partners.api.skyscanner.net/' . $array['parsed']['urls']['hotel_details'];
+
+            foreach ($hotels as $ht) 
+            {
+                $hotel_id  = $ht['hotel_id'];
+
+                $hotel_array[(string) $hotel_id] = array(
+                    'url'=> $url
+                    );
+
+            }
+            $hotel_list =  array(
+                'Hotels' =>$hotel_array,
+                'total_hotels'=>$total_hotels,
+                'total_available_hotels' => $total_available_hotels,
+                'SessionUrl' => $sessionUrl
+                );   
+       }
+       else
+       {
+            $hotel_list  = array();
+       }
+        return $hotel_list;
     }
 }   

@@ -14,6 +14,12 @@ class FlightController extends Controller
 
     protected $apiKey;
 
+     public function __construct()
+    {
+        $this->apiKey = 'ab388326561270749029492042586956';
+        $this->flights_service = new Flights($this->apiKey);
+
+    }
 
     public function getPlace(array $places,$id)
     {
@@ -167,8 +173,7 @@ class FlightController extends Controller
     }
     public function getLivePriceFlight(Request $request)
     {
-        $this->apiKey = 'ab388326561270749029492042586956';
-        $this->flights_service = new Flights($this->apiKey);
+      
         $params = array(
             'country'=>'VN',
             'currency'=>'VND',
@@ -194,23 +199,32 @@ class FlightController extends Controller
         $json = json_encode($result);
 
         $array = json_decode($json,true);
-
-        $data  = $this->responeData($array);
+        if ($array != null)
+            $this->sessionKey = $array['parsed']['SessionKey'];
+        else
+            $this->sessionKey  = null;
+        $sessionUrl = 'http://partners.api.skyscanner.net/apiservices/pricing/v1.0/' . $this->sessionKey;
+        $data  = $this->responeData($array,$sessionUrl);
         
         //printf('<pre>Poll Data  %s</pre>', print_r($array, true));
         return $this->jsonResponse($data);
 
     }  
 
-    public function getLivePriceFlightByIndex($index)
+    //Request
+
+    //index 
+    //url    
+    public function getLivePriceFlightByIndex(Request $request)
     {
         $addParams1 = array(
             'apiKey' => $this->apiKey,
             'sorttype' => 'price',
             'sortorder' =>'asc',
-            'pageindex' => $index,
+            'pageindex' => $request->index,
             'pagesize' => 10);
-        $url = 'http://partners.api.skyscanner.net/apiservices/pricing/v1.0/' . $this->sessionKey;
+        $url = $request->url;
+
         $r = $this->flights_service->getResultWithSession(Flights::GRACEFUL,$url,$addParams1);
 
         $json = json_encode($r);
@@ -218,19 +232,15 @@ class FlightController extends Controller
         $array = json_decode($json,true);
 
 
-        $data = $this->responeData($array);
+        $data = $this->responeData($array,$url);
 
         return $this->jsonResponse($data);
     }
 
-    public function responeData(array $array)
+    public function responeData(array $array,$sessionUrl)
     {
         if ($array != null)
         {
-            $SessionKey = $array['parsed']['SessionKey'];
-
-            $this->sessionKey = $SessionKey;
-
             $Query =    $array['parsed']['Query'];
 
             $Status = $array['parsed']['Status'];
@@ -352,7 +362,7 @@ class FlightController extends Controller
                             'overall' => $inbound_overall,
                             'segment' => $segment_inbound_list
                             ),
-                        'Price' => $price
+                        'Price' => number_format($price, 0, '.', '')
                         );
                 $countId++;
             }
@@ -360,6 +370,7 @@ class FlightController extends Controller
             $flightsResult = array(
                 'input' => $input,
                 'flight' => $flightArray,
+                'sessionUrl' =>$sessionUrl
                 );
         }
         else

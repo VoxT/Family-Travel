@@ -227,7 +227,7 @@ class CarHireController extends Controller
 
             array_push($carArray,array(
                 'sipp' => $sipp,
-                'price_all_days' => $price_all_days,
+                'price_all_days' => number_format($price_all_days, 0, '.', ''),
                 'image_url' => $image_url,
                 'seats' => $seats,
                 'doors' => $doors,

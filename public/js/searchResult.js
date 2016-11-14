@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
 
-
+var tours = {};
 
 function outbounddatepicker() {
 	$('#outbounddate').datepicker({
@@ -215,6 +215,25 @@ $('#hotelModal .arrival').click(function() {
 
 })
 
+// set request date
+var outbounddate = new Date(request.outbounddate),
+	day = outbounddate.getDate(),
+	month = outbounddate.getMonth() + 1,
+	year = outbounddate.getFullYear();
+	$('#planeModal .depart span').text(day + '/' + month + '/' + year);
+	$('#carModal .depart span').text(day + '/' + month + '/' + year);
+	$('#hotelModal .depart span').text(day + '/' + month + '/' + year);
+
+
+if(request.inbounddate != '') {
+	var inbounddate = new Date(request.inbounddate),
+	day = inbounddate.getDate(),
+	month = inbounddate.getMonth() + 1,
+	year = inbounddate.getFullYear();
+	$('#planeModal .arrival span').text(day + '/' + month + '/' + year);
+	$('#carModal .arrival span').text(day + '/' + month + '/' + year);
+	$('#hotelModal .arrival span').text(day + '/' + month + '/' + year);
+}
 
 // open flight details modal
 $(document).on('click', '.details-link', function(e){
@@ -230,22 +249,27 @@ $(document).on('click', '#hotelModal .listing-item', function(e){
 })
 
 $(document).on('click', '.result-item .item-select-button', function(e){
-	var dom = $(e.target).closest('div[class^="result-item"]');
-	renderFlightDetails(dom);
-	redirectToBook(JSON.stringify(createFlightJson()), 'booking/flight');
+	var id = $(e.target).closest('div[class^="result-item"]').attr('data-id');
+	var details = { input: flightinput, flight: flightlist[id] };
+	redirectToBook(details, 'booking/flight');
 });
 
 $(document).on('click', '#flightdetailsmodal .item-select-button', function(e){
-	redirectToBook(JSON.stringify(createFlightJson()), 'booking/flight');
+	var id = $(this).attr('data-target');
+	var details = { input: flightinput, flight: flightlist[id] };
+	redirectToBook(details, 'booking/flight');
 });
 
 $(document).on('click', '#hoteldetailsmodal #hotelbooking', function(e){
-	var details = hoteldetails[$('#hoteldetailsmodal .details').attr('data-target')];
+	var id = $('#hoteldetailsmodal .details').attr('data-target');
+	var details = {input: hotelinput, hotel: hoteldetails[id]};
 	redirectToBook(details, 'booking/hotel');
 });
 
 
 $(document).on('click', '#flight-search', function(e) {
+	flightlist = {};
+	flightinput = {};
 	getAirPortCode($('#outbounddate').val(), $('#inbounddate').val(),
 		 $('#adults').val(), $('#childrens').val(), $('#kid').val(), $('.cabinclass input[name="gender"]:checked').val());
 });
@@ -255,18 +279,21 @@ $(document).on('click', '#car-search', function(e) {
 });
 
 $(document).on('click', '#hotel-search', function(e){
+	hoteldetails = {};
+	hotellist = {};
+	hotelinput = {};
 	Hotel($('#checkindate').val(), $('#checkoutdate').val(), $('#guests').val(), $('#rooms').val());
 })
 
 function renderFlightDetails(id) {
-	var flight = flightlist.flight[id];
+	var flight = flightlist[id];
 	var outbound = flight.Outbound;
 	var oSegment = outbound.segment;
 	var inbound = flight.Inbound;
 	var dSegment = inbound.segment;
 
-	var flightDetailsTemplate = $('#flightdetailitem').html();
-	var detailsrowTemplate =  $('#details-row').html();
+	var flightDetailsTemplate = flightdetailitem;
+	var detailsrowTemplate = detailsrow;
 
 	var outboundTemp = '';
 	for(var i in oSegment){
@@ -274,8 +301,8 @@ function renderFlightDetails(id) {
 										.replace('{{depart}}', oSegment[i].departureTime)
 										.replace('{{destination}}', oSegment[i].destinationName)
 										.replace('{{arrival}}', oSegment[i].arrivalTime)
-										.replace('{{dcode}}', oSegment[i].destinationCode)
 										.replace('{{ocode}}', oSegment[i].originCode)
+										.replace('{{dcode}}', oSegment[i].destinationCode)
 										.replace('{{duration}}', oSegment[i].duration_h + ' giờ : ' + oSegment[i].duration_m + ' phút')
 										.replace('{{carrierImage}}', oSegment[i].imageUrl)
 										.replace('{{carrierName}}', oSegment[i].imageName)
@@ -311,13 +338,13 @@ function renderFlightDetails(id) {
 	$('#flightdetailsmodal .modal-body').html(
 			flightDetailsTemplate.replace('{{originName}}', outbound.overall.originName)
 								.replace('{{destinationName}}', outbound.overall.destinationName)
-								.replace('{{departdate}}', flightlist.input.outboundDate)
-								.replace('{{returndate}}', flightlist.input.inboundDate)
+								.replace('{{departdate}}', flightinput.outboundDate)
+								.replace('{{returndate}}', (flightinput.inboundDate != null)? '<b>Lượt Về: </b>' + flightinput.inboundDate : '' )
 								.replace('{{outbound}}', outboundTemp)
 								.replace('{{inbound}}', inboundTemp)
-								.replace('{{passenger}}', parseInt(flightlist.input.adults) + parseInt(flightlist.input.children) + parseInt(flightlist.input.infants))
-								.replace('{{cabinclass}}', flightlist.input.cabinClass)
-								.replace('{{price}}', flight.Price)
+								.replace('{{passenger}}', parseInt(flightinput.adults) + parseInt(flightinput.children) + parseInt(flightinput.infants))
+								.replace('{{cabinclass}}', flightinput.cabinClass)
+								.replace('{{price}}', numberWithCommas(flight.Price))
 								.replace('{{data-target}}', id)
 		);
 }
@@ -325,7 +352,7 @@ function renderFlightDetails(id) {
 // render hotel details
 function renderHotelDetails(id) {
 	var hotel = hoteldetails[id];
-	var template = $('#hotelDetailsTemplate').html();
+	var template = hotelDetailsTemplate;
 
 	var stars = '';
 	for(var i = 0; i < 5; i++){
@@ -339,7 +366,7 @@ function renderHotelDetails(id) {
 	}
 
 	var images_li = '';
-	for(var i = 0; i < 5; i++){
+	for(var i = 0; (i < 5) && (i < hotel.hotel.image_url.length); i++){
 		images_li += '<li data-toggle="modal" data-target="#imageModal"><a href="#myGallery" data-slide-to="' 
 					+ i + '"><img class="img-responsive first" src="http://' + hotel.hotel.image_url[i].url + '" alt="' + hotel.hotel.name + '"></a></li>';
 	}
@@ -358,6 +385,7 @@ function renderHotelDetails(id) {
         for(var j in hotel.hotel.amenities[i].amenities_details){
         	amenities += hotel.hotel.amenities[i].amenities_details[j].name + ', ';
         }
+        amenities = amenities.replace(/, $/, "") + ".";
         amenities += '</p> </div>';
         if (((i+1)%3) == 0) {
             amenities += '</div>';
@@ -380,6 +408,7 @@ function renderHotelDetails(id) {
         for(var j in hotel.reviews.categories[i].entries){
         	reviews += '"' + hotel.reviews.categories[i].entries[j] + '", ';
         }
+        reviews = reviews.replace(/, $/, "") + ".";
         reviews += '</p> </div>';
         
         if (((i%2) - 1) == 0) {
@@ -396,9 +425,10 @@ function renderHotelDetails(id) {
 			.replace('{{address}}', hotel.hotel.address)
 			.replace('{{price}}', numberWithCommas(hotel.price_total))
 			.replace('{{stars}}', stars)
+			.replace('{{roomtype}}', hotelinput.rooms + ' x ' + hotel.room.type_room)
 			.replace('{{amenities}}', amenities)
 			.replace('{{reviews}}', reviews)
-			.replace('{{description}}', hotel.hotel.description.replace(/\n\n/g, '</p><p>'));
+			.replace('{{description}}', (hotel.hotel.description)? hotel.hotel.description.replace(/\n\n/g, '</p><p>') : "Không có mô tả");
 
 	$('#hoteldetailsmodal .modal-body').html(result);
 
@@ -411,36 +441,6 @@ function renderHotelDetails(id) {
           
 }
 
-//  submit post flight
-function createFlightJson() {
-	var i = 0, jsonObj = [];
-	$('#flightdetailsmodal .details-row').each(function() {
-		var temp_bound = [];
-		$(this).children('.details-content').each(function() {
-			var content = $(this).children('.content-info').children('.info-cell');
-			var carrier = $(this).children('.carrier');
-			var item = {};
-			item['origin'] = content.eq(0).children('h4').text();
-			item['depart'] = content.eq(0).children('h5').text()
-			item['destination'] = content.eq(1).children('h4').text();
-			item['arrival'] = content.eq(1).children('h5').text();
-			item['carrier_name'] = carrier.children('span').text();
-			item['carrier_logo'] = carrier.children().children().attr('src');
-			
-			temp_bound.push(item);
-		});
-		if(i == 0) {
-			jsonObj.push({outbound: temp_bound});
-		} else {
-			jsonObj.push({inbound: temp_bound});
-		}
-		i++;
-	});
-	jsonObj.push({price: $('#flightdetailsmodal .flight-price span').val()});
-	console.log(JSON.stringify(jsonObj));
-	return jsonObj;
-}
-
 function redirectToBook(details, action) {
 	$('#book input[name="details"]').val(JSON.stringify(details));
 	$('#book').attr('action', action);
@@ -450,26 +450,6 @@ function redirectToBook(details, action) {
 	}).done(function(status) {
 		status.login? $('#book').submit(): $('#loginModal').modal();
 	}).fail(function(){
+
 	});
 }
-
-// set request date
-var outbounddate = new Date(request.outbounddate),
-	day = outbounddate.getDate(),
-	month = outbounddate.getMonth() + 1,
-	year = outbounddate.getFullYear();
-	$('#planeModal .depart span').text(day + '/' + month + '/' + year);
-	$('#carModal .depart span').text(day + '/' + month + '/' + year);
-	$('#hotelModal .depart span').text(day + '/' + month + '/' + year);
-
-
-if(request.inbounddate != '') {
-	var inbounddate = new Date(request.inbounddate),
-	day = inbounddate.getDate(),
-	month = inbounddate.getMonth() + 1,
-	year = inbounddate.getFullYear();
-	$('#planeModal .arrival span').text(day + '/' + month + '/' + year);
-	$('#carModal .arrival span').text(day + '/' + month + '/' + year);
-	$('#hotelModal .arrival span').text(day + '/' + month + '/' + year);
-}
-

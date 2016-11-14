@@ -360,24 +360,13 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-//   $(document).ready(function () {
-
-//     $('#form').validate({ // initialize the plugin
-
-//         submitHandler: function(form) {
-//             $("#form").attr("action", "/search/" + $('#origin-input').val().replace(/ /g,"-") + "/" + $('#destination-input').val().replace(/ /g,"-"));
-//             form.submit();
-//           }
-//     });
-// });
-</script>
-
-<script src="{{ elixir('js/homeScript.js') }}"></script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&libraries=places&callback=autocompletePlace&language=vi&region=VN"
-async defer></script>
 @endsection
 @section('footer')
 	@include('layouts.footer')
+@endsection
+
+@section('scripts')
+<script src="{{ elixir('js/homeScript.js') }}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&libraries=places&callback=autocompletePlace&language=vi&region=VN"
+async defer></script>
 @endsection

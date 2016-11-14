@@ -12,9 +12,17 @@ use App\Skyscanner\Transport\Hotels;
 
 class HotelController extends Controller
 {
+
+    protected $sessionKey;
+
+    protected $hotels_service;
+
+    protected $apiKey;
+
     public function getHotelPrice(Request $request)
     {
-    	$hotels_service = new Hotels('prtl6749387986743898559646983194');
+        $this->apiKey = 'prtl6749387986743898559646983194'
+    	$this->hotels_service = new Hotels($this->apiKey);
     	$params = array(
             'currency' => 'VND',
     		'market' => 'VN',
@@ -31,7 +39,15 @@ class HotelController extends Controller
     	$array = json_decode($json,true);
        // printf('<pre>Poll Data  %s</pre>', print_r($array, true));
 
-        //danh sách khách sạn
+        $data = $this->responseData($array);
+
+        return $this->jsonResponse($data);
+
+    }
+
+    public function responseData(array $array)
+    {
+         //danh sách khách sạn
         $hotels = $array['parsed']['hotels'];
 
         $total_hotels = $array['parsed']['total_hotels'];
@@ -249,7 +265,6 @@ class HotelController extends Controller
 
 
         }
-        return $this->jsonResponse($hotel_array);
-
+        return $hotel_array;
     }
 }   

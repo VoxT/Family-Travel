@@ -1,10 +1,11 @@
 // Get hotel list
 var hotellist = {};
 var hoteldetails = {};
-var allHotels = {};
+var hotelinput = {};
 
 // get flight list
-var flightlist = {"input": {}, "flight": {}};
+var flightlist = {};
+var flightinput = {};
 
 var originAirCode = '';
 var destinationAirCode = '';
@@ -30,8 +31,8 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 			if($.isEmptyObject(flights))
 				$('#carModal .loading').html('<b> Không có chuyến bay phù hợp!</b>');
 
-			$.extend(flightlist.input, data.data.input);
-			$.extend(flightlist.flight, flights);
+			$.extend(flightinput, data.data.input);
+			$.extend(flightlist, flights);
 			
 			renderFlight();
 		},
@@ -42,12 +43,12 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 }
 
 function renderFlight() {
-	var flights = flightlist.flight;
+	var flights = flightlist;
 	for(var i in flights) {
 		$('#planeModal .loading').hide();
 		var outbound = flights[i].Outbound.overall;
 		var inbound = flights[i].Inbound.overall;
-		var template = $('#itemsTemplate').html();
+		var template = itemsTemplate;
 		var osegment = flights[i].Outbound.segment;
 		var dsegment = flights[i].Inbound.segment;
 
@@ -71,8 +72,8 @@ function renderFlight() {
 		}
 		else dstop = '<span class="line-stop"></span>';
 
-		var outboundTemplate = $('#flightItemTemplate').html();
-		var inboundTemplate = $('#flightItemTemplate').html();
+		var outboundTemplate = flightItemTemplate;
+		var inboundTemplate = flightItemTemplate;
 		$('#planeModal .result-list').append(template.replace('{{outbound}}', 
 								outboundTemplate.replace('{{ImageUrl}}', outbound.imageUrl).
 												replace(/{{ImageName}}/g, outbound.imageName).
@@ -85,18 +86,19 @@ function renderFlight() {
 												replace('{{stop_title}}', (osegment.length > 1)? osegment.length - 1 + ' Chặng dừng': 'Bay Thẳng').
 												replace('{{NameDestination}}', outbound.destinationName + ' ('+ outbound.destinationCode + ')')
 								).replace('{{inbound}}', 
+								dsegment.length?
 								inboundTemplate.replace('{{ImageUrl}}', inbound.imageUrl).
 												replace(/{{ImageName}}/g, inbound.imageName).
 												replace('{{Departure}}', inbound.departureTime).
-												replace('{{NameOrigin}}', inbound.originName + ' ('+ outbound.originCode + ')').
+												replace('{{NameOrigin}}', inbound.originName + ' ('+ inbound.originCode + ')').
 												replace('{{Duration_h}}', inbound.duration_h).
 												replace('{{Duration_m}}', inbound.duration_m).
 												replace('{{stop}}', dstop).
 												replace('{{stop_title}}', (dsegment.length > 1)? dsegment.length - 1 + ' Chặng dừng': 'Bay Thẳng').
 												replace('{{Arrival}}', inbound.arrivalTime).
-												replace('{{NameDestination}}', inbound.destinationName + ' ('+ outbound.destinationCode + ')')
-								).
-								replace('{{price}}', numberWithCommas(flights[i].Price))
+												replace('{{NameDestination}}', inbound.destinationName + ' ('+ inbound.destinationCode + ')')
+								: '')
+								.replace('{{price}}', numberWithCommas(flights[i].Price))
 								.replace('{{data-id}}', i));			
 }
 }
@@ -122,7 +124,7 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 			for(var i in cars) {
 				$('#carModal .loading').hide();
 				var item = cars[i];
-				var template = $('#carItemTemplate').html();
+				var template = carItemTemplate;
 				$('#carModal .result-list').append(
 					template.replace('{{vehicle}}', item.vehicle)
 							.replace('{{image_url}}', item.image_url)
@@ -164,8 +166,9 @@ function Hotel(checkindate, checkoutdate, guests, rooms) {
             rooms: rooms
 		},
 		success: function (data) {
-			$.extend(hotellist, data.data);
-			var hotels = data.data;
+			$.extend(hotellist, data.data.Hotels);
+			hotelinput = {checkindate: checkindate, checkoutdate: checkoutdate, guests: guests, rooms: rooms};
+			var hotels = data.data.Hotels;
 
 			for(var hotel_id in hotels) {
 				var hotel_param = hotels[hotel_id];
@@ -198,18 +201,16 @@ function HotelDetails(url, hotel_id) {
 
 function renderHotel(hotel_id) {
 	var hotel = hoteldetails[hotel_id];
-			var template = $('#hotelItemTemplate').html();
+			var template = hotelItemTemplate;
 
 			if($.isEmptyObject(hotellist))
 				$('#hotelModal .loading').html('<b> Không có Khách sạn phù hợp!</b>');
 			$('#hotelModal .loading').hide();
 
 			var stars = '';
-			for(var j = 0; j < 5; j++){
-				if(((hotel.hotel.popularity - 20*j)/20) >= 1)
+			for(var j = 1; j <= 5; j++){
+				if(j <= hotel.hotel.star_rating)
 					stars += '<span><i class="fa fa-star" aria-hidden="true"></i></span>';
-				else if(((hotel.hotel.popularity - 20*j)/20) >= 0.5)
-					stars += '<span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>';
 				else 
 					stars += '<span><i class="fa fa-star-o" aria-hidden="true"></i></span>';
 

@@ -14,6 +14,7 @@ class Hotels extends Transport
      */
     private $pricingSessionUrl;
 
+    protected $sessionUrl;
     /**
      * @param string $apiKey
      */
@@ -52,7 +53,7 @@ class Hotels extends Transport
             self::STRICT,
             $params
         );
-
+        $this->sessionUrl = self::API_HOST . $pollPath;
         return self::API_HOST . $pollPath;
     }
     public function createHotelDetails($sessionKey,array $addParams = [])
@@ -68,6 +69,11 @@ class Hotels extends Transport
             $addParams
         );
         return self::API_HOST . $pollPath;
+    }
+
+    public function getSessionUrl()
+    {
+        return $this->sessionUrl;
     }
 }
 
