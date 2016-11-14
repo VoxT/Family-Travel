@@ -352,7 +352,7 @@ class FlightController extends Controller
                             'overall' => $inbound_overall,
                             'segment' => $segment_inbound_list
                             ),
-                        'Price' => $price
+                        'Price' => number_format($price, 0, '.', '')
                         );
                 $countId++;
             }

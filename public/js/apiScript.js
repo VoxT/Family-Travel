@@ -1,10 +1,10 @@
 // Get hotel list
 var hotellist = {};
 var hoteldetails = {};
-var allHotels = {};
 
 // get flight list
-var flightlist = {"input": {}, "flight": {}};
+var flightlist = {};
+var flightinput = {};
 
 var originAirCode = '';
 var destinationAirCode = '';
@@ -30,8 +30,8 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 			if($.isEmptyObject(flights))
 				$('#carModal .loading').html('<b> Không có chuyến bay phù hợp!</b>');
 
-			$.extend(flightlist.input, data.data.input);
-			$.extend(flightlist.flight, flights);
+			$.extend(flightinput, data.data.input);
+			$.extend(flightlist, flights);
 			
 			renderFlight();
 		},
@@ -42,7 +42,7 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 }
 
 function renderFlight() {
-	var flights = flightlist.flight;
+	var flights = flightlist;
 	for(var i in flights) {
 		$('#planeModal .loading').hide();
 		var outbound = flights[i].Outbound.overall;
@@ -88,13 +88,13 @@ function renderFlight() {
 								inboundTemplate.replace('{{ImageUrl}}', inbound.imageUrl).
 												replace(/{{ImageName}}/g, inbound.imageName).
 												replace('{{Departure}}', inbound.departureTime).
-												replace('{{NameOrigin}}', inbound.originName + ' ('+ outbound.originCode + ')').
+												replace('{{NameOrigin}}', inbound.originName + ' ('+ inbound.originCode + ')').
 												replace('{{Duration_h}}', inbound.duration_h).
 												replace('{{Duration_m}}', inbound.duration_m).
 												replace('{{stop}}', dstop).
 												replace('{{stop_title}}', (dsegment.length > 1)? dsegment.length - 1 + ' Chặng dừng': 'Bay Thẳng').
 												replace('{{Arrival}}', inbound.arrivalTime).
-												replace('{{NameDestination}}', inbound.destinationName + ' ('+ outbound.destinationCode + ')')
+												replace('{{NameDestination}}', inbound.destinationName + ' ('+ inbound.destinationCode + ')')
 								).
 								replace('{{price}}', numberWithCommas(flights[i].Price))
 								.replace('{{data-id}}', i));			
