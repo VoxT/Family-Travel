@@ -1,6 +1,7 @@
 // Get hotel list
 var hotellist = {};
 var hoteldetails = {};
+var hotelinput = {};
 
 // get flight list
 var flightlist = {};
@@ -164,8 +165,9 @@ function Hotel(checkindate, checkoutdate, guests, rooms) {
             rooms: rooms
 		},
 		success: function (data) {
-			$.extend(hotellist, data.data);
-			var hotels = data.data;
+			$.extend(hotellist, data.data.Hotels);
+			hotelinput = {checkindate: checkindate, checkoutdate: checkoutdate, guests: guests, rooms: rooms};
+			var hotels = data.data.Hotels;
 
 			for(var hotel_id in hotels) {
 				var hotel_param = hotels[hotel_id];
@@ -205,11 +207,9 @@ function renderHotel(hotel_id) {
 			$('#hotelModal .loading').hide();
 
 			var stars = '';
-			for(var j = 0; j < 5; j++){
-				if(((hotel.hotel.popularity - 20*j)/20) >= 1)
+			for(var j = 1; j <= 5; j++){
+				if(j <= hotel.hotel.star_rating)
 					stars += '<span><i class="fa fa-star" aria-hidden="true"></i></span>';
-				else if(((hotel.hotel.popularity - 20*j)/20) >= 0.5)
-					stars += '<span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>';
 				else 
 					stars += '<span><i class="fa fa-star-o" aria-hidden="true"></i></span>';
 

@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
 
-
+var tours = {};
 
 function outbounddatepicker() {
 	$('#outbounddate').datepicker({
@@ -261,8 +261,8 @@ $(document).on('click', '#flightdetailsmodal .item-select-button', function(e){
 });
 
 $(document).on('click', '#hoteldetailsmodal #hotelbooking', function(e){
-	var details = hoteldetails[$('#hoteldetailsmodal .details').attr('data-target')];
-	console.log(details);
+	var id = $('#hoteldetailsmodal .details').attr('data-target');
+	var details = {input: hotelinput, hotel: hoteldetails[id]};
 	redirectToBook(details, 'booking/hotel');
 });
 
@@ -281,6 +281,7 @@ $(document).on('click', '#car-search', function(e) {
 $(document).on('click', '#hotel-search', function(e){
 	hoteldetails = {};
 	hotellist = {};
+	hotelinput = {};
 	Hotel($('#checkindate').val(), $('#checkoutdate').val(), $('#guests').val(), $('#rooms').val());
 })
 
@@ -365,7 +366,7 @@ function renderHotelDetails(id) {
 	}
 
 	var images_li = '';
-	for(var i = 0; i < 5; i++){
+	for(var i = 0; (i < 5) && (i < hotel.hotel.image_url.length); i++){
 		images_li += '<li data-toggle="modal" data-target="#imageModal"><a href="#myGallery" data-slide-to="' 
 					+ i + '"><img class="img-responsive first" src="http://' + hotel.hotel.image_url[i].url + '" alt="' + hotel.hotel.name + '"></a></li>';
 	}
@@ -384,6 +385,7 @@ function renderHotelDetails(id) {
         for(var j in hotel.hotel.amenities[i].amenities_details){
         	amenities += hotel.hotel.amenities[i].amenities_details[j].name + ', ';
         }
+        amenities = amenities.replace(/, $/, "") + ".";
         amenities += '</p> </div>';
         if (((i+1)%3) == 0) {
             amenities += '</div>';
@@ -406,6 +408,7 @@ function renderHotelDetails(id) {
         for(var j in hotel.reviews.categories[i].entries){
         	reviews += '"' + hotel.reviews.categories[i].entries[j] + '", ';
         }
+        reviews = reviews.replace(/, $/, "") + ".";
         reviews += '</p> </div>';
         
         if (((i%2) - 1) == 0) {
@@ -422,9 +425,10 @@ function renderHotelDetails(id) {
 			.replace('{{address}}', hotel.hotel.address)
 			.replace('{{price}}', numberWithCommas(hotel.price_total))
 			.replace('{{stars}}', stars)
+			.replace('{{roomtype}}', hotelinput.rooms + ' x ' + hotel.room.type_room)
 			.replace('{{amenities}}', amenities)
 			.replace('{{reviews}}', reviews)
-			.replace('{{description}}', hotel.hotel.description.replace(/\n\n/g, '</p><p>'));
+			.replace('{{description}}', (hotel.hotel.description)? hotel.hotel.description.replace(/\n\n/g, '</p><p>') : "Không có mô tả");
 
 	$('#hoteldetailsmodal .modal-body').html(result);
 

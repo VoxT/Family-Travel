@@ -545,7 +545,8 @@
           <div class="listing-details__meta">
             <div class="listing-details__price">
               <small>Tổng giá: </small>
-              <span>@{{price}}<sup>đ</sup></span>
+              <span>@{{price}}<sup>đ</sup> </span>
+              <span style="color: grey; font-size: 14px;"> ( @{{roomtype}} )</span>
             </div>
            <button type="button" class="flight-search btn-search" id="hotelbooking">Đặt Ngay</button>
           </div>

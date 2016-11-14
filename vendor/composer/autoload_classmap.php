@@ -7,10 +7,11 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'CreateCarsTable' => $baseDir . '/database/migrations/2016_11_01_071445_create_cars_table.php',
+    'CreateFlightRoundTripTable' => $baseDir . '/database/migrations/2016_11_14_065703_create_flight_round_trip_table.php',
     'CreateFlightsTable' => $baseDir . '/database/migrations/2016_11_01_071249_create_flights_table.php',
     'CreateHotelsTable' => $baseDir . '/database/migrations/2016_11_01_071344_create_hotels_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
-    'CreatePaymentsTable' => $baseDir . '/database/migrations/2016_11_01_071506_create_payments_table.php',
+    'CreatePaymentsTable' => $baseDir . '/database/migrations/2016_11_01_071206_create_payments_table.php',
     'CreatePlacesTable' => $baseDir . '/database/migrations/2016_11_01_071428_create_places_table.php',
     'CreateToursTable' => $baseDir . '/database/migrations/2016_11_01_071243_create_tours_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',

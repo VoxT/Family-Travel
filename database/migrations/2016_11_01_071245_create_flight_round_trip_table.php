@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHotelsTable extends Migration
+class CreateFlightRoundTripTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,24 +13,19 @@ class CreateHotelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hotels', function (Blueprint $table) {
+        Schema::create('flight_round_trip', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->date('check_in_date');
-            $table->date('check_out_date');
-            $table->string('address');
+            $table->char('cabin_class', 12)->default('Economic');
+            $table->tinyInteger('number_of_seat');
             $table->integer('price');
-            $table->char('room_type', 6);
-            $table->text('location');
             $table->string('full_name');
             $table->char('phone', 15);
             $table->string('email');
             $table->char('gender', 5);
-            $table->text('more_details')->nullable();
             $table->string('payment_id')->nullable();
-            $table->foreign('payment_id')->references('paypal_id')->on('payments');
+            $table->foreign('payment_id')->references('paypal_id')->on('payments')->onDelete('cascade');
             $table->integer('tour_id')->unsigned();
-            $table->foreign('tour_id')->references('id')->on('tours');
+            $table->foreign('tour_id')->references('id')->on('tours')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -42,6 +37,8 @@ class CreateHotelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hotels');
+        Schema::table('flight_round_trip', function (Blueprint $table) {
+            //
+        });
     }
 }

@@ -17,18 +17,15 @@ class CreateFlightsTable extends Migration
             $table->increments('id');
             $table->string('origin_place');
             $table->string('destination_place');
-            $table->date('outbound_date');
-            $table->date('inbound_date');
-            $table->char('cabin_class', 12);
-            $table->tinyInteger('number_of_seat');
-            $table->integer('price');
+            $table->date('departure_date');
+            $table->date('arrival_date');
             $table->char('flight_number', 6);
             $table->string('carrier_logo');
             $table->string('carrier_name');
-            $table->string('payment_id')->nullable();
-            $table->foreign('payment_id')->references('paypal_id')->on('payments')->onDelete('cascade');;
-            $table->integer('tour_id')->unsigned();
-            $table->foreign('tour_id')->references('id')->on('tours')->onDelete('cascade');;
+            $table->char('type', 8)->default('outbound');
+            $table->tinyInteger('index')->default(0);
+            $table->integer('round_trip_id')->unsigned();
+            $table->foreign('round_trip_id')->references('id')->on('flight_round_trip')->onDelete('cascade');
             $table->timestamps();
         });
     }
