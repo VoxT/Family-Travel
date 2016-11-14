@@ -46,7 +46,6 @@ class GetHotelListController extends Controller
     	$json = json_encode($result);
     	$array = json_decode($json,true);
        // printf('<pre>Poll Data  %s</pre>', print_r($array, true));
-        print $this->hotels_service->getSessionUrl();
         //danh sách khách sạn
         $hotels = $array['parsed']['hotels'];
 
@@ -78,6 +77,7 @@ class GetHotelListController extends Controller
     //url
     public function getHotelDetails(Request $request)
     {
+        $this->hotels_service = new Hotels('prtl6749387986743898559646983194');
 
         $hotel_id = $request->hotel_id;
 
