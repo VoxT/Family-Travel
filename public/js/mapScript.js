@@ -125,15 +125,25 @@ function initMap() {
 
     route(origin_place_id, destination_place_id, travel_mode,
             directionsService, directionsDisplay);
-
+   
+ 
     // handler result item
     // $('#things').click( function() {
-     //showInterestingThings(destination_place_id);
-    //});
-     $('#things').click( function() {
-      ShowRestaurant(destination_place_id);
-    });
+    //  showInterestingThings(destination_place_id);
+    // });
 
+    //  $('#things').click( function() {
+    //   ShowRestaurant(destination_place_id);
+    // });
+
+     $(document).on('click', '#restaurant', function() {
+     ShowRestaurant(destination_place_id);
+    });  
+     
+     $(document).on('click', '#museum', function() {
+     ShowMuseum(destination_place_id);
+    }); 
+     
 
 }
 
@@ -162,6 +172,7 @@ function route(origin_place_id, destination_place_id, travel_mode, directionsSer
       }
     });
 }
+
 
 function showInterestingThings(place_id) {
   placeService.getDetails({
@@ -213,12 +224,16 @@ function search() {
 function callback(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
   
-    // clearResults();
-    // clearMarkers();
- 
     for (var i = 0, results; result = results[i]; i++) {
-       addMarker(result);//, i);
+       //PlaceReviews(result);
+       addMarker(result);
+       //console.log(PlaceReviews(result));
+     placeService.getDetails({placeId: result.place_id},
+      function(place, status) {
+         $("#show").append(PlaceReviews(place));
+       });
     }
+
   }
 }
 
@@ -226,6 +241,7 @@ function addMarker(place) {
 
   placeService.getDetails({placeId: place.place_id},
     function(result, status) {
+       
       if (status !== google.maps.places.PlacesServiceStatus.OK) {
         return;
       }
@@ -239,6 +255,7 @@ function addMarker(place) {
             //animation: google.maps.Animation.DROP,
             icon : iconType[icon[0]].icon
           });
+      markers.push(marker);
       //mousover 
       google.maps.event.addListener(marker, 'mouseover', function() {
           infoWindow.open(map, marker);
@@ -248,7 +265,7 @@ function addMarker(place) {
           infoWindow.close();
       }); 
       google.maps.event.addListener(marker, 'click', function() {
-          PlaceReviews(result);
+           PlaceReviews(result);
       });    
 
     }); 
@@ -270,6 +287,7 @@ function clearMarkers() {
   for (var i = 0; i < markers.length; i++) {
     if (markers[i]) {
       markers[i].setMap(null);
+      console.log('here');
     }
   }
   markers = [];
@@ -298,8 +316,15 @@ function showInfoWindow(result) {
           
   // Load the place information into the HTML elements used by the info window.
 function buildIWContent(place) {
+  if(place.photos) {
   document.getElementById('iw-icon').innerHTML = '<img class=" image_place"' +
       'src="' + place.photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100}) + '"/>';
+    }
+    else {
+  document.getElementById('iw-icon').innerHTML = '<img class=" image_place"'+
+      'src="images/iw-icon/icon.png " />';
+    }
+
   document.getElementById('iw-url').innerHTML = '<b><a   href="' + place.url +
       '">' + place.name + '</a></b>';
   if (place.rating) {
@@ -325,25 +350,26 @@ function buildIWContent(place) {
 
 
 //REVIEW PLACE 
+
 function PlaceReviews(place) {
 
-   var imageHtml='';
-  if (place.photos) {
+   var ResImageHtml='';
+
+  if (place.photos != null) {
      for (var i = 0; i<place.photos.length ; i++){
    
-      imageHtml +=  '<img class="views"' +
+      ResImageHtml +=  '<img class="ResImage"' +
             'src="' + place.photos[i].getUrl({'maxWidth': 500, 'maxHeight': 500}) + '"/>' 
-    // document.getElementById('review-image').innerHTML= imageHtml;
+ //    document.getElementById('res-image').innerHTML= ResImageHtml;
           }
-  
-     console.log(imageHtml);
+         // console.log(ResImageHtml);
   }
-     document.getElementById('review-url').innerHTML = '<b><a   href="' + place.url +
-     '">' + place.name + '</a></b>';
-
-    document.getElementById('review-address').textContent = place.vicinity;
+   var  urlHtml = '<b><a   href="' + place.url +'">' + place.name + '</a></b>';
+ //   document.getElementById('res-url').innerHTML = urlHtml;
+    
+  //  document.getElementById('res-address').textContent = place.vicinity;
       
-    var reviewsHtml = '', user_idHtml='';
+    var reviewsHtml = '';
     if(place.reviews){
         for (var j = 0; j < place.reviews.length; j++) {
           reviewsHtml += '<p class="review-text">' + place.reviews[j].text + '</p>'
@@ -351,22 +377,15 @@ function PlaceReviews(place) {
           reviewsHtml += '<span class="review-rating">' + place.reviews[j].rating + '</span>'
          // user_idHtml +=  (place.reviews[j].author_url) 
          // avartaHtml = user_idHtml.substr(24);
-    //  document.getElementById('iw-reviews').style.display = '';
-   //   document.getElementById('reviews').innerHTML = reviewsHtml;
-
-      }
-   //console.log(avartaHtml);
-     console.log (reviewsHtml);
+ //   document.getElementById('iw-reviews').style.display = '';
+  //   document.getElementById('res-reviews').innerHTML = reviewsHtml;
+     }
    }
- }
+   return ResImageHtml +reviewsHtml+urlHtml;
+ //  console.log(reviewsHtml);
+ 
+}
 
-//function get_avatar_from_service(userid, size) {
- // var url = '';
- // url = "http://profiles.google.com/s2/photos/profile/" + userid + "?sz=" + size;
-  // return url;
-//}
-
- // RESTAURANT
 function ShowRestaurant(place_id){
     placeService = new google.maps.places.PlacesService(map);
     placeService.getDetails({
@@ -388,6 +407,51 @@ function searchRestaurant() {
   };
    placeService.radarSearch(search, callback);
 }
+function ShowMuseum(place_id){
+    
+    placeService = new google.maps.places.PlacesService(map);
+    placeService.getDetails({
+        placeId: place_id
+      }, function(place, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          clearMarkers();
+          clearResults();
+          map.panTo(place.geometry.location);
+          map.setZoom(13);
+          map.addListener('idle', searchMuseum);
+        }
+      });
+}
+function searchMuseum() {
+  var search = {
+    bounds: map.getBounds(),
+    types: ['museum'],
+    keyword:  " (attractions) OR (point_of_interest)OR (establishment) "
+  };
+   placeService.radarSearch(search, callback);
+}
+function ShowAttractions(place_id){
+    placeService = new google.maps.places.PlacesService(map);
+    placeService.getDetails({
+        placeId: place_id
+      }, function(place, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          map.panTo(place.geometry.location);
+          map.setZoom(13);
+          map.addListener('idle', searchPark);
+        }
+      });
+}
+function searchAttractions() {
+ 
+  var search = {
+    bounds: map.getBounds(),
+    types: ['park','zoo','amusement_park','church'],
+    keyword:  " (attractions) OR (point_of_interest)OR (establishment) "
+  };
+   placeService.radarSearch(search, callback);
+}
+
 
     
 

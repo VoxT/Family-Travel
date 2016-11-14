@@ -82,6 +82,7 @@
         <p>Những địa điểm hấp dẫn nhất</p>
       </button>
     </div>
+
     </div>
 </div>
 </div>
@@ -309,25 +310,19 @@
       </div>  
       <div class="modal-body">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#restaurants">Mô Tả</a></li>
-            <li><a data-toggle="tab" href="#parks">Cơ Sở Vật Chất</a></li>
-            <li><a data-toggle="tab" href="#museum">Nhận Xét</a></li>
+            <li class="active"><a id= "museum" data-toggle="tab" href="#museum">Bảo tàng</a></li>
+            <li><a data-toggle="tab" href="#parks">Công viên</a></li>
+            <li ><a id="restaurant"  data-toggle ="tab" href="#restaurant">Nhà hàng</a></li>
         </ul>
          <div class="clearfix"> </div>
       <div class="container">
 
         <div class="tab-content">
-          <div id="restaurants" class="tab-pane fade in active">
-            <h3>Mô Tả</h3> 
-            <p>@{{description}}</p>
+          <div id="show" class="tab-pane fade in active">
           </div>
-          <div id="parks" class="tab-pane fade">
-            <h3>Cơ Sơ Vật Chất</h3>
-              @{{amenities}}
+          <div id="show" class="tab-pane fade">    
           </div>
-          <div id="museum" class="tab-pane fade">
-            <h3>Nhận Xét</h3>
-            @{{reviews}}
+          <div  id="show" class="tab-pane fade">
           </div>
         </div>
       </div>
@@ -594,9 +589,9 @@
   <script src="{{ elixir('js/apiScript.js') }}"></script> 
   <script src="{{ elixir('js/homeScript.js') }}"></script>
   <script src="{{ elixir('js/searchResult.js') }}"></script>
-   <!--  <script async defer
+    <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&callback=initMap&language=vi&region=VN&libraries=places">
-    </script> -->
+    </script>
 
 @endsection
 
