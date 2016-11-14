@@ -47,7 +47,7 @@ class GetHotelListController extends Controller
         );
         $addParams = array(
             'sortColumn' => 'rating',
-            'sortorder' =>'asc',
+            'sortorder' =>'desc',
             'pageindex' => 0,
             'pagesize' => 10);
         
@@ -338,7 +338,7 @@ class GetHotelListController extends Controller
             }
         }
         else
-            $image_url = null;
+            $image_url = array();
         $hotel_array[(string) $hotel_id] =
             array(
             'price_per_room_night' => number_format($price_per_room_night, 0, '.', ''),
@@ -384,7 +384,7 @@ class GetHotelListController extends Controller
     {
         $addParams = array(
             'sortColumn' => 'rating',
-            'sortorder' =>'asc',
+            'sortorder' =>'desc',
             'pageindex' => $request->index,
             'pagesize' => 10);
 
@@ -425,7 +425,10 @@ class GetHotelListController extends Controller
                 $hotel_id  = $ht['hotel_id'];
 
                 $hotel_array[(string) $hotel_id] = array(
-                    'url'=> $url
+                    'url'=> $url,
+                    'total_hotels'=>$total_hotels,
+                    'total_available_hotels' => $total_available_hotels,
+                    'star_rating' => $ht['star_rating']
                     );
 
             }
