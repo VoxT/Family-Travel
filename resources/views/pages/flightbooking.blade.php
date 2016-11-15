@@ -4,8 +4,9 @@
 @section('content')
 
 @php
-	$flight_details = ((array) json_decode($flightDetails))['flight'];
-	$input = ((array) json_decode($flightDetails))['input'];
+	$jsonToArray = (array) json_decode($flightDetails);
+	$flight_details = $jsonToArray['flight'];
+	$input = $jsonToArray['input'];
 @endphp
 <div class="container" style="padding-top: 62px;">
 
@@ -131,7 +132,7 @@
 						   	</div>
 						 </div>
 
-					<form action="postFlight" method="post" id="postHotel" enctype='application/json'>
+					<form action="postFlight" method="post" id="postFlight" enctype='application/json'>
 							 {{ csrf_field() }}
 							<input type="hidden" name="flightdetails" value="">
 						
@@ -199,8 +200,8 @@
 	var json = @php echo $flightDetails; @endphp;
 	var flightJson = JSON.stringify(json);
 	$(document).on('click', '#book', function() {
-		$('input[name="hoteldetails"').val(flightJson);
-		$('#postHotel').submit();
+		$('input[name="flightdetails"').val(flightJson);
+		$('#postFlight').submit();
 	});
 </script>
 @endsection

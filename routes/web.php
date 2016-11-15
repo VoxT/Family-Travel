@@ -23,4 +23,6 @@ Route::group(['middleware' => ['web']], function () {
 	Auth::routes();
 
 	Route::post('booking/postHotel', 'BookingController@postBookingHotel')->middleware('checklogin');
+
+	Route::post('booking/postFlight', 'BookingController@postBookingFlight')->middleware('checklogin');
 });

@@ -58,10 +58,10 @@
 	 		<div class="search-tabs-box">
 		        <ul>
 		            <li class="tab  active ">
-		                <a href="http://flights.travelandleisure.com/en-US/flights/" data-tab="flights">
+		                <!-- <a href="http://flights.travelandleisure.com/en-US/flights/" data-tab="flights">
 		                    <i class="fa fa-plane" aria-hidden="true"></i>
 		                    <span data-i18n="breadcrumbs.flights">Flights</span>
-		                </a>
+		                </a> -->
 		            </li>
 		        </ul>
 		    </div>
@@ -71,14 +71,14 @@
 		 			<div class="field-box flex">
 			 			<div class="place-selector">
 					        <div class="place-selector__root clearfix">
-					            <input type="text" name="originplace" id="origin-input" placeholder="Origin Place" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="Ha noi" />
+					            <input type="text" name="originplace" id="origin-input" placeholder="Điểm đi" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="" />
 					        </div>
 					    </div>
 				    </div>
 				    <div class="field-box flex">
 			 			<div class="place-selector">
 					        <div class="place-selector__root clearfix" tabindex="1">
-					            <input type="text" name="destinationplace" id="destination-input" placeholder="Destination Place" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="Ho Chi Minh">
+					            <input type="text" name="destinationplace" id="destination-input" placeholder="Điểm đến" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="">
 					        </div>
 					    </div>
 				    </div>

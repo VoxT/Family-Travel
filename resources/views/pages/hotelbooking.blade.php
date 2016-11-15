@@ -20,8 +20,9 @@
 							    <div class="panel-heading" role="tab" id="headingOne">
 							      	<div class="row">
 							          	<div class="col-md-6">
-							          	@php( $input = ((array) json_decode($hotelDetails))['input'])
-							          	@php( $hotel_details = ((array) json_decode($hotelDetails))['hotel'] )
+							          	@php( $jsonToArray = (array) json_decode($hotelDetails))
+							          	@php( $input = $jsonToArray['input'])
+							          	@php( $hotel_details = $jsonToArray['hotel'] )
 
 							          		<h4>{{ $hotel_details->hotel->name }}</h4>
 							          	</div>

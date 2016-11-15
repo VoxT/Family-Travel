@@ -21,7 +21,35 @@ class BookingController extends Controller
 
     public function postBookingFlight(Request $request)
     {
-    	print_r((array) json_decode($request->flightdetails));    	
+    	$flight_details = (array) json_decode($request->flightdetails);    
+        $input = $flight_details['input'];
+        $flight = $flight_details['flight'];
+
+        // create flight round trip
+        $id = DB::table('flight_round_trip')->insertGetId(
+            ['cabin_class' => $input->cabin_class,
+             'number_of_seat' => $input->adults,
+             'price' => $flight->Price,
+             'full_name' => $request->full_name,
+             'phone' => $request->phone,
+             'email' => $request->email,
+             'gender' => 'other',
+             'tour_id' => '1',
+             ]
+        );	
+
+        // create flight
+        $id = DB::table('flights')->insertGetId(
+            ['cabin_class' => $input->cabin_class,
+             'number_of_seat' => $input->adults,
+             'price' => $flight->Price,
+             'full_name' => $request->full_name,
+             'phone' => $request->phone,
+             'email' => $request->email,
+             'gender' => 'other',
+             'tour_id' => '1',
+             ]
+        );  
     }
 
     public function postBookingHotel(Request $request)
