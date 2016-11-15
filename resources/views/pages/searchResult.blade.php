@@ -310,22 +310,19 @@
       </div>  
       <div class="modal-body">
         <ul class="nav nav-tabs">
-            <li class="active"><a id= "museum" data-toggle="tab" href="#museum">Bảo tàng</a></li>
+            <li class="active"><a data-toggle="tab" href="#museum">Bảo tàng</a></li>
             <li><a data-toggle="tab" href="#parks">Công viên</a></li>
-            <li ><a id="restaurant"  data-toggle ="tab" href="#restaurant">Nhà hàng</a></li>
+            <li ><a data-toggle ="tab" href="#restaurant">Nhà hàng</a></li>
         </ul>
          <div class="clearfix"> </div>
-      <div class="container">
-
         <div class="tab-content">
-          <div id="show" class="tab-pane fade in active">
+          <div id="museum" class="tab-pane fade in active">
           </div>
-          <div id="show" class="tab-pane fade">    
+          <div id="parks" class="tab-pane fade">    
           </div>
-          <div  id="show" class="tab-pane fade">
+          <div  id="restaurant" class="tab-pane fade">
           </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
@@ -384,7 +381,6 @@
   <script src="{{ elixir('js/searchResult.js') }}"></script>
 
 <script src="{{ elixir('js/template.js') }}"></script>
-<!-- <script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHQZWI0R8e412mvB1k44OOigCcPe5FTh0&callback=initMap&language=vi&region=VN&libraries=places">
-</script> -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40&callback=initMap&language=vi&region=VN&libraries=places">
+</script>
 @endsection

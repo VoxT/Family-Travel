@@ -2430,3 +2430,24 @@ p.car-class {
 .hop-location {
     color: #797979;
 }
+
+/* place review */
+.place-review {
+  width: 48%;
+  height: auto;
+  padding: 10px;
+  border: 1px solid grey;
+  float: left;
+  margin: 1px;
+  max-height: 400px;
+  overflow: hidden;
+}
+.place-review img {
+  width: 100%;
+  max-height: 200px;
+}
+#thingsModal .tab-content {
+  padding: 10px;
+  background: white;
+  overflow: auto;
+}

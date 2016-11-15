@@ -3,6 +3,10 @@ var key = 'AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40';
 
 var olat = request.olat, olng = request.olng, dlat = request.dlat, dlng = request.dlng;
 
+var stop = false, typeofthing = 'all';
+
+var restaurantListener = null, museumListener = null;
+
 // begin result search map
 var map, placeService, infoWindow;
 var markers = [];
@@ -136,11 +140,11 @@ function initMap() {
     //   ShowRestaurant(destination_place_id);
     // });
 
-     $(document).on('click', '#restaurant', function() {
+     $(document).on('click', 'a[href="#restaurant"]', function() {
      ShowRestaurant(destination_place_id);
     });  
      
-     $(document).on('click', '#museum', function() {
+     $(document).on('click', 'a[href="#museum"]', function() {
      ShowMuseum(destination_place_id);
     }); 
      
@@ -223,15 +227,10 @@ function search() {
 
 function callback(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
-  
     for (var i = 0, results; result = results[i]; i++) {
        //PlaceReviews(result);
        addMarker(result);
        //console.log(PlaceReviews(result));
-     placeService.getDetails({placeId: result.place_id},
-      function(place, status) {
-         $("#show").append(PlaceReviews(place));
-       });
     }
 
   }
@@ -245,6 +244,7 @@ function addMarker(place) {
       if (status !== google.maps.places.PlacesServiceStatus.OK) {
         return;
       }
+
       var icon = intersectionJson(iconType, result.types);
       if(!(icon.length > 0)) {
         icon.push('art_gallery');
@@ -268,6 +268,12 @@ function addMarker(place) {
            PlaceReviews(result);
       });    
 
+      switch(typeofthing) {
+        case 'museum': $('#museum').append(PlaceReviews(result)); break;
+        case 'restaurant': $('#restaurant').append(PlaceReviews(result)); break;
+        case 'park': $('#park').append(PlaceReviews(result)); break;
+        default: break;
+      }
     }); 
 }
 
@@ -287,7 +293,6 @@ function clearMarkers() {
   for (var i = 0; i < markers.length; i++) {
     if (markers[i]) {
       markers[i].setMap(null);
-      console.log('here');
     }
   }
   markers = [];
@@ -316,13 +321,13 @@ function showInfoWindow(result) {
           
   // Load the place information into the HTML elements used by the info window.
 function buildIWContent(place) {
-  if(place.photos) {
-  document.getElementById('iw-icon').innerHTML = '<img class=" image_place"' +
-      'src="' + place.photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100}) + '"/>';
-    }
-    else {
+  if(!place.photos)
+  {
   document.getElementById('iw-icon').innerHTML = '<img class=" image_place"'+
       'src="images/iw-icon/icon.png " />';
+    }  else {
+  document.getElementById('iw-icon').innerHTML = '<img class=" image_place"' +
+      'src="' + place.photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100}) + '"/>';
     }
 
   document.getElementById('iw-url').innerHTML = '<b><a   href="' + place.url +
@@ -354,47 +359,51 @@ function buildIWContent(place) {
 function PlaceReviews(place) {
 
    var ResImageHtml='';
-
-  if (place.photos != null) {
-     for (var i = 0; i<place.photos.length ; i++){
+  if (!place.photos) {} else {
+     for (var i = 0; i< place.photos.length ; i++){
    
-      ResImageHtml +=  '<img class="ResImage"' +
+      ResImageHtml +=  '<img class="ResImage img-responsive"' +
             'src="' + place.photos[i].getUrl({'maxWidth': 500, 'maxHeight': 500}) + '"/>' 
  //    document.getElementById('res-image').innerHTML= ResImageHtml;
-          }
+        break;
+      }
          // console.log(ResImageHtml);
   }
-   var  urlHtml = '<b><a   href="' + place.url +'">' + place.name + '</a></b>';
+   var  urlHtml = '<h4><a target="_blank"  href="' + place.url +'">' + place.name + '</a></h4>';
  //   document.getElementById('res-url').innerHTML = urlHtml;
     
   //  document.getElementById('res-address').textContent = place.vicinity;
       
-    var reviewsHtml = '';
+    var reviewsHtml = '<div class="review-details">';
     if(place.reviews){
         for (var j = 0; j < place.reviews.length; j++) {
           reviewsHtml += '<p class="review-text">' + place.reviews[j].text + '</p>'
-          reviewsHtml += '<p class="review-author">' + place.reviews[j].author_name + '</p>'
-          reviewsHtml += '<span class="review-rating">' + place.reviews[j].rating + '</span>'
+          reviewsHtml += '<p class="review-author"><b>' + place.reviews[j].author_name
+                      + '</b><span class="review-rating"> Đánh giá:' + place.reviews[j].rating + '</span></p>'
          // user_idHtml +=  (place.reviews[j].author_url) 
          // avartaHtml = user_idHtml.substr(24);
  //   document.getElementById('iw-reviews').style.display = '';
   //   document.getElementById('res-reviews').innerHTML = reviewsHtml;
      }
+     reviewsHtml += '</div>';
    }
-   return ResImageHtml +reviewsHtml+urlHtml;
+   return '<div class="place-review">' + urlHtml + ResImageHtml + reviewsHtml + '</div>';
  //  console.log(reviewsHtml);
  
 }
 
 function ShowRestaurant(place_id){
-    placeService = new google.maps.places.PlacesService(map);
     placeService.getDetails({
         placeId: place_id
       }, function(place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           map.panTo(place.geometry.location);
           map.setZoom(13);
-          map.addListener('idle', searchRestaurant);
+          clearMarkers();
+          clearResults();
+          typeofthing = 'restaurant';
+          google.maps.event.removeListener(museumListener);
+          restaurantListener = map.addListener('idle', searchRestaurant);
         }
       });
 }
@@ -408,8 +417,6 @@ function searchRestaurant() {
    placeService.radarSearch(search, callback);
 }
 function ShowMuseum(place_id){
-    
-    placeService = new google.maps.places.PlacesService(map);
     placeService.getDetails({
         placeId: place_id
       }, function(place, status) {
@@ -418,7 +425,10 @@ function ShowMuseum(place_id){
           clearResults();
           map.panTo(place.geometry.location);
           map.setZoom(13);
-          map.addListener('idle', searchMuseum);
+
+          typeofthing = 'museum';
+          google.maps.event.removeListener(restaurantListener);
+          museumListener = map.addListener('idle', searchMuseum);
         }
       });
 }
@@ -426,12 +436,11 @@ function searchMuseum() {
   var search = {
     bounds: map.getBounds(),
     types: ['museum'],
-    keyword:  " (attractions) OR (point_of_interest)OR (establishment) "
+    keyword:  " (attractions) OR (point_of_interest) OR (establishment) "
   };
    placeService.radarSearch(search, callback);
 }
 function ShowAttractions(place_id){
-    placeService = new google.maps.places.PlacesService(map);
     placeService.getDetails({
         placeId: place_id
       }, function(place, status) {
