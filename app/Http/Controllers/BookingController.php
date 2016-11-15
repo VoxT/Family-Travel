@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -23,13 +23,13 @@ class BookingController extends Controller
     {
     	$flight_details = (array) json_decode($request->flightdetails);    
         $input = $flight_details['input'];
-        $flight = $flight_details['flight'];
+        $flights = $flight_details['flight'];
 
         // create flight round trip
         $id = DB::table('flight_round_trip')->insertGetId(
-            ['cabin_class' => $input->cabin_class,
+            ['cabin_class' => $input->cabinClass,
              'number_of_seat' => $input->adults,
-             'price' => $flight->Price,
+             'price' => $flights->Price,
              'full_name' => $request->full_name,
              'phone' => $request->phone,
              'email' => $request->email,
@@ -39,17 +39,29 @@ class BookingController extends Controller
         );	
 
         // create flight
-        $id = DB::table('flights')->insertGetId(
-            ['cabin_class' => $input->cabin_class,
-             'number_of_seat' => $input->adults,
-             'price' => $flight->Price,
-             'full_name' => $request->full_name,
-             'phone' => $request->phone,
-             'email' => $request->email,
-             'gender' => 'other',
-             'tour_id' => '1',
-             ]
-        );  
+        foreach ($flights as $key => $flight) {
+            if($key === 'Price') continue;
+            else
+            foreach ($flight->segment as $index => $segment) {
+                DB::table('flights')->insert(
+                    ['origin_place' => $segment->originName,
+                     'destination_place' => $segment->destinationName,
+                     'origin_code' => $segment->originCode,
+                     'destination_code' => $segment->destinationCode,
+                     'departure_datetime' => new \DateTime($segment->departureDate.' '.$segment->departureTime),
+                     'arrival_datetime' =>  new \DateTime($segment->arrivalDate.' '.$segment->arrivalTime),
+                     'flight_number' => $segment->flightCode.$segment->flightNumber,
+                     'carrier_logo' => $segment->imageUrl,
+                     'carrier_name' => $segment->imageName,
+                     'type' => $key,
+                     'index' => $index,
+                     'round_trip_id' => $id,
+                     ]
+                );  
+            }
+        }
+
+        return redirect('/report/1');
     }
 
     public function postBookingHotel(Request $request)

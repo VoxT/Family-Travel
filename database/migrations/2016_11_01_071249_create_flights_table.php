@@ -17,8 +17,10 @@ class CreateFlightsTable extends Migration
             $table->increments('id');
             $table->string('origin_place');
             $table->string('destination_place');
-            $table->date('departure_date');
-            $table->date('arrival_date');
+            $table->string('origin_code');
+            $table->string('destination_code');
+            $table->dateTime('departure_datetime');
+            $table->dateTime('arrival_datetime');
             $table->char('flight_number', 6);
             $table->string('carrier_logo');
             $table->string('carrier_name');

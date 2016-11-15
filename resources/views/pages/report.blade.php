@@ -1,47 +1,46 @@
 @extends('layouts.master')
-@section('title', 'Report Page')
+@section('title', 'Trang Đặt Chỗ')
 
 @section('content')
 
 @php
-	$jsonToArray = (array) json_decode($flightDetails);
-	$flight_details = $jsonToArray['flight'];
-	$input = $jsonToArray['input'];
+	$flight_round = json_decode(json_encode($data['flights']));
 @endphp
 <div class="container" style="padding-top: 62px;">
 
 	<div class="page-header">
-        <h1 id="timeline">Đặt Vé Máy Bay</h1>
+        <h1 id="timeline">Tổng Hợp Chuyến Đi</h1>
     </div>
-	<ul class="timeline col-md-10 col-md-offset-1">
+	<ul class="timeline col-md-12">
 	    <li class="timeline-inverted">
 		     <div class="timeline-badge flight"><i class="fa fa-plane" aria-hidden="true"></i></div>
 		     <div class="timeline-panel">
-		        <div class="timeline-heading">
-		        </div>
-		        <div class="timeline-body" id="flight-booking">
+		        <div class="timeline-heading"></div>
+
+		        <div class="timeline-body">
 		          	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-						<div class="panel panel-default  col-md-7">
-					       	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+					@foreach($flight_round as $key => $flights)
+						<div class="panel panel-default">
+					       	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$key}}" aria-expanded="true" aria-controls="collapseOne">
 							    <div class="panel-heading" role="tab" id="headingOne">
 							      <h4 class="panel-title clearfix">
 							          <div class="col-md-12">
-							          		<h4>{{$flight_details->Outbound->overall->originName}} - {{$flight_details->Outbound->overall->destinationName}}</h4>
+							          		<h4>{{$flights->Outbound[0]->originName}} - {{$flights->Outbound[count($flights->Outbound) - 1]->destinationName}}</h4>
 							          </div>
 							          <div class="col-md-12">
-							          		<h4>Tổng giá <span>{{number_format($flight_details->Price,0,",",".")}}<sup>đ</sup></span></h4>
+							          		<h4>Tổng giá <span>{{number_format($flights->Round->price,0,",",".")}}<sup>đ</sup></span></h4>
 							          </div>
 							      </h4>
 							    </div>
 					        </a>
 
-						    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+						    <div id="collapse{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 						      <div class="panel-body">
 							    <div class="details" id="flightdetailsmodal">
 							    	<br/>
 									<div class="details-row">
-										<h3 class="row-title"><b>Lượt đi</b> {{$input->outboundDate}}</h3>
-										@php ( $oSegment = $flight_details->Outbound->segment )
+										<h3 class="row-title"><b>Lượt đi</b> {{$flights->Outbound[0]->departureDate}}</h3>
+										@php ( $oSegment = $flights->Outbound)
 										@foreach($oSegment as $i => $flight)
 										<div class="details-content">
 											<div class="content-info">
@@ -65,7 +64,7 @@
 								        		<div class="flight-logo">
 													<img src="{{$flight->imageUrl}}" atl="{{$flight->imageName}}">
 												</div>
-								        		<span>{{$flight->imageName.' - '.$flight->flightCode.$flight->flightNumber}}</span>
+								        		<span>{{$flight->imageName.' - '.$flight->flightNumber}}</span>
 								        	</div>
 										</div>
 										@if(($i+1) < count($oSegment)) 
@@ -81,12 +80,12 @@
 									</div>
 
 							    	<br/>
-									
+								
+									@php ( $iSegment = $flights->Inbound)
+									@if(count($iSegment))
 									<div class="details-row">
-										@php ( $iSegment = $flight_details->Inbound->segment )
-										@if(count($iSegment))
-										<h3 class="row-title"><b>Lượt về</b> {{$input->inboundDate}}</h3>
-										@endif
+
+										<h3 class="row-title"><b>Lượt về</b> {{$flights->Inbound[0]->departureDate}}</h3>
 										@foreach($iSegment as $i => $flight)
 										<div class="details-content">
 											<div class="content-info">
@@ -110,7 +109,7 @@
 								        		<div class="flight-logo">
 													<img src="{{$flight->imageUrl}}" atl="{{$flight->imageName}}">
 												</div>
-								        		<span>{{$flight->imageName.' - '.$flight->flightCode.$flight->flightNumber}}</span>
+								        		<span>{{$flight->imageName.' - '.$flight->flightNumber}}</span>
 								        	</div>
 										</div>
 										@if(($i+1) < count($iSegment)) 
@@ -124,64 +123,17 @@
 														{{$stoptime}}</span></div>
 										@endif
 										@endforeach
-										<br>
-										
 									</div>
+									@endif
 								</div>
 						      </div>
 						   	</div>
 						 </div>
-
-					<form action="postFlight" method="post" id="postFlight" enctype='application/json'>
-							 {{ csrf_field() }}
-							<input type="hidden" name="flightdetails" value="">
-						
-						<div class="col-md-5" style="padding-left: 30px;">
-							<div class="form-group">
-								<label for="full_name" class="control-label">Họ Tên</label>
-								<div class="">
-									<input class='form-control' data-type="input" type='text' name='full_name' id='full_name' value ='{{Auth::user()->full_name}}' required />
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="email" class="control-label">Email</label>
-								<div class="">
-									<input class='form-control' data-type="input" type='text' name='email' id='email' value ='{{Auth::user()->email}}' required />
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="phone" class="control-label">Số Điện Thoại</label>
-								<div class="">
-									<input class='form-control' data-type="input" type='text' name='phone' id='phone' value ='{{Auth::user()->phone}}' required/>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="address" class="control-label">Địa Chỉ</label>
-								<div class="">
-									<input class='form-control' data-type="input" type='text' name='address' id='address' value ='{{Auth::user()->address}}' />
-								</div>
-							</div>
-							<div class="form-group">
-		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="book">
-		                                Giữ Chỗ
-		                            </button>
-		                        </div>
-		                    </div>
-							<div class="form-group">
-		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="payment">
-		                                Đặt và Thanh Toán
-		                            </button>
-		                        </div>
-		                    </div>
-						</div>
-
-					</form>
-		      		</div>
-		     	</div>
+		      		@endforeach
+		     		</div>
+		        </div>
 		     </div>
-	   </li>
+	   	</li>
 	</ul>
 </div>
 
@@ -196,12 +148,4 @@
 @section('scripts')
   @parent
 
-<script type="text/javascript">
-	var json = @php echo $flightDetails; @endphp;
-	var flightJson = JSON.stringify(json);
-	$(document).on('click', '#book', function() {
-		$('input[name="flightdetails"').val(flightJson);
-		$('#postFlight').submit();
-	});
-</script>
 @endsection
