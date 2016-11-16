@@ -95,6 +95,46 @@ class ReportController extends Controller
     	return array('Outbound' => $oSegment, 'Inbound' => $dSegment, 'Payment' => array());
     }
 
+    public function renderHotelResponse($hotelRoundTripId)
+    {
+
+        $hotels  = DB::table('hotels')->where('tour_id', $hotelRoundTripId)->get();
+
+        $data = array();
+        foreach ($hotels as $key => $value) 
+        {
+               array_push($data,array(
+                'checkindate' => $value->check_in_date,
+                'checkoutdate' => $value->check_out_date,
+                'guests' => $value->guests,
+                'rooms' => $value->rooms,
+                'price' => $value->price,
+                'policy' => json_decode($value->policy),
+                'room_type' => $value->room_type,
+                'reviews' => json_decode($reviews),
+                'hotel' => array(
+                    'name' => $value->name,
+                    'description' => $value->description,
+                    'location' => $value->location,
+                    'popularity' => $value->popularity,
+                    'amenities' => json_decode($value->amenities),
+                    'latitude' => $value->latitude,
+                    'longitude' => $value->longitude,
+                    'star_rating' => $value->star_rating,
+                    'image_url' => json_decode($value->image_url)
+                    )
+                'user' => array(
+                    'full_name' => $value->full_name,
+                    'email' => $value->email,
+                    'address' => $value->address,
+                    'phone' => $value->phone,
+                    'gender' => $value->gender
+                    ) 
+                ));
+        }
+        return $data;
+    }
+
     public function getReport($tourId)
     {
     	$user = Auth::user();
@@ -108,6 +148,8 @@ class ReportController extends Controller
     			'data', array('flights' => $this->flightsRespone($tourId))
     		);
     }
+
+
 
     // api: get available tours
     public function postTour(Request $request)
