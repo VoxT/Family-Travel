@@ -8,6 +8,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class ReportController extends Controller
 {
@@ -95,6 +98,8 @@ class ReportController extends Controller
     public function getReport($tourId)
     {
     	$user = Auth::user();
+    	if(!$user) return redirect('/');
+
     	$tour = App\Tours::where('id', $tourId)
     						->where('user_id', $user->id)->get();
     	if(!$tour) return $this->jsonResponse(null);
@@ -102,5 +107,30 @@ class ReportController extends Controller
     	return view('pages.report')->with(
     			'data', array('flights' => $this->flightsRespone($tourId))
     		);
+    }
+
+    // api: get available tours
+    public function postTour(Request $request)
+    {
+        $user = Auth::user();
+        if(!$user) return jsonResponse();
+
+        $tourId = DB::table('tours')->insertGetId(
+                ['origin_place' => $request->originName,
+                'destination_place' => $request->destinationName,
+                'outbound_date' => $request->startDate,
+                'inbound_date' => $request->endDate,
+                'adults' => $request->adults,
+                'children' => $request->children,
+                'infants' => $request->infants,
+                'user_id' => $user->id
+                ]
+            );
+        $tour = App\Tours::where('id', $tourId)->get()->first();
+
+        $expiresAt = Carbon::now()->endOfDay();
+        Cache::put('tourId', $tour->id , $expiresAt);
+
+        return $this->jsonResponse($tour);
     }
 }

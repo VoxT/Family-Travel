@@ -17,10 +17,13 @@ class CreateToursTable extends Migration
             $table->increments('id');
             $table->string('origin_place');
             $table->string('destination_place');
+            $table->string('origin_location');
+            $table->string('destination_location');
             $table->date('outbound_date');
             $table->date('inbound_date');
             $table->tinyInteger('adults');
-            $table->tinyInteger('childrens');
+            $table->tinyInteger('children');
+            $table->tinyInteger('infants');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

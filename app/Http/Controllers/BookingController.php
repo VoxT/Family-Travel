@@ -18,7 +18,7 @@ class BookingController extends Controller
 
     public function redirectToBookingHotel(Request $request)
     {
-    	return View('pages.hotelbooking')->with('hotelDetails', $request->details)->with('tourId', $request->tourId);;
+    	return View('pages.hotelbooking')->with('hotelDetails', $request->details)->with('tourId', $request->tourId);
     }
 
     public function postBookingFlight(Request $request)

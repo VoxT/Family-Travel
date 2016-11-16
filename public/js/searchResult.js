@@ -1,8 +1,6 @@
 
 $(document).ready(function() {
 
-var tours = {};
-
 function outbounddatepicker() {
 	$('#outbounddate').datepicker({
 	  dateFormat: "yy-mm-dd",
@@ -224,9 +222,9 @@ var outbounddate = new Date(request.outbounddate),
 	$('#carModal .depart span').text(day + '/' + month + '/' + year);
 	$('#hotelModal .depart span').text(day + '/' + month + '/' + year);
 
-
+var inbounddate = '';
 if(request.inbounddate != '') {
-	var inbounddate = new Date(request.inbounddate),
+	inbounddate = new Date(request.inbounddate),
 	day = inbounddate.getDate(),
 	month = inbounddate.getMonth() + 1,
 	year = inbounddate.getFullYear();
@@ -396,28 +394,30 @@ function renderHotelDetails(id) {
 	}
 
 	var reviews = '';
-	for(var i in hotel.reviews.categories) {
-		if ((i%2) == 0) {
-            reviews += '<div class="row">'
+	if(!hotel.reviews.categories)
+		for(var i in hotel.reviews.categories) {
+			if ((i%2) == 0) {
+	            reviews += '<div class="row">'
+			}
+			reviews += 
+	              '<div class="col-md-6">'
+	              +'<span class="badge">' + hotel.reviews.categories[i].score/10 +'</span>'
+	                +'<h5>' + hotel.reviews.categories[i].name +'</h5>'
+	                +'<p>';
+	        for(var j in hotel.reviews.categories[i].entries){
+	        	reviews += '"' + hotel.reviews.categories[i].entries[j] + '", ';
+	        }
+	        reviews = reviews.replace(/, $/, "") + ".";
+	        reviews += '</p> </div>';
+	        
+	        if (((i%2) - 1) == 0) {
+	            reviews += '</div>';
+			} 
+		}	
+	    if (i%2 == 0) {
+	        reviews += '</div>';
 		}
-		reviews += 
-              '<div class="col-md-6">'
-              +'<span class="badge">' + hotel.reviews.categories[i].score/10 +'</span>'
-                +'<h5>' + hotel.reviews.categories[i].name +'</h5>'
-                +'<p>';
-        for(var j in hotel.reviews.categories[i].entries){
-        	reviews += '"' + hotel.reviews.categories[i].entries[j] + '", ';
-        }
-        reviews = reviews.replace(/, $/, "") + ".";
-        reviews += '</p> </div>';
-        
-        if (((i%2) - 1) == 0) {
-            reviews += '</div>';
-		} 
-	}	
-    if (i%2 == 0) {
-        reviews += '</div>';
-	}
+	else reviews = '<p> Không có nhận xét nào cho Khách sạn này. </p>';
 
 	var result = template.replace('{{images_li}}', images_li)
 			.replace('{{data-target}}', id)
@@ -444,12 +444,66 @@ function renderHotelDetails(id) {
 function redirectToBook(details, action) {
 	$('#book input[name="details"]').val(JSON.stringify(details));
 	$('#book').attr('action', action);
-	$.ajax({
-		url: 'api/v1/getuser',
-		method: 'get'
-	}).done(function(status) {
-		status.login? $('#book').submit(): $('#loginModal').modal();
-	}).fail(function(){
+	if(!isLogin) {
+		$.ajax({
+			url: 'api/v1/getuser',
+			method: 'get'
+		}).done(function(status) {
+			isLogin = status.login;
+			if(status.login) 
+				{
+					if(tourId != "") {
+						$('input[name="tourId"]').val(tourId);
+						$('#book').submit();
+					}
+					else {
+						tourHandler();
+					}
+				}
+				else $('#loginModal').modal();
+		}).fail(function(){
 
-	});
+		});
+	}
+	else 
+		if(tourId != "") {
+			$('input[name="tourId"]').val(tourId);
+			$('#book').submit();
+		}
+		else {
+			tourHandler();
+		}
+}
+
+
+// Tours handler
+var t = '';
+function tourHandler() {
+	var originName = $('#origin-input').val();
+	var destinationName = $('#destination-input').val();
+	$.ajax({
+		url: 'api/v1/postTour',
+		method: 'post',
+		data: {
+			originName: originName,
+			destinationName: destinationName,
+			startDate: request.outbounddate,
+			endDate: (request.inbounddate == '')? nextweek():request.inbounddate,
+			adults: request.adults,
+			children: request.children,
+			infants: request.infants
+		}
+	}).done(function(data){
+		tourId = data.data.id;
+		$('input[name="tourId"]').val(tourId);
+		$('#book').submit();
+	}).fail(function(e){
+
+	})
+}
+
+function nextweek(){
+    var today = new Date();
+    var nextweek = new Date(today.getFullYear(), today.getMonth(), today.getDate()+7);
+    return nextweek;
 }

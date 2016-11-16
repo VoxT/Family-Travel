@@ -350,6 +350,7 @@
 <form action="/booking/" method="post" target="_blank" id="book" enctype='application/json'>
    {{ csrf_field() }}
   <input type="hidden" name="details" value="">
+  <input type="hidden" name="tourId" value="">
 </form>
 
   
@@ -364,6 +365,7 @@
 
 <script type="text/javascript">
   var request = JSON.parse('{{ $request}}'.replace(/&quot;/g,'"'));
+  var tourId = '{{$tourId}}';
 
   $('#switch').click(function(){
     var originInput = $('#origin-input').val();

@@ -40,3 +40,5 @@ Route::get('getDataByRequestURL', 'HomeController@getDataByRequestURL');
 Route::get('getlisthotel', 'GetHotelListController@getHotelList');
 Route::get('gethoteldetails', 'GetHotelListController@getHotelDetails');
 Route::get('getHotelListByIndex', 'GetHotelListController@getHotelListByIndex');
+
+Route::post('postTour', 'ReportController@postTour');

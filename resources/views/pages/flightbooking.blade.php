@@ -135,7 +135,8 @@
 					<form action="postFlight" method="post" id="postFlight" enctype='application/json'>
 							 {{ csrf_field() }}
 							<input type="hidden" name="flightdetails" value="">
-						
+  							<input type="hidden" name="tourId" value="{{$tourId}}">
+
 						<div class="col-md-5" style="padding-left: 30px;">
 							<div class="form-group">
 								<label for="full_name" class="control-label">Họ Tên</label>
