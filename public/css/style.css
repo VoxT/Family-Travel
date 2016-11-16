@@ -2108,7 +2108,9 @@ p.car-class {
         right: auto;
     }
 }
-
+.panel-heading {
+    padding: 5px 5px !important;
+}
 .panel.panel-default a {
   color: #e7745c;
 }
@@ -2118,7 +2120,14 @@ p.car-class {
 .timeline .panel.panel-default {
   border: 1px dashed #68a19a;
 }
-.timeline .panel-heading {
+.timeline-inverted .panel-body .panel.panel-default {
+  border: 1px solid #68a19a !important;
+}
+.timeline-inverted .timeline-body > .panel-default {
+  border: 1px dashed #68a19a;    
+  margin: 0;
+}
+.timeline-inverted .timeline-body > .panel > a > .panel-heading {
   border-bottom: 1px dashed #68a19a;
 }
 #accordion {
@@ -2129,14 +2138,10 @@ p.car-class {
   border: none;
 }
 #accordion button[id='book'] {
-  background: #04c9a6 !important;
-}
-#accordion button[id='payment'] {
-  margin-top: 10px;
-  background: #e7745c !important
+  background: #68a19a !important;
 }
 #accordion button:hover {
-  background: #68a19a !important
+  background: #e7745c !important
 }
 
 /* hotel list style*/
@@ -2450,4 +2455,14 @@ p.car-class {
   padding: 10px;
   background: white;
   overflow: auto;
+}
+.panel-group {
+  margin: 0;
+}
+
+#flight-booking .panel-heading, #hotel-booking .panel-heading {
+  border-bottom: 1px dashed #68a19a;
+}
+#accordion-hotel .panel-body {
+  border-top: 1px solid #ddd;
 }

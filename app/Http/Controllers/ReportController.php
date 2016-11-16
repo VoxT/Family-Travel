@@ -95,7 +95,7 @@ class ReportController extends Controller
     	return array('Outbound' => $oSegment, 'Inbound' => $dSegment, 'Payment' => array());
     }
 
-    public function renderHotelResponse($hotelRoundTripId)
+    public function hotelResponse($hotelRoundTripId)
     {
 
         $hotels  = DB::table('hotels')->where('tour_id', $hotelRoundTripId)->get();
@@ -111,7 +111,7 @@ class ReportController extends Controller
                 'price' => $value->price,
                 'policy' => json_decode($value->policy),
                 'room_type' => $value->room_type,
-                'reviews' => json_decode($reviews),
+                'reviews' => json_decode($value->reviews),
                 'hotel' => array(
                     'name' => $value->name,
                     'description' => $value->description,
@@ -122,7 +122,7 @@ class ReportController extends Controller
                     'longitude' => $value->longitude,
                     'star_rating' => $value->star_rating,
                     'image_url' => json_decode($value->image_url)
-                    )
+                    ),
                 'user' => array(
                     'full_name' => $value->full_name,
                     'email' => $value->email,
@@ -144,8 +144,12 @@ class ReportController extends Controller
     						->where('user_id', $user->id)->get();
     	if(!$tour) return $this->jsonResponse(null);
 
+        $returnArray = array('flights' => $this->flightsRespone($tourId),
+                            'hotels' => $this->hotelResponse($tourId)
+                        );
+
     	return view('pages.report')->with(
-    			'data', array('flights' => $this->flightsRespone($tourId))
+    			'data',  $returnArray
     		);
     }
 

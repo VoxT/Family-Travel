@@ -165,13 +165,6 @@
 							<div class="form-group">
 		                        <div class="">
 		                            <button type="submit" class="btn btn-primary col-md-12" id="book">
-		                                Giữ Chỗ
-		                            </button>
-		                        </div>
-		                    </div>
-							<div class="form-group">
-		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="payment">
 		                                Đặt và Thanh Toán
 		                            </button>
 		                        </div>

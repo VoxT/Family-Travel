@@ -19,7 +19,7 @@
 					       	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 							    <div class="panel-heading" role="tab" id="headingOne">
 							      	<div class="row">
-							          	<div class="col-md-6">
+							          	<div class="col-md-8">
 							          	@php
 								          	$jsonToArray = (array) json_decode($hotelDetails);
 								          	$input = $jsonToArray['input'];
@@ -28,7 +28,7 @@
 
 							          		<h4>{{ $hotel_details->hotel->name }}</h4>
 							          	</div>
-							          	<div class="col-md-6">
+							          	<div class="col-md-4">
 								            <h4 style="color: #ffad00; text-align: right;"><div class="stars">
 								            @for($i = 1; $i <= 5; $i++)
 												@if($i <= $hotel_details->hotel->star_rating)
@@ -162,13 +162,6 @@
 							<div class="form-group">
 		                        <div class="">
 		                            <button type="button" class="btn btn-primary col-md-12" id="book">
-		                                Giữ Chỗ
-		                            </button>
-		                        </div>
-		                    </div>
-							<div class="form-group">
-		                        <div class="">
-		                            <button type="button" class="btn btn-primary col-md-12" id="payment">
 		                                Đặt và Thanh Toán
 		                            </button>
 		                        </div>
