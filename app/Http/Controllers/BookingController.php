@@ -7,16 +7,18 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\Cache;
+
 class BookingController extends Controller
 {
     public function redirectToBookingFlight(Request $request)
     {
-    	return View('pages.flightbooking')->with('flightDetails', $request->details);
+    	return View('pages.flightbooking')->with('flightDetails', $request->details)->with('tourId', $request->tourId);
     }
 
     public function redirectToBookingHotel(Request $request)
     {
-    	return View('pages.hotelbooking')->with('hotelDetails', $request->details);
+    	return View('pages.hotelbooking')->with('hotelDetails', $request->details)->with('tourId', $request->tourId);;
     }
 
     public function postBookingFlight(Request $request)
@@ -24,7 +26,7 @@ class BookingController extends Controller
     	$flight_details = (array) json_decode($request->flightdetails);    
         $input = $flight_details['input'];
         $flights = $flight_details['flight'];
-
+        echo 'a'.$request->tourId;
         // create flight round trip
         $id = DB::table('flight_round_trip')->insertGetId(
             ['cabin_class' => $input->cabinClass,
@@ -34,7 +36,7 @@ class BookingController extends Controller
              'phone' => $request->phone,
              'email' => $request->email,
              'gender' => 'other',
-             'tour_id' => '1',
+             'tour_id' => $request->tourId,
              ]
         );	
 
