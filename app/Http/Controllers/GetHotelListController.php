@@ -219,7 +219,7 @@ class GetHotelListController extends Controller
             if (array_key_exists('popularity', $hotel))
                 $popularity = $hotel['popularity'];
             else
-                $popularity = null;
+                $popularity = 0;
 
             if (array_key_exists('popularity_desc', $hotel))
                 $popularity_desc = $hotel['popularity_desc'];

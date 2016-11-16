@@ -68,6 +68,39 @@ class BookingController extends Controller
 
     public function postBookingHotel(Request $request)
     {
-    	print_r((array) json_decode($request->hoteldetails));
+
+        $hoteldetails = (array)json_decode($request->hoteldetails);  
+        (object)$input = $hoteldetails['input'];
+        (object)$hotel = $hoteldetails['hotel'];
+        $reviews = json_encode($hotel->reviews);
+
+        
+         DB::table('hotels')->insert(
+            [
+                'check_in_date' => $input->checkindate,
+                'check_out_date' => $input->checkoutdate,
+                'guests' => $input->guests,
+                'rooms' => $input->rooms,
+                'price' => $hotel->price_total,
+                'policy' => json_encode($hotel->policy),
+                'room_type' =>$hotel->room->type_room,
+                'reviews' => $reviews,
+                'name' => $hotel->hotel->name,
+                'description' => $hotel->hotel->description,
+                'location' => $hotel->hotel->address,
+                'popularity' => $hotel->hotel->popularity,
+                'amenities' => json_encode($hotel->hotel->amenities),
+                'latitude' => $hotel->hotel->latitude,
+                'longitude' =>$hotel->hotel->longitude,
+                'star_rating' => $hotel->hotel->star_rating,
+                'image_url' => json_encode($hotel->hotel->image_url),
+                'full_name' => $request->full_name,
+                'email' => $request->email,
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'gender' => 'other',
+                'tour_id' => 1
+            ]);
+        return redirect('/report/1');
     }
 }

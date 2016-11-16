@@ -15,18 +15,28 @@ class CreateHotelsTable extends Migration
     {
         Schema::create('hotels', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
             $table->date('check_in_date');
             $table->date('check_out_date');
-            $table->string('address');
+            $table->integer('guests');
+            $table->integer('rooms');
             $table->integer('price');
-            $table->char('room_type', 6);
+            $table->text('policy');
+            $table->string('room_type', 20);
+            $table->text('reviews');
+            $table->string('name');
+            $table->text('description');
             $table->text('location');
+            $table->integer('popularity');
+            $table->text('amenities');
+            $table->string('latitude',10);
+            $table->string('longitude',10);
+            $table->integer('star_rating');
+            $table->text('image_url');
             $table->string('full_name');
             $table->char('phone', 15);
+            $table->string('address');
             $table->string('email');
             $table->char('gender', 5);
-            $table->text('more_details')->nullable();
             $table->string('payment_id')->nullable();
             $table->foreign('payment_id')->references('paypal_id')->on('payments');
             $table->integer('tour_id')->unsigned();
