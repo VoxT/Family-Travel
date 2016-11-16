@@ -353,11 +353,9 @@ function renderHotelDetails(id) {
 	var template = hotelDetailsTemplate;
 
 	var stars = '';
-	for(var i = 0; i < 5; i++){
-		if(((hotel.hotel.popularity - 20*i)/20) >= 1)
+	for(var j = 1; j <= 5; j++){
+		if(j <= hotel.hotel.star_rating)
 			stars += '<span><i class="fa fa-star" aria-hidden="true"></i></span>';
-		else if(((hotel.hotel.popularity - 20*i)/20) >= 0.5)
-			stars += '<span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>';
 		else 
 			stars += '<span><i class="fa fa-star-o" aria-hidden="true"></i></span>';
 
@@ -394,7 +392,7 @@ function renderHotelDetails(id) {
 	}
 
 	var reviews = '';
-	if(!hotel.reviews.categories)
+	if(hotel.reviews.reviews_count > 0)
 		for(var i in hotel.reviews.categories) {
 			if ((i%2) == 0) {
 	            reviews += '<div class="row">'
@@ -417,7 +415,7 @@ function renderHotelDetails(id) {
 	    if (i%2 == 0) {
 	        reviews += '</div>';
 		}
-	else reviews = '<p> Không có nhận xét nào cho Khách sạn này. </p>';
+	else reviews = '<p style="text-align: center;"> Không có nhận xét nào cho khách sạn này. </p>';
 
 	var result = template.replace('{{images_li}}', images_li)
 			.replace('{{data-target}}', id)
