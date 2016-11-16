@@ -30,11 +30,9 @@
 							          	</div>
 							          	<div class="col-md-6">
 								            <h4 style="color: #ffad00; text-align: right;"><div class="stars">
-								            @for ($i = 0; $i < 5; $i++)
-								              	@if(( ($hotel_details->hotel->popularity - 20*$i)/20) >= 1)
+								            @for($i = 1; $i <= 5; $i++)
+												@if($i <= $hotel_details->hotel->star_rating)
 													<span><i class="fa fa-star" aria-hidden="true"></i></span>
-												@elseif( (($hotel_details->hotel->popularity - 20*$i)/20) >= 0.5)
-													<span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
 												@else 
 													<span><i class="fa fa-star-o" aria-hidden="true"></i></span>
 												@endif
@@ -100,26 +98,29 @@
 								          </div>
 								          <div id="menu2" class="tab-pane fade">
 								            <h3>Nhận Xét</h3>
-								            @foreach($hotel_details->reviews->categories as $i => $value)
-												@if (($i%2) == 0) 
-											       <div class="row">
-												@endif
-											          <div class="col-md-6">
-											          <span class="badge">{{ $value->score/10 }}</span>
-											            <h5> {{$value->name}}</h5>
-											            <p>
-											    @foreach($value->entries as $j => $entries)
-											    	{{$entries}} ,
-											    @endforeach
-											    </p> </div>
-											    
-											    @if ((($i + 1)%2) == 0) 
+								            @if($hotel_details->reviews->reviews_count > 0)
+									            @foreach($hotel_details->reviews->categories as $i => $value)
+													@if (($i%2) == 0) 
+												       <div class="row">
+													@endif
+												          <div class="col-md-6">
+												          <span class="badge">{{ $value->score/10 }}</span>
+												            <h5> {{$value->name}}</h5>
+												            <p>
+												    @foreach($value->entries as $j => $entries)
+												    	{{$entries}} ,
+												    @endforeach
+												    </p> </div>
+												    
+												    @if ((($i + 1)%2) == 0) 
+												        </div>
+													@endif
+												@endforeach
+											    @if ((count($hotel_details->reviews->categories))%2 != 0)
 											        </div>
 												@endif
-											@endforeach
-										    @if ((count($hotel_details->reviews->categories))%2 != 0)
-										        </div>
-											@endif
+											@else <p style="text-align: center;"> Không có nhận xét nào cho khách sạn này. </p>
+											@endif	
 								          </div>
 								        </div>
 								      </div>
