@@ -95,10 +95,10 @@ class ReportController extends Controller
     	return array('Outbound' => $oSegment, 'Inbound' => $dSegment, 'Payment' => array());
     }
 
-    public function hotelResponse($hotelRoundTripId)
+    public function hotelResponse($tourId)
     {
 
-        $hotels  = DB::table('hotels')->where('tour_id', $hotelRoundTripId)->get();
+        $hotels  = DB::table('hotels')->where('tour_id', $tourId)->get();
 
         $data = array();
         foreach ($hotels as $key => $value) 

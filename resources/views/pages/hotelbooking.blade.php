@@ -133,6 +133,7 @@
 					<form action="postHotel" method="post" id="postHotel" enctype='application/json'>
 							 {{ csrf_field() }}
 						<input type="hidden" name="hoteldetails" value="">
+  						<input type="hidden" name="tourId" value="{{$tourId}}">
 						
 						<div class="col-md-5" style="padding-left: 30px;">
 							<div class="form-group">

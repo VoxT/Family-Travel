@@ -66,6 +66,7 @@ class HomeController extends Controller
 
             if(count($tour) != 0)
                 $tourId = $tour->first()->id;
+            else $tourId = '';
         }
         
         return $tourId;

@@ -17,8 +17,8 @@ class CreateToursTable extends Migration
             $table->increments('id');
             $table->string('origin_place');
             $table->string('destination_place');
-            $table->string('origin_location');
-            $table->string('destination_location');
+            $table->string('origin_location')->nullable();
+            $table->string('destination_location')->nullable();
             $table->date('outbound_date');
             $table->date('inbound_date');
             $table->tinyInteger('adults');

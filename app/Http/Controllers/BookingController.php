@@ -63,7 +63,7 @@ class BookingController extends Controller
             }
         }
 
-        return redirect('/report/1');
+        return redirect('/report'.'/'.$request->tourId);
     }
 
     public function postBookingHotel(Request $request)
@@ -99,8 +99,8 @@ class BookingController extends Controller
                 'address' => $request->address,
                 'phone' => $request->phone,
                 'gender' => 'other',
-                'tour_id' => 1
+                'tour_id' => $request->tourId
             ]);
-        return redirect('/report/1');
+        return redirect('/report'.'/'.$request->tourId);
     }
 }
