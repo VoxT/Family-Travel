@@ -100,7 +100,15 @@ function initMap() {
         window.alert("Autocomplete's returned place contains no geometry");
         return;
       }
-
+        // Get each component of the address from the place details
+      // and fill the corresponding field on the form.
+      for (var i = 0; i < place.address_components.length; i++) {
+        var addressType = place.address_components[i].types[0];
+        if (addressType === 'administrative_area_level_1') {
+          var val = place.address_components[i]['long_name'];
+          origin_input.value = val;
+        }
+      }
       olat = place.geometry.location.lat();
       olng = place.geometry.location.lng();
 
@@ -117,7 +125,16 @@ function initMap() {
         window.alert("Autocomplete's returned place contains no geometry");
         return;
       }
-
+  // Get each component of the address from the place details
+      // and fill the corresponding field on the form.
+      for (var i = 0; i < place.address_components.length; i++) {
+        var addressType = place.address_components[i].types[0];
+        if (addressType === 'administrative_area_level_1') {
+          var val = place.address_components[i]['long_name'];
+          destination_input.value = val;
+        }
+      }
+      
       dlat = place.geometry.location.lat();
       dlng = place.geometry.location.lng();
       // If the place has a geometry, store its place ID and route if we have

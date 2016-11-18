@@ -1025,7 +1025,10 @@ ul li {
     background-image: none !important;
     height: 0px;
 }
-
+.pac-icon {
+  width: 0 !important;
+  background-image: none !important;
+}
 /*date picker style*/
 .ui-datepicker {
   z-index: 1000 !important;

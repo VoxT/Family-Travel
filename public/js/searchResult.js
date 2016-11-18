@@ -392,7 +392,7 @@ function renderHotelDetails(id) {
 	}
 
 	var reviews = '';
-	if(hotel.reviews.reviews_count > 0)
+	if(hotel.reviews.reviews_count > 0) {
 		for(var i in hotel.reviews.categories) {
 			if ((i%2) == 0) {
 	            reviews += '<div class="row">'
@@ -415,6 +415,7 @@ function renderHotelDetails(id) {
 	    if (i%2 == 0) {
 	        reviews += '</div>';
 		}
+	}
 	else reviews = '<p style="text-align: center;"> Không có nhận xét nào cho khách sạn này. </p>';
 
 	var result = template.replace('{{images_li}}', images_li)
@@ -505,3 +506,5 @@ function nextweek(){
     var nextweek = new Date(today.getFullYear(), today.getMonth(), today.getDate()+7);
     return nextweek;
 }
+
+getEnityId(request.destinationplace, request.outbounddate, request.inbounddate, request.adults, request.adults);

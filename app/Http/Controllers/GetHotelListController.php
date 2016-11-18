@@ -26,6 +26,19 @@ class GetHotelListController extends Controller
         $this->hotels_service = new Hotels($this->apiKey);
 
     }
+
+    public function getEnityId(Request $request)
+    {
+
+        $params = array(
+                'market' => 'VN',
+                'currency' => 'VND',
+                'locale' =>'vi-VN',
+                'query' => $request->queryText
+            );
+        return $this->jsonResponse($this->hotels_service->locationAutosuggest($params));
+    }
+
     //Request
 
     //entityid

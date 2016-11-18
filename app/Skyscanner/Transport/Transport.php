@@ -80,7 +80,7 @@ class Transport
         }
         $this->apiKey = $apiKey;
         $this->marketServiceUrl = self::API_HOST . '/apiservices/reference/v1.0/countries';
-        $this->locationAutosuggestUrl = self::API_HOST . '/apiservices/autosuggest/v1.0';
+        $this->locationAutosuggestUrl = self::API_HOST . '/apiservices/hotels/autosuggest/v2';
         $this->locationAutosuggestParams = array('market', 'currency', 'locale', 'query');
     }
 
@@ -134,7 +134,6 @@ class Transport
         // }
         // use our own httpRequest function if HttpRequest class is not available.
         $r = NetworkUtils::httpRequest($serviceUrl, $headers, $method, $data);
-        
 
         if('HTTP/1.1 200'== substr($r,0,12)||'HTTP/1.1 201'== substr($r,0,12)||'HTTP/1.1 302'== substr($r,0,12)){
              return call_user_func($callback, $r);
@@ -285,6 +284,7 @@ class Transport
                 $params_list[] = $params[$optKey];
             }
         }
+
         return implode($params_list, "/");
     }
 

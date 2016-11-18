@@ -27,4 +27,11 @@ Route::group(['middleware' => ['web']], function () {
 	Route::post('booking/postFlight', 'BookingController@postBookingFlight')->middleware('checklogin');
 
 	Route::get('report/{tourId}', 'ReportController@getReport')->middleware('checklogin');
+
+	Route::get('payment', 'PaypalController@postPayment');
+	// this is after make the payment, PayPal redirect back to your site
+	Route::get('payment/status', array(
+	    'as' => 'payment.status',
+	    'uses' => 'PaypalController@getPaymentStatus',
+	));
 });

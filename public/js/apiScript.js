@@ -10,6 +10,8 @@ var flightinput = {};
 var originAirCode = '';
 var destinationAirCode = '';
 
+var entityid = '';
+
 var isLogin = false;
 
 //var tourId = request.tourId;
@@ -163,7 +165,7 @@ function Hotel(checkindate, checkoutdate, guests, rooms) {
 		crossDomain: true,
 		contentType: "application/json; charset=utf-8",
 		data: {
-			entityid: dlat + ',' + dlng + '-latlong',
+			entityid: entityid,
             checkindate: checkindate,
             checkoutdate: checkoutdate,
             guests: guests,
@@ -254,8 +256,6 @@ function getRigion() {
 
 }
 
-Hotel(request.outbounddate, request.inbounddate, 2, 1);
-
 
 // Rome to rio
 function getAirPortCode(outbounddate, inbounddate,
@@ -310,3 +310,27 @@ function getAirPortCode(outbounddate, inbounddate,
 }
 getAirPortCode(request.outbounddate, request.inbounddate,
 					 request.adults, request.children, request.infants, request.cabinclass, true);
+
+
+function getEnityId(destinationplace, checkindate, checkoutdate, guests, rooms) {
+	$.ajax({
+		url: '/api/v1/getEnityId',
+		method: 'GET',
+		data: {
+			queryText: encodeURI(destinationplace)
+		}
+	}).done(function(data){
+
+		var list = data.data.parsed.results;
+		for(var i in list) {
+			if(list[i].geo_type === 'City') {
+				entityid = list[i].individual_id; break;
+			}
+		}
+		if(entityid !== '') {
+			Hotel(checkindate, checkoutdate, guests, rooms);
+		}
+	}).fail(function (e) {
+		
+	})
+}

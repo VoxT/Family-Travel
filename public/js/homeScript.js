@@ -130,13 +130,16 @@ $('#service-class .dropdown-items li > a').click(function(e){
     $('#service-class .js-dropdown-toggle-name').text($(this).text());
 });
 
+
+
+
 // begin autocomplete searchbox
 function autocompletePlace() {
   var origin_place = document.getElementById('origin-input');
   var destination_place = document.getElementById('destination-input');
 
   var options = {
-    types: ['(cities)']
+    types: ['(regions)']
   };
 
   var origin_autocomplete = new google.maps.places.Autocomplete(origin_place, options);
@@ -146,6 +149,16 @@ function autocompletePlace() {
       window.alert("Autocomplete's returned place contains no geometry");
       return;
     }
+     // Get each component of the address from the place details
+    // and fill the corresponding field on the form.
+    for (var i = 0; i < place.address_components.length; i++) {
+      var addressType = place.address_components[i].types[0];
+      if (addressType === 'administrative_area_level_1') {
+        var val = place.address_components[i]['long_name'];
+        origin_place.value = val;
+      }
+    }
+    
     $('#oPlaceId').val(place.place_id);    
     $('#olat').val(place.geometry.location.lat());
     $('#olng').val(place.geometry.location.lng());
@@ -160,6 +173,16 @@ function autocompletePlace() {
       window.alert("Autocomplete's returned place contains no geometry");
       return;
     }
+    // Get each component of the address from the place details
+    // and fill the corresponding field on the form.
+    for (var i = 0; i < place.address_components.length; i++) {
+      var addressType = place.address_components[i].types[0];
+      if (addressType === 'administrative_area_level_1') {
+        var val = place.address_components[i]['long_name'];
+        destination_place.value = val;
+      }
+    }
+
     $('#dPlaceId').val(place.place_id);
     $('#dlat').val(place.geometry.location.lat());
     $('#dlng').val(place.geometry.location.lng());
@@ -167,6 +190,8 @@ function autocompletePlace() {
     // $('#destination_place_name').val(place.name);
   })
 }
+
+
 // end autocomplete searchbox
 function getLocation() {
   if (navigator.geolocation) {

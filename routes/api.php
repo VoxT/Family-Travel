@@ -41,4 +41,6 @@ Route::get('getlisthotel', 'GetHotelListController@getHotelList');
 Route::get('gethoteldetails', 'GetHotelListController@getHotelDetails');
 Route::get('getHotelListByIndex', 'GetHotelListController@getHotelListByIndex');
 
+Route::get('getEnityId', 'GetHotelListController@getEnityId');
+
 Route::post('postTour', 'ReportController@postTour');
