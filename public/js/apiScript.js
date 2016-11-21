@@ -323,7 +323,7 @@ function getEnityId(destinationplace, checkindate, checkoutdate, guests, rooms) 
 
 		var list = data.data.parsed.results;
 		for(var i in list) {
-			if(list[i].geo_type === 'City') {
+			if((list[i].geo_type === 'City') || (list[i].geo_type === 'SecondLevelNationAdministrativeDivision')) {
 				entityid = list[i].individual_id; break;
 			}
 		}
