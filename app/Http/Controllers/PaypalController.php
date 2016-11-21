@@ -25,6 +25,8 @@ use PayPal\Api\Transaction;
 class PaypalController extends Controller
 {
     private $_api_context;
+    private $result;
+
     public function __construct()
     {
         // setup PayPal api context
@@ -33,44 +35,54 @@ class PaypalController extends Controller
         $this->_api_context->setConfig($paypal_conf['settings']);
     }
 
-    public function postPayment()
+    public function postFlightPayment($flight_details)
 	{
-	    $payer = new Payer();
-	    $payer->setPaymentMethod('paypal');
+        $input = $flight_details['input'];
+        $flights = $flight_details['flight'];
 
-	    $item_1 = new Item();
-	    $item_1->setName('Item 1') // item name
-	        ->setCurrency('USD')
-	        ->setQuantity(2)
-	        ->setPrice('15'); // unit price
-
-	    $item_2 = new Item();
-	    $item_2->setName('Item 2')
-	        ->setCurrency('USD')
-	        ->setQuantity(4)
-	        ->setPrice('7');
-
-	    $item_3 = new Item();
-	    $item_3->setName('Item 3')
+	    $item = new Item();
+	    $item->setName($flights->Outbound->overall->originName.' - '.$flights->Outbound->overall->destinationName) // item name
 	        ->setCurrency('USD')
 	        ->setQuantity(1)
-	        ->setPrice('20');
+	        ->setPrice($flights->Price); // unit price
 
 	    // add item to list
 	    $item_list = new ItemList();
-	    $item_list->setItems(array($item_1, $item_2, $item_3));
+	    $item_list->setItems(array($item));
 	    $amount = new Amount();
 	    $amount->setCurrency('USD')
-	        ->setTotal(78);
+	        ->setTotal($flights->Price);
 
 	    $transaction = new Transaction();
 	    $transaction->setAmount($amount)
 	        ->setItemList($item_list)
 	        ->setDescription('Your transaction description');
 
+	    return $this->Payment($transaction,'payment.status.flight');
+	    
+	}
+
+	public function saveFlightPayment()
+	{
+		$this->getPaymentStatus();
+
+	    //echo '<pre>';print_r($result);echo '</pre>';exit; // DEBUG RESULT, remove it later
+	    if ($this->result>getState() == 'approved') { // payment made
+	    	$tourId = \Session::get('tourID'); \Session::forget('tourID');
+	        return redirect('report'.$tourId)
+	            ->with('success', 'Payment success');
+	    }
+	    return \Redirect::route('home');
+	}
+
+	public function Payment($transaction, $redirect_target)
+	{
+		$payer = new Payer();
+	    $payer->setPaymentMethod('paypal');
+
 	    $redirect_urls = new RedirectUrls();
-	    $redirect_urls->setReturnUrl(\URL::route('payment.status'))
-	        ->setCancelUrl(\URL::route('payment.status'));
+	    $redirect_urls->setReturnUrl(\URL::route($redirect_target))
+	        ->setCancelUrl(\URL::route('home'));
 
 	    $payment = new Payment();
 	    $payment->setIntent('Sale')
@@ -98,14 +110,13 @@ class PaypalController extends Controller
 	    }
 
 	    // add payment ID to session
-	    \Session::put('paypal_payment_id', $payment->getId());
 	    if(isset($redirect_url)) {
 	        // redirect to paypal
-	        return \Redirect::away($redirect_url);
+	       return redirect($redirect_url);
 	    }
 
-	    return \Redirect::route('original.route')
-	        ->with('error', 'Unknown error occurred');
+	   return \Redirect::route('original.route')
+	       ->with('error', 'Unknown error occurred');
 	}
 
 	public function getPaymentStatus()
@@ -113,7 +124,6 @@ class PaypalController extends Controller
 	    // Get the payment ID before session clear
 	    $payment_id = Input::get('paymentId'); //\Session::get('paypal_payment_id');
 	    // clear the session payment ID
-	    \Session::forget('paypal_payment_id');
 	    if (empty(Input::get('PayerID')) || empty(Input::get('token'))) {
 	        return \Redirect::route('original.route')
 	            ->with('error', 'Payment failed');
@@ -128,13 +138,7 @@ class PaypalController extends Controller
 	    $execution->setPayerId(Input::get('PayerID'));
 	    
 	    //Execute the payment
-	    $result = $payment->execute($execution, $this->_api_context);
-	    echo '<pre>';print_r($result);echo '</pre>';exit; // DEBUG RESULT, remove it later
-	    if ($result->getState() == 'approved') { // payment made
-	        return \Redirect::route('original.route')
-	            ->with('success', 'Payment success');
-	    }
-	    return \Redirect::route('original.route')
-	        ->with('error', 'Payment failed');
+	    $this->result = $payment->execute($execution, $this->_api_context);
 	}
+
 }

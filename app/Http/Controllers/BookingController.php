@@ -6,11 +6,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PaypalController;
 
 use Illuminate\Support\Facades\Cache;
 
 class BookingController extends Controller
 {
+    private $paypalService;
+
+    public function __construct(PaypalController $paypalService)
+    {
+        $this->paypalService = $paypalService;
+    }
+
     public function redirectToBookingFlight(Request $request)
     {
     	return View('pages.flightbooking')->with('flightDetails', $request->details)->with('tourId', $request->tourId);
@@ -22,11 +30,11 @@ class BookingController extends Controller
     }
 
     public function postBookingFlight(Request $request)
-    {
-    	$flight_details = (array) json_decode($request->flightdetails);    
+    { 
+        $flight_details = (array) json_decode($request->flightdetails); 
         $input = $flight_details['input'];
         $flights = $flight_details['flight'];
-        echo 'a'.$request->tourId;
+
         // create flight round trip
         $id = DB::table('flight_round_trip')->insertGetId(
             ['cabin_class' => $input->cabinClass,
@@ -63,7 +71,9 @@ class BookingController extends Controller
             }
         }
 
-        return redirect('/report'.'/'.$request->tourId);
+        \Session::put('tourId', $request->tourId);
+        return $this->paypalService->postFlightPayment($flight_details);
+
     }
 
     public function postBookingHotel(Request $request)

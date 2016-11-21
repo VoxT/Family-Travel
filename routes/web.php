@@ -12,7 +12,9 @@
 */
 // Home page
 Route::group(['middleware' => ['web']], function () {
-	Route::get('/', 'HomeController@index');
+	Route::get('/', array(
+		'as' => 'home',
+		'use' => 'HomeController@index'));
 
 	// Result page
 	Route::get('search', ['as' => 'search', 'uses' => 'HomeController@searchResult']);
@@ -28,10 +30,10 @@ Route::group(['middleware' => ['web']], function () {
 
 	Route::get('report/{tourId}', 'ReportController@getReport')->middleware('checklogin');
 
-	Route::get('payment', 'PaypalController@postPayment');
+	Route::get('payment', 'PaypalController@postFlightPayment');
 	// this is after make the payment, PayPal redirect back to your site
-	Route::get('payment/status', array(
-	    'as' => 'payment.status',
-	    'uses' => 'PaypalController@getPaymentStatus',
+	Route::get('payment/status/flight', array(
+	    'as' => 'payment.status.flight',
+	    'uses' => 'PaypalController@saveFlightPayment',
 	));
 });

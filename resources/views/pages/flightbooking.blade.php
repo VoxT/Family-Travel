@@ -192,6 +192,7 @@
 
 <script type="text/javascript">
 	var json = @php echo $flightDetails; @endphp;
+	console.log(json);
 	var flightJson = JSON.stringify(json);
 	$(document).on('click', '#book', function() {
 		$('input[name="flightdetails"').val(flightJson);
