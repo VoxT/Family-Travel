@@ -44,21 +44,21 @@ class PaypalController extends Controller
 	    $item->setName($flights->Outbound->overall->originName.' - '.$flights->Outbound->overall->destinationName) // item name
 	        ->setCurrency('USD')
 	        ->setQuantity(1)
-	        ->setPrice($flights->Price); // unit price
+	        ->setPrice($flights->Price/20000); // unit price
 
 	    // add item to list
 	    $item_list = new ItemList();
 	    $item_list->setItems(array($item));
 	    $amount = new Amount();
 	    $amount->setCurrency('USD')
-	        ->setTotal($flights->Price);
+	        ->setTotal($flights->Price/20000);
 
 	    $transaction = new Transaction();
 	    $transaction->setAmount($amount)
 	        ->setItemList($item_list)
 	        ->setDescription('Your transaction description');
 
-	    return $this->Payment($transaction,'payment.status.flight');
+	    return $this->Payment($transaction, 'payment.status.flight');
 	    
 	}
 
@@ -66,8 +66,8 @@ class PaypalController extends Controller
 	{
 		$this->getPaymentStatus();
 
-	    //echo '<pre>';print_r($result);echo '</pre>';exit; // DEBUG RESULT, remove it later
-	    if ($this->result>getState() == 'approved') { // payment made
+	    echo '<pre>';print_r($this->result);echo '</pre>';exit; // DEBUG RESULT, remove it later
+	    if ($this->result->getState() == 'approved') { // payment made
 	    	$tourId = \Session::get('tourID'); \Session::forget('tourID');
 	        return redirect('report'.$tourId)
 	            ->with('success', 'Payment success');
