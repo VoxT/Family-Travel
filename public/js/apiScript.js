@@ -118,8 +118,8 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 		crossDomain: true,
 		contentType: "application/json; charset=utf-8",
 		data: {
-			pickupplace: originplace + '-sky',
-			dropoffplace:  destinationplace + '-sky',
+			pickupplace: originplace,
+			dropoffplace:  destinationplace,
 			pickupdatetime: pickupdatetime,
 			dropoffdatetime: dropoffdatetime
 		},
@@ -299,8 +299,6 @@ function getAirPortCode(outbounddate, inbounddate,
 			Flight(originAirCode + '-sky', destinationAirCode + '-sky', outbounddate, inbounddate,
 					 adults, children, infants, cabinclass);
 
-			if(car) 
-				Car(destinationAirCode, destinationAirCode, request.outbounddate+'T12:00', request.inbounddate+'T12:00');
 		},
 		fail: function(e) {
 
@@ -329,6 +327,7 @@ function getEnityId(destinationplace, checkindate, checkoutdate, guests, rooms) 
 		}
 		if(entityid !== '') {
 			Hotel(checkindate, checkoutdate, guests, rooms);
+			Car(entityid, entityid, request.outbounddate+'T12:00', request.inbounddate+'T12:00');
 		}
 	}).fail(function (e) {
 		
