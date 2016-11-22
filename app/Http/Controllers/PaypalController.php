@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\BookingController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Input;
 use PayPal\Rest\ApiContext;
@@ -20,38 +23,47 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\ExecutePayment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Api\Transaction;
-
+use Swap\Builder;
 
 class PaypalController extends Controller
 {
     private $_api_context;
-    private $result;
+    private $paymentResult;
+    private $bookingService;
 
-    public function __construct()
+    public function __construct(BookingController $bookingService)
     {
+    	$this->bookingService = $bookingService;
         // setup PayPal api context
         $paypal_conf = \Config::get('paypal');
         $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_conf['client_id'], $paypal_conf['secret']));
         $this->_api_context->setConfig($paypal_conf['settings']);
     }
 
-    public function postFlightPayment($flight_details)
+    public function postFlightPayment(Request $request)
 	{
+		$this->storeSession($request);
+
+		\Session::put('flightDetails', $request->flightdetails);
+
+        $flight_details = (array) json_decode($request->flightdetails); 
         $input = $flight_details['input'];
         $flights = $flight_details['flight'];
+
+        $price = $flights->Price / \Currency::conv($from = 'USD', $to = 'VND', $value = 1, $decimals = 2);
 
 	    $item = new Item();
 	    $item->setName($flights->Outbound->overall->originName.' - '.$flights->Outbound->overall->destinationName) // item name
 	        ->setCurrency('USD')
 	        ->setQuantity(1)
-	        ->setPrice($flights->Price/20000); // unit price
+	        ->setPrice($price); // unit price
 
 	    // add item to list
 	    $item_list = new ItemList();
 	    $item_list->setItems(array($item));
 	    $amount = new Amount();
 	    $amount->setCurrency('USD')
-	        ->setTotal($flights->Price/20000);
+	        ->setTotal($price);
 
 	    $transaction = new Transaction();
 	    $transaction->setAmount($amount)
@@ -59,17 +71,24 @@ class PaypalController extends Controller
 	        ->setDescription('Your transaction description');
 
 	    return $this->Payment($transaction, 'payment.status.flight');
-	    
 	}
 
 	public function saveFlightPayment()
 	{
 		$this->getPaymentStatus();
 
-	    echo '<pre>';print_r($this->result);echo '</pre>';exit; // DEBUG RESULT, remove it later
-	    if ($this->result->getState() == 'approved') { // payment made
-	    	$tourId = \Session::get('tourID'); \Session::forget('tourID');
-	        return redirect('report'.$tourId)
+	   // echo '<pre>';print_r($this->paymentResult);echo '</pre>';//exit; // DEBUG RESULT, remove it later
+	    if ($this->paymentResult->getState() == 'approved') { // payment made
+	    	// Store payment	    	
+	    	$this->storePayment();
+	    	// Store Flight if payment is success
+	    	$this->bookingService->postBookingFlight();
+
+	        $tourId = \Session::get('tourID'); 
+
+	        $this->forgetSession();
+
+	        return redirect('report/'.$tourId)
 	            ->with('success', 'Payment success');
 	    }
 	    return \Redirect::route('home');
@@ -122,7 +141,8 @@ class PaypalController extends Controller
 	public function getPaymentStatus()
 	{
 	    // Get the payment ID before session clear
-	    $payment_id = Input::get('paymentId'); //\Session::get('paypal_payment_id');
+	    $payment_id = Input::get('paymentId'); 
+	    \Session::put('paypal_payment_id', $payment_id);
 	    // clear the session payment ID
 	    if (empty(Input::get('PayerID')) || empty(Input::get('token'))) {
 	        return \Redirect::route('original.route')
@@ -138,7 +158,45 @@ class PaypalController extends Controller
 	    $execution->setPayerId(Input::get('PayerID'));
 	    
 	    //Execute the payment
-	    $this->result = $payment->execute($execution, $this->_api_context);
+	    $this->paymentResult = $payment->execute($execution, $this->_api_context);
+	}
+
+	public function storePayment()
+	{
+		$payer = $this->paymentResult->getPayer()->getPayerInfo();
+		$amount = $this->paymentResult->getTransactions()[0]->getRelatedResources()[0]->getSale()->getAmount();
+
+		DB::table('payments')->insert(
+			[
+				'paypal_id' => \Session::get('paypal_payment_id'),
+				'payer_name' => $payer->getFirstName().' '.$payer->getMiddleName().' '.$payer->getLastName(),
+				'payer_email' => $payer->getEmail(),
+				'amount_total' => $amount->getTotal(),
+				'amount_currency' => $amount->getCurrency(),
+				'created_at' => date("Y-m-d H:i:s",strtotime($this->paymentResult->getCreateTime())),
+				'updated_at' => date("Y-m-d H:i:s",strtotime($this->paymentResult->getUpdateTime())),
+				'user_id' => Auth::user()->id
+			]);
+	}
+
+	// store user info for booking. get it when payment success, or forget it when user cancelled, payment fail
+	public function storeSession($request)
+	{
+		\Session::put('user_name', $request->full_name);
+		\Session::put('user_phone', $request->phone);
+		\Session::put('user_email', $request->email);
+		\Session::put('tourID', $request->tourId);
+	}
+
+	public function forgetSession()
+	{
+		
+        \Session::forget('flightDetails');
+        \Session::forget('user_name');
+        \Session::forget('user_phone');
+        \Session::forget('user_email');
+        \Session::forget('paypal_payment_id');
+        \Session::forget('tourID');
 	}
 
 }

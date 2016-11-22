@@ -15,12 +15,10 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->string('paypal_id')->unique();
-            $table->text('payer');
-            $table->text('intent');
-            $table->text('transactions');
-            $table->date('create_at');
-            $table->date('update_at');
-            $table->text('links');
+            $table->string('payer_name');
+            $table->string('payer_email');
+            $table->char('amount_total', 11);
+            $table->char('amount_currency', 3);
             $table->primary('paypal_id');
             $table->integer('user_id')->unsigned();;
             $table->foreign('user_id')->references('id')->on('users');

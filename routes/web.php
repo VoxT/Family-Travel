@@ -14,7 +14,7 @@
 Route::group(['middleware' => ['web']], function () {
 	Route::get('/', array(
 		'as' => 'home',
-		'use' => 'HomeController@index'));
+		'uses' => 'HomeController@index'));
 
 	// Result page
 	Route::get('search', ['as' => 'search', 'uses' => 'HomeController@searchResult']);
@@ -26,7 +26,7 @@ Route::group(['middleware' => ['web']], function () {
 
 	Route::post('booking/postHotel', 'BookingController@postBookingHotel')->middleware('checklogin');
 
-	Route::post('booking/postFlight', 'BookingController@postBookingFlight')->middleware('checklogin');
+	Route::post('booking/postFlight', 'PaypalController@postFlightPayment')->middleware('checklogin');
 
 	Route::get('report/{tourId}', 'ReportController@getReport')->middleware('checklogin');
 

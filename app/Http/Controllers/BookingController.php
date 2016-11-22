@@ -6,18 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\PaypalController;
 
 use Illuminate\Support\Facades\Cache;
 
 class BookingController extends Controller
 {
-    private $paypalService;
-
-    public function __construct(PaypalController $paypalService)
-    {
-        $this->paypalService = $paypalService;
-    }
 
     public function redirectToBookingFlight(Request $request)
     {
@@ -29,9 +22,11 @@ class BookingController extends Controller
     	return View('pages.hotelbooking')->with('hotelDetails', $request->details)->with('tourId', $request->tourId);
     }
 
-    public function postBookingFlight(Request $request)
+    public function postBookingFlight()
     { 
-        $flight_details = (array) json_decode($request->flightdetails); 
+        $flight_details = (array) json_decode(\Session::get('flightDetails'));
+        $tourId = \Session::get('tourID');
+
         $input = $flight_details['input'];
         $flights = $flight_details['flight'];
 
@@ -40,11 +35,12 @@ class BookingController extends Controller
             ['cabin_class' => $input->cabinClass,
              'number_of_seat' => $input->adults,
              'price' => $flights->Price,
-             'full_name' => $request->full_name,
-             'phone' => $request->phone,
-             'email' => $request->email,
+             'full_name' => \Session::get('user_name'),
+             'phone' => \Session::get('user_phone'),
+             'email' => \Session::get('user_email'),
              'gender' => 'other',
-             'tour_id' => $request->tourId,
+             'tour_id' => $tourId,
+             'payment_id' => \Session::get('paypal_payment_id')
              ]
         );	
 
@@ -71,9 +67,7 @@ class BookingController extends Controller
             }
         }
 
-        \Session::put('tourId', $request->tourId);
-        return $this->paypalService->postFlightPayment($flight_details);
-
+        return $id;
     }
 
     public function postBookingHotel(Request $request)
