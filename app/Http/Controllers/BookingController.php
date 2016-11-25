@@ -115,9 +115,48 @@ class BookingController extends Controller
             ]);
     }
 
-    public function postBookingCar(Request $request)
+    public function postBookingCar()
     {
+         $cardetails = json_decode(\Session::get('carDetails')); 
 
-        return redirect('/report'.'/'.$request->tourId);
+        $tourId = \Session::get('tourID');
+        
+        DB::table('cars')->insert(
+            [
+                'pick_up_place' => $cardetails->pick_up_address,
+                'drop_off_place' => $cardetails->pick_up_address,
+                'pick_up_datetime' => '2016-11-25 12:00:00',
+                'drop_off_datetime' => '2016-11-27 12:00:00',
+                'price' => $cardetails->price_all_days,
+                'image' =>$cardetails->image_url,
+                'seats' => $cardetails->seats,
+                'doors' => $cardetails->doors,
+                'bags' => $cardetails->bags,
+                'manual'=> $cardetails->manual,
+                'air_conditioning' => $cardetails->air_conditioning,
+                'mandatory_chauffeur' => $cardetails->mandatory_chauffeur,
+                'car_class_name' => $cardetails->car_class_name,
+                'vehicle' => $cardetails->vehicle,
+                'distance_to_search_location_in_km' => $cardetails->distance_to_search_location_in_km,
+                'geo_info' => json_encode($cardetails->geo_info),
+                'fuel_type' => $cardetails->fuel_type,
+                'fuel_policy' => $cardetails->fuel_policy,
+                'theft_protection_insurance' => $cardetails->theft_protection_insurance,
+                'third_party_cover_insurance' => $cardetails->third_party_cover_insurance,
+                'free_collision_waiver_insurance' => $cardetails->free_collision_waiver_insurance,
+                'free_damage_refund_insurance' => $cardetails->free_damage_refund_insurance,
+                'free_cancellation' => $cardetails->free_cancellation,
+                'free_breakdown_assistance' => $cardetails->free_breakdown_assistance,
+                'unlimited' => $cardetails->unlimited,
+                'included' =>$cardetails->included,
+                'unit' => $cardetails->unit,
+                'full_name' => \Session::get('user_name'),
+                'email' => \Session::get('user_email'),
+                'address' => \Session::get('address'),
+                'phone' => \Session::get('user_phone'),
+                'gender' => 'other',
+                'tour_id' =>  $tourId
+            ]);
+        
     }
 }

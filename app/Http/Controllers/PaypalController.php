@@ -106,6 +106,37 @@ class PaypalController extends Controller
 	    return $this->Payment($transaction, 'payment.status.hotel');
 	}
 
+	 public function postCarPayment(Request $request)
+	{
+		$this->storeSession($request);
+
+		\Session::put('carDetails', $request->cardetails);
+
+        $car_details = json_decode($request->cardetails); 
+ 
+        $price = $car_details->price_all_days / \Currency::conv($from = 'USD', $to = 'VND', $value = 1, $decimals = 2);
+
+	    $item = new Item();
+	    $item->setName($car_details->vehicle) // item name
+	        ->setCurrency('USD')
+	        ->setQuantity(1)
+	        ->setPrice($price); // unit price
+
+	    // add item to list
+	    $item_list = new ItemList();
+	    $item_list->setItems(array($item));
+	    $amount = new Amount();
+	    $amount->setCurrency('USD')
+	        ->setTotal($price);
+
+	    $transaction = new Transaction();
+	    $transaction->setAmount($amount)
+	        ->setItemList($item_list)
+	        ->setDescription('Your transaction description');
+
+	    return $this->Payment($transaction, 'payment.status.car');
+	}
+
 	public function saveFlightPayment()
 	{
 		$this->getPaymentStatus();
@@ -147,6 +178,28 @@ class PaypalController extends Controller
 	    }
 	    return \Redirect::route('home');
 	}
+
+	public function saveCarPayment()
+	{
+		$this->getPaymentStatus();
+
+	   // echo '<pre>';print_r($this->paymentResult);echo '</pre>';//exit; // DEBUG RESULT, remove it later
+	    if ($this->paymentResult->getState() == 'approved') { // payment made
+	    	// Store payment	    	
+	    	$this->storePayment();
+	    	// Store Flight if payment is success
+	    	$this->bookingService->postBookingCar();
+
+	        $tourId = \Session::get('tourID'); 
+
+	        $this->forgetSession('carDetails');
+
+	        return redirect('report/'.$tourId)
+	            ->with('success', 'Payment success');
+	    }
+	    return \Redirect::route('home');
+	}
+
 	public function Payment($transaction, $redirect_target)
 	{
 		$payer = new Payer();
