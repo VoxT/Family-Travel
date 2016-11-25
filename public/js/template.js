@@ -11,7 +11,7 @@ var itemsTemplate =
     +'  <div class="summary-details">1 người lớn | Economy</div>'
     +'  <div class="price-select-block">'
     +'    <div class="flight-price"><span>{{price}}</span><sup>đ</sup></div>'
-    +'    <a class="item-select-button" href="#">Đặt Ngay <i class="fa fa-plane" aria-hidden="true" style="transform: rotate(0deg); margin-left: 10px"></i></a>'
+    +'    <a class="item-select-button" href="javascript:void(0)">Đặt Ngay <i class="fa fa-plane" aria-hidden="true" style="transform: rotate(0deg); margin-left: 10px"></i></a>'
     +'  </div>'
     +'</div>'
  +' </div>';
@@ -57,7 +57,7 @@ var flightdetailitem =
  +'     <div class="summary-details">{{passenger}} Hành Khách | Ghế {{cabinclass}}</div>'
  +'     <div class="best-price">'
  +'       <div class="flight-price"><span>{{price}}</span><sup>đ</sup></div>'
-+'        <a class="item-select-button" href="#" data-target="{{data-target}}">Đặt Ngay <i class="fa fa-plane" aria-hidden="true" style="transform: rotate(0deg); margin-left: 10px"></i></a>'
++'        <a class="item-select-button" href="javascript:void(0)" data-target="{{data-target}}">Đặt Ngay <i class="fa fa-plane" aria-hidden="true" style="transform: rotate(0deg); margin-left: 10px"></i></a>'
 +'      </div>'
 +'  </div>';
 
@@ -134,7 +134,7 @@ var carItemTemplate =
 +'      <div class="price-select-block">'
 +'        <p>Tổng giá:</p>'
 +'        <div class="flight-price">{{price_all_days}}<sup>đ</sup></div>'
-+'        <a class="item-select-button" href="#carbooking"   data-id={{id}}>Đặt Ngay <i class="fa fa-car" aria-hidden="true" style="margin-left: 5px;"></i></a>'
++'        <a class="item-select-button" href="javascript:void(0)"   data-id={{id}}>Đặt Ngay <i class="fa fa-car" aria-hidden="true" style="margin-left: 5px;"></i></a>'
 +'      </div>'
 +'    </div>'
 +'  </div> '; 

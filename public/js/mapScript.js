@@ -5,7 +5,7 @@ var olat = request.olat, olng = request.olng, dlat = request.dlat, dlng = reques
 
 var stop = false, typeofthing = 'all';
 
-var restaurantListener = null, museumListener = null;
+var restaurantListener = null, museumListener = null, parkListener = null;
 
 // begin result search map
 var map, placeService, infoWindow;
@@ -158,11 +158,15 @@ function initMap() {
     // });
 
      $(document).on('click', 'a[href="#restaurant"]', function() {
-     ShowRestaurant(destination_place_id);
+      ShowRestaurant(destination_place_id);
     });  
      
      $(document).on('click', 'a[href="#museum"]', function() {
-     ShowMuseum(destination_place_id);
+      ShowMuseum(destination_place_id);
+    }); 
+     
+     $(document).on('click', 'a[href="#park"]', function() {
+      ShowP(destination_place_id);
     }); 
      
 
@@ -373,8 +377,8 @@ function buildIWContent(place) {
 
 //REVIEW PLACE 
 
-function PlaceReviews(place) {
-
+function PlaceReviews(place) 
+{
    var ResImageHtml='';
   if (!place.photos) {} else {
      for (var i = 0; i< place.photos.length ; i++){
@@ -414,9 +418,10 @@ function ShowRestaurant(place_id){
         placeId: place_id
       }, function(place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
+          google.maps.event.removeListener(museumListener);
+          museumListener.remove();
           map.panTo(place.geometry.location);
           map.setZoom(13);
-          google.maps.event.removeListener(museumListener);
           clearMarkers();
           clearResults();
           typeofthing = 'restaurant';
@@ -439,6 +444,7 @@ function ShowMuseum(place_id){
       }, function(place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           google.maps.event.removeListener(restaurantListener);
+          restaurantListener.remove();
           clearMarkers();
           clearResults();
           map.panTo(place.geometry.location);
@@ -457,7 +463,7 @@ function searchMuseum() {
   };
    placeService.radarSearch(search, callback);
 }
-function ShowAttractions(place_id){
+function ShowPark(place_id){
     placeService.getDetails({
         placeId: place_id
       }, function(place, status) {
@@ -468,11 +474,32 @@ function ShowAttractions(place_id){
         }
       });
 }
-function searchAttractions() {
+function searchPark() {
  
   var search = {
     bounds: map.getBounds(),
-    types: ['park','zoo','amusement_park','church'],
+    types: ['park','amusement_park'],
+    keyword:  " (attractions) OR (point_of_interest)OR (establishment) "
+  };
+   placeService.radarSearch(search, callback);
+}
+
+function ShowOther(place_id){
+    placeService.getDetails({
+        placeId: place_id
+      }, function(place, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          map.panTo(place.geometry.location);
+          map.setZoom(13);
+          map.addListener('idle', searchOther);
+        }
+      });
+}
+function searchOther() {
+ 
+  var search = {
+    bounds: map.getBounds(),
+    types: ['park','amusement_park','church','zoo'],
     keyword:  " (attractions) OR (point_of_interest)OR (establishment) "
   };
    placeService.radarSearch(search, callback);
