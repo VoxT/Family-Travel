@@ -19,7 +19,12 @@ class BookingController extends Controller
 
     public function redirectToBookingHotel(Request $request)
     {
-    	return View('pages.hotelbooking')->with('hotelDetails', $request->details)->with('tourId', $request->tourId);
+        return View('pages.hotelbooking')->with('hotelDetails', $request->details)->with('tourId', $request->tourId);
+    }
+
+    public function redirectToBookingCar(Request $request)
+    {
+    	return View('pages.carbooking')->with('carDetails', $request->details)->with('tourId', $request->tourId);
     }
 
     public function postBookingFlight()
@@ -105,6 +110,12 @@ class BookingController extends Controller
                 'gender' => 'other',
                 'tour_id' => $request->tourId
             ]);
+        return redirect('/report'.'/'.$request->tourId);
+    }
+
+    public function postBookingCar(Request $request)
+    {
+
         return redirect('/report'.'/'.$request->tourId);
     }
 }
