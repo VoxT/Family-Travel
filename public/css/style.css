@@ -2479,3 +2479,19 @@ p.car-class {
     overflow: auto;
     background: #f8f8f8;
 }
+.add .btn {
+  position: absolute;
+  padding: 0 !important;
+  text-align: center;
+  vertical-align: middle;
+  bottom: 13px;
+  right: 35px;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  background: #e47225;
+  color: white;
+}
+.add .btn:hover i{
+  transform: scale(1.5);
+}

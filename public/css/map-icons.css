@@ -26,8 +26,6 @@
         height: 80px;
         border-radius: 0;
         float: left;
-  
-        
 
       }
      
@@ -46,11 +44,11 @@
       padding: 5px;
       margin-left: 10px;
       margin-bottom: 30px;
-      width: 510px !important;
+      width: 100% !important;
       height: 90px !important;
   }
   .gm-style-iw{
-    width: 510px !important;
+    width: 100% !important;
       height: 90px !important;
       
   }
@@ -59,4 +57,9 @@
   
   .views{
     margin-left: 100px;
+    padding: 2px 0 8px 0px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;    
+    max-width: 400px;
   }

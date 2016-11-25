@@ -42,6 +42,9 @@
                <div id="iw-rating-row" > 
                    <p class="iw-rating"> Đánh giá: <span id="iw-rating"></span></p>
 
+                 <div class="add">
+                   <button type="button" class="btn" title="Thêm vào chuyến đi"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                 </div>
                </div>
             </div>       
         </div>
@@ -313,6 +316,7 @@
             <li class="active"><a data-toggle="tab" href="#museum">Bảo tàng</a></li>
             <li><a data-toggle="tab" href="#parks">Công viên</a></li>
             <li ><a data-toggle ="tab" href="#restaurant">Nhà hàng</a></li>
+            <li ><a data-toggle ="tab" href="#other">Điểm Thú Vị Khác</a></li>
         </ul>
          <div class="clearfix"> </div>
         <div class="tab-content">
@@ -321,6 +325,8 @@
           <div id="parks" class="tab-pane fade">    
           </div>
           <div  id="restaurant" class="tab-pane fade">
+          </div>
+          <div  id="other" class="tab-pane fade">
           </div>
         </div>
       </div>
