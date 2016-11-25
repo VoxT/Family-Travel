@@ -38,7 +38,7 @@ class CarHireController extends Controller
         $car_classes = $array['parsed']['car_classes'];
 
         $carArray = array();
-
+        $count = 0;
         foreach ($cars as $car) {
 
             //SIPP Code
@@ -225,7 +225,7 @@ class CarHireController extends Controller
             }
 
 
-            array_push($carArray,array(
+            $carArray["0".(string)$count] = (
                 'sipp' => $sipp,
                 'price_all_days' => number_format($price_all_days, 0, '.', ''),
                 'image_url' => $image_url,
@@ -253,7 +253,8 @@ class CarHireController extends Controller
                 'unlimited' =>$unlimited,
                 'included' =>$included,
                 'unit' => $unit
-                ));
+                );
+            $count++;
         }
 		return $this->jsonResponse($carArray);
     }
