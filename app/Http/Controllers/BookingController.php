@@ -75,12 +75,17 @@ class BookingController extends Controller
         return $id;
     }
 
-    public function postBookingHotel(Request $request)
+    public function postBookingHotel()
     {
 
-        $hoteldetails = (array)json_decode($request->hoteldetails);  
+        $hoteldetails = (array)json_decode(\Session::get('hotelDetails')); 
+
+        $tourId = \Session::get('tourID');
+
         (object)$input = $hoteldetails['input'];
+
         (object)$hotel = $hoteldetails['hotel'];
+
         $reviews = json_encode($hotel->reviews);
 
         
@@ -103,14 +108,13 @@ class BookingController extends Controller
                 'longitude' =>$hotel->hotel->longitude,
                 'star_rating' => $hotel->hotel->star_rating,
                 'image_url' => json_encode($hotel->hotel->image_url),
-                'full_name' => $request->full_name,
-                'email' => $request->email,
-                'address' => $request->address,
-                'phone' => $request->phone,
+                'full_name' => \Session::get('user_name'),
+                'email' => \Session::get('user_email'),
+                'address' => \Session::get('address'),
+                'phone' => \Session::get('user_phone'),
                 'gender' => 'other',
-                'tour_id' => $request->tourId
+                'tour_id' =>  $tourId
             ]);
-        return redirect('/report'.'/'.$request->tourId);
     }
 
     public function postBookingCar(Request $request)

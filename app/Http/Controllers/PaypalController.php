@@ -73,6 +73,39 @@ class PaypalController extends Controller
 	    return $this->Payment($transaction, 'payment.status.flight');
 	}
 
+	 public function postHotelPayment(Request $request)
+	{
+		$this->storeSession($request);
+
+		\Session::put('hotelDetails', $request->hoteldetails);
+
+        $hotel_details = (array) json_decode($request->hoteldetails); 
+        $input = $hotel_details['input'];
+        $hotel = $hotel_details['hotel'];
+
+        $price = $hotel->price_total / \Currency::conv($from = 'USD', $to = 'VND', $value = 1, $decimals = 2);
+
+	    $item = new Item();
+	    $item->setName($hotel->hotel->name) // item name
+	        ->setCurrency('USD')
+	        ->setQuantity(1)
+	        ->setPrice($price); // unit price
+
+	    // add item to list
+	    $item_list = new ItemList();
+	    $item_list->setItems(array($item));
+	    $amount = new Amount();
+	    $amount->setCurrency('USD')
+	        ->setTotal($price);
+
+	    $transaction = new Transaction();
+	    $transaction->setAmount($amount)
+	        ->setItemList($item_list)
+	        ->setDescription('Your transaction description');
+
+	    return $this->Payment($transaction, 'payment.status.hotel');
+	}
+
 	public function saveFlightPayment()
 	{
 		$this->getPaymentStatus();
@@ -86,7 +119,7 @@ class PaypalController extends Controller
 
 	        $tourId = \Session::get('tourID'); 
 
-	        $this->forgetSession();
+	        $this->forgetSession('flightDetails');
 
 	        return redirect('report/'.$tourId)
 	            ->with('success', 'Payment success');
@@ -94,6 +127,26 @@ class PaypalController extends Controller
 	    return \Redirect::route('home');
 	}
 
+	public function saveHotelPayment()
+	{
+		$this->getPaymentStatus();
+
+	   // echo '<pre>';print_r($this->paymentResult);echo '</pre>';//exit; // DEBUG RESULT, remove it later
+	    if ($this->paymentResult->getState() == 'approved') { // payment made
+	    	// Store payment	    	
+	    	$this->storePayment();
+	    	// Store Flight if payment is success
+	    	$this->bookingService->postBookingHotel();
+
+	        $tourId = \Session::get('tourID'); 
+
+	        $this->forgetSession('hotelDetails');
+
+	        return redirect('report/'.$tourId)
+	            ->with('success', 'Payment success');
+	    }
+	    return \Redirect::route('home');
+	}
 	public function Payment($transaction, $redirect_target)
 	{
 		$payer = new Payer();
@@ -185,13 +238,14 @@ class PaypalController extends Controller
 		\Session::put('user_name', $request->full_name);
 		\Session::put('user_phone', $request->phone);
 		\Session::put('user_email', $request->email);
+		\Session::put('address',$request->address);
 		\Session::put('tourID', $request->tourId);
 	}
 
-	public function forgetSession()
+	public function forgetSession($details)
 	{
 		
-        \Session::forget('flightDetails');
+        \Session::forget($details);
         \Session::forget('user_name');
         \Session::forget('user_phone');
         \Session::forget('user_email');
