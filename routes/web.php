@@ -21,12 +21,15 @@ Route::group(['middleware' => ['web']], function () {
 
 	Route::post('booking/flight', 'BookingController@redirectToBookingFlight')->middleware('checklogin');
 	Route::post('booking/hotel', 'BookingController@redirectToBookingHotel')->middleware('checklogin');
+	Route::post('booking/car', 'BookingController@redirectToBookingCar')->middleware('checklogin');
 
 	Auth::routes();
 
-	Route::post('booking/postHotel', 'BookingController@postBookingHotel')->middleware('checklogin');
+	Route::post('booking/postHotel', 'PaypalController@postHotelPayment')->middleware('checklogin');
 
 	Route::post('booking/postFlight', 'PaypalController@postFlightPayment')->middleware('checklogin');
+
+	Route::post('booking/postCar', 'PaypalController@postCarPayment')->middleware('checklogin');
 
 	Route::get('report/{tourId}', 'ReportController@getReport')->middleware('checklogin');
 
@@ -35,5 +38,15 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('payment/status/flight', array(
 	    'as' => 'payment.status.flight',
 	    'uses' => 'PaypalController@saveFlightPayment',
+	));
+
+	Route::get('payment/status/hotel', array(
+	    'as' => 'payment.status.hotel',
+	    'uses' => 'PaypalController@saveHotelPayment',
+	));
+
+	Route::get('payment/status/car', array(
+	    'as' => 'payment.status.car',
+	    'uses' => 'PaypalController@saveCarPayment',
 	));
 });

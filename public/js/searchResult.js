@@ -283,6 +283,12 @@ $(document).on('click', '#hotel-search', function(e){
 	Hotel($('#checkindate').val(), $('#checkoutdate').val(), $('#guests').val(), $('#rooms').val());
 })
 
+$(document).on('click', '#carModal .item-select-button', function (e) {
+	var id = $(this).attr('data-id');
+	var details = carList[id];
+	redirectToBook(details, 'booking/car');
+})
+
 function renderFlightDetails(id) {
 	var flight = flightlist[id];
 	var outbound = flight.Outbound;

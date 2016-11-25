@@ -10,6 +10,8 @@ var flightinput = {};
 var originAirCode = '';
 var destinationAirCode = '';
 
+var carList = {};
+
 var entityid = '';
 
 var isLogin = false;
@@ -127,12 +129,16 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 			var cars = data.data;
 			if($.isEmptyObject(cars))
 				$('#carModal .loading').html('<b> Không có dịch vụ thuê xe phù hợp!</b>');
+
+			$.extend(carList, cars);
+
 			for(var i in cars) {
 				$('#carModal .loading').hide();
 				var item = cars[i];
 				var template = carItemTemplate;
 				$('#carModal .result-list').append(
-					template.replace('{{vehicle}}', item.vehicle)
+					template.replace('{{id}}', i)
+							.replace('{{vehicle}}', item.vehicle)
 							.replace('{{image_url}}', item.image_url)
 							.replace('{{car_class_name}}', item.car_class_name)
 							.replace('{{seats}}', item.seats)

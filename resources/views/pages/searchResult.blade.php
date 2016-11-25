@@ -70,7 +70,7 @@
         <p>Theo giá hợp lý nhất</p>
       </button>
       <button type="button" class="list-group-item" id="car" data-toggle="modal" data-target="#carModal">
-        <span class="badge car"><i class="fa fa-car" aria-hidden="true"></i></i></span>
+        <span class="badge car"><i class="fa fa-car" aria-hidden="true"></i></span>
         <span class="chevron-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
         <h4>Thuê xe tại Hồ Chí Minh</h2>
         <p>Theo giá hợp lý nhất</p>

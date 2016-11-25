@@ -13,6 +13,7 @@
         <h1 id="timeline">Tổng Hợp Chuyến Đi</h1>
     </div>
 	<ul class="timeline col-md-12">
+		@if(count($flight_round) > 0)
 	    <li class="timeline-inverted">
 		     <div class="timeline-badge flight"><i class="fa fa-plane" aria-hidden="true"></i></div>
 		     <div class="timeline-panel">
@@ -150,6 +151,8 @@
 		        </div>
 		     </div>
 	   	</li>
+	   	@endif
+	   	@if(count($hotels) > 0)
 	    <li class="timeline-inverted">
 		     <div class="timeline-badge hotel"><i class="fa fa-bed" aria-hidden="true"></i></div>
 		     <div class="timeline-panel">
@@ -286,6 +289,7 @@
 		     	</div>
 		     </div>
 	   </li>
+	   @endif
 	</ul>
 </div>
 
@@ -299,5 +303,12 @@
 
 @section('scripts')
   @parent
-
+  <script type="text/javascript">
+	  if($('#accordion-flight').children('.panel-default').length == 1) {
+	  	$('#collapse0').collapse('show');
+	  }
+	  if($('#accordion-hotel').children('.panel-default').length == 1) {
+	  	$('#collapse0').collapse('show');
+	  }
+  </script>
 @endsection

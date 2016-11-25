@@ -71,8 +71,6 @@ class BookingController extends Controller
                 );  
             }
         }
-
-        return $id;
     }
 
     public function postBookingHotel()

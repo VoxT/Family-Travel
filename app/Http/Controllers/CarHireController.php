@@ -225,7 +225,7 @@ class CarHireController extends Controller
             }
 
 
-            $carArray["0".(string)$count] = (
+            $carArray["0".(string)$count] = array (
                 'sipp' => $sipp,
                 'price_all_days' => number_format($price_all_days, 0, '.', ''),
                 'image_url' => $image_url,

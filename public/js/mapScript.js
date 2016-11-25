@@ -416,10 +416,10 @@ function ShowRestaurant(place_id){
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           map.panTo(place.geometry.location);
           map.setZoom(13);
+          google.maps.event.removeListener(museumListener);
           clearMarkers();
           clearResults();
           typeofthing = 'restaurant';
-          google.maps.event.removeListener(museumListener);
           restaurantListener = map.addListener('idle', searchRestaurant);
         }
       });
@@ -438,13 +438,13 @@ function ShowMuseum(place_id){
         placeId: place_id
       }, function(place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
+          google.maps.event.removeListener(restaurantListener);
           clearMarkers();
           clearResults();
           map.panTo(place.geometry.location);
           map.setZoom(13);
 
           typeofthing = 'museum';
-          google.maps.event.removeListener(restaurantListener);
           museumListener = map.addListener('idle', searchMuseum);
         }
       });

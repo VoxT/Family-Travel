@@ -105,7 +105,7 @@ var carItemTemplate =
 +'            <li>Đựng được {{bags}} túi</li>'
 +'          </ul><br/>'
 +'          <ul>'
-+'            <li><i class="fa fa-check {{air_conditioning_icon}}" aria-hidden="true"></i> Điều hoà không khí</li>'
++'            <li><i class="fa {{air_conditioning_icon}}" aria-hidden="true"></i> Điều hoà không khí</li>'
 +'            <li><i class="fa {{manual_icon}}" aria-hidden="true"></i> Số tự động</li>'
 +'            <li><i class="fa {{mandatory_chauffeur_icon}}" aria-hidden="true"></i> Tài xế</li>'
 +'          </ul>'
@@ -134,7 +134,7 @@ var carItemTemplate =
 +'      <div class="price-select-block">'
 +'        <p>Tổng giá:</p>'
 +'        <div class="flight-price">{{price_all_days}}<sup>đ</sup></div>'
-+'        <a class="item-select-button" href="">Đặt Ngay <i class="fa fa-car" aria-hidden="true" style="margin-left: 5px;"></i></a>'
++'        <a class="item-select-button" href="#carbooking"   data-id={{id}}>Đặt Ngay <i class="fa fa-car" aria-hidden="true" style="margin-left: 5px;"></i></a>'
 +'      </div>'
 +'    </div>'
 +'  </div> '; 

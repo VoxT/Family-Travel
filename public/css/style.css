@@ -277,6 +277,9 @@ button.list-group-item > p {
 .car {
   background-color: #3c6e76;
 }
+.timeline-badge.car {
+  background-color: #3c6e76 !important;
+}
 #car:hover {
   background-color: #3c6e76;
 }
@@ -296,21 +299,6 @@ button.list-group-item > p {
 }
 .things {
   background-color: #e47225;
-  margin-left: -10px;
-  margin-right: 8px;
-  margin-top: 8px;
-  float: left !important;
-}
-#things > h4 {
-  margin-bottom: 3px;
-  margin-top: 8px;
-}
-#things > p {
-  margin-left: 23px;
-}
-#things {
-  height: 66px;
-  background-color: #f0f0f0;
 }
 #things:hover {
   background-color: #e47225;
@@ -1847,7 +1835,7 @@ p.car-class {
     float: left;
 }
 #carModal .item-summary {
-  width: 150px;
+  width: 162px;
 }
 .free-group {
   margin-top: 10px;
@@ -2463,9 +2451,31 @@ p.car-class {
   margin: 0;
 }
 
-#flight-booking .panel-heading, #hotel-booking .panel-heading {
+#flight-booking .panel-heading, #hotel-booking .panel-heading, #car-booking .panel-heading  {
   border-bottom: 1px dashed #68a19a;
 }
 #accordion-hotel .panel-body {
   border-top: 1px solid #ddd;
+}
+#car-booking .panel-body div {
+  padding: 0;
+}
+#car-booking .car-details {
+  border-left: 1px solid lightgrey;
+}
+#car-booking .car-details div {
+  padding: 0 15px;
+}
+#car-booking .car-details ul li {
+    padding: 5px 0 0 0px; 
+}
+#car-booking .car-img {
+  width: 80%;
+  height: auto;
+}
+#car-booking .info {
+    border-top: 1px solid lightgrey;
+    padding: 15px 0 15px 15px !important;
+    overflow: auto;
+    background: #f8f8f8;
 }
