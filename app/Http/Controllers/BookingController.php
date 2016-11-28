@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Cache;
 
@@ -14,23 +17,27 @@ class BookingController extends Controller
 
     public function redirectToBookingFlight(Request $request)
     {
-    	return View('pages.flightbooking')->with('flightDetails', $request->details)->with('tourId', $request->tourId);
+    	return View('pages.flightbooking')->with('flightDetails', $request->details);
     }
 
     public function redirectToBookingHotel(Request $request)
     {
-        return View('pages.hotelbooking')->with('hotelDetails', $request->details)->with('tourId', $request->tourId);
+        return View('pages.hotelbooking')->with('hotelDetails', $request->details);
     }
 
     public function redirectToBookingCar(Request $request)
     {
-    	return View('pages.carbooking')->with('carDetails', $request->details)->with('tourId', $request->tourId);
+    	return View('pages.carbooking')->with('carDetails', $request->details);
     }
 
     public function postBookingFlight()
     { 
         $flight_details = (array) json_decode(\Session::get('flightDetails'));
-        $tourId = \Session::get('tourID');
+        $tourId = Cache::get('tourId');
+
+        if($tourId == '') {
+            $tourId = $this->createTour();
+        }
 
         $input = $flight_details['input'];
         $flights = $flight_details['flight'];
@@ -78,8 +85,10 @@ class BookingController extends Controller
 
         $hoteldetails = (array)json_decode(\Session::get('hotelDetails')); 
 
-        $tourId = \Session::get('tourID');
-
+        $tourId = Cache::get('tourId');
+        if($tourId == '') {
+            $tourId = $this->createTour();
+        }
         (object)$input = $hoteldetails['input'];
 
         (object)$hotel = $hoteldetails['hotel'];
@@ -119,8 +128,11 @@ class BookingController extends Controller
     {
         $cardetails = json_decode(\Session::get('carDetails')); 
 
-        $tourId = \Session::get('tourID');
-        
+        $tourId = Cache::get('tourId');
+        if($tourId == '') {
+            $tourId = $this->createTour();
+        }
+
         DB::table('cars')->insert(
             [
                 'pick_up_place' => $cardetails->pick_up_address,
@@ -161,6 +173,11 @@ class BookingController extends Controller
 
     public function postPlace(Request $request)
     {
+        $tourId = Cache::get('tourId');
+        if($tourId == '') {
+            $tourId = $this->createTour();
+        }
+
         $place = $request->place;
         array_key_exists('phone', $place)? $phone = $place['phone'] : $phone = '';
         array_key_exists('website', $place)? $website = $place['website'] : $website = '';
@@ -176,9 +193,34 @@ class BookingController extends Controller
                 'rates' => $place['rates'],
                 'phone' => $phone,
                 'website' => $website,
-                'tour_id' => $request->tourId
+                'tour_id' => $tourId
             ]);
         
         return response(['place_id' => $place['place_id']]);
+    }
+
+    public function createTour()
+    {
+        $user = Auth::user();
+        if(!$user) return jsonResponse();
+
+        $tourId = DB::table('tours')->insertGetId(
+                ['origin_place' => Cache::get('originplace'),
+                'destination_place' => Cache::get('destinationplace'),
+                'outbound_date' => Cache::get('outbounddate'),
+                'inbound_date' => Cache::get('inbounddate'),
+                'adults' => Cache::get('adults'),
+                'children' => Cache::get('children'),
+                'infants' => Cache::get('infants'),
+                'user_id' => $user->id
+                ]
+            );
+        $tour = App\Tours::where('id', $tourId)->get()->first();
+
+        $expiresAt = Carbon::now()->endOfDay();
+        Cache::put('tourId', $tour->id , $expiresAt);
+        \Session::put('tourID', $tourId);
+
+        return $tourId;
     }
 }
