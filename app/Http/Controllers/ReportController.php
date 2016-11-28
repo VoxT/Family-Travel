@@ -47,6 +47,8 @@ class ReportController extends Controller
     							->where('type', 'Inbound')
     							->orderBy('index')
     							->get();
+        $flight_round_trip  = DB::table('flight_round_trip')->where('id', $flightRoundTripId)->get();
+        
     	$respone = array();
     	$oSegment = array();
     	foreach ($outbound as $key => $value) {
@@ -91,8 +93,25 @@ class ReportController extends Controller
                 'flightNumber' => $value->flight_number
                 ));
     	}
+        $payment = array();
+         foreach ($flight_round_trip as $key => $value) 
+        {
+            $paymentId = $value->payment_id;
+            $payments  = DB::table('payments')->where('paypal_id', $paymentId)->get();
+            foreach ($payments as $result) {
+                # code...
+            
+                array_push($payment, array(
+                    'name' => $result->payer_name,
+                    'email' => $result->payer_email,
+                    'amount_total'=> $result->amount_total,
+                    'amount_currency'=> $result->amount_currency,
+                    'payment_time' => $result->created_at
+                    ));
+            }
+        }
 
-    	return array('Outbound' => $oSegment, 'Inbound' => $dSegment, 'Payment' => array());
+    	return array('Outbound' => $oSegment, 'Inbound' => $dSegment, 'Payment' => $payment);
     }
 
     public function hotelResponse($tourId)
@@ -101,38 +120,119 @@ class ReportController extends Controller
         $hotels  = DB::table('hotels')->where('tour_id', $tourId)->get();
 
         $data = array();
+        $payment = array();
         foreach ($hotels as $key => $value) 
         {
-               array_push($data,array(
-                'checkindate' => $value->check_in_date,
-                'checkoutdate' => $value->check_out_date,
-                'guests' => $value->guests,
-                'rooms' => $value->rooms,
+           array_push($data,array(
+            'checkindate' => $value->check_in_date,
+            'checkoutdate' => $value->check_out_date,
+            'guests' => $value->guests,
+            'rooms' => $value->rooms,
+            'price' => $value->price,
+            'policy' => json_decode($value->policy),
+            'room_type' => $value->room_type,
+            'reviews' => json_decode($value->reviews),
+            'hotel' => array(
+                'name' => $value->name,
+                'description' => $value->description,
+                'location' => $value->location,
+                'popularity' => $value->popularity,
+                'amenities' => json_decode($value->amenities),
+                'latitude' => $value->latitude,
+                'longitude' => $value->longitude,
+                'star_rating' => $value->star_rating,
+                'image_url' => json_decode($value->image_url)
+                ),
+            'user' => array(
+                'full_name' => $value->full_name,
+                'email' => $value->email,
+                'address' => $value->address,
+                'phone' => $value->phone,
+                'gender' => $value->gender
+                ) 
+            ));
+            $paymentId = $value->payment_id;
+            $payments  = DB::table('payments')->where('paypal_id', $paymentId)->get();
+            foreach ($payments as $result) {
+                # code...
+            
+                array_push($payment, array(
+                    'name' => $result->payer_name,
+                    'email' => $result->payer_email,
+                    'amount_total'=> $result->amount_total,
+                    'amount_currency'=> $result->amount_currency,
+                    'payment_time' => $result->created_at
+                    ));
+            }
+        }
+
+        return array('Hotel' => $data,'Payment'=>$payment);
+    }
+
+    public function carResponse($tourId)
+    {
+        $cars  = DB::table('cars')->where('tour_id', $tourId)->get();
+
+        $flight_round_trip  = DB::table('flight_round_trip')->where('tour_id', $tourId)->get();
+
+        $data =  array();
+        $payment = array();
+        foreach ($cars as $key => $value)
+        {
+            array_push($data, array(
+
+                'pick_up_place' => $value->pick_up_place,
+                'drop_off_place' => $value->drop_off_place,
+                'pick_up_datetime'=> $value->pick_up_datetime,
+                'drop_off_datetime' => $value->drop_off_datetime,
                 'price' => $value->price,
-                'policy' => json_decode($value->policy),
-                'room_type' => $value->room_type,
-                'reviews' => json_decode($value->reviews),
-                'hotel' => array(
-                    'name' => $value->name,
-                    'description' => $value->description,
-                    'location' => $value->location,
-                    'popularity' => $value->popularity,
-                    'amenities' => json_decode($value->amenities),
-                    'latitude' => $value->latitude,
-                    'longitude' => $value->longitude,
-                    'star_rating' => $value->star_rating,
-                    'image_url' => json_decode($value->image_url)
-                    ),
+                'image' => $value->image,
+                'seats' => $value->seats,
+                'doors' => $value->doors,
+                'bags' => $value->bags,
+                'manual'=> $value->manual,
+                'air_conditioning' => $value->air_conditioning,
+                'mandatory_chauffeur' => $value->mandatory_chauffeur,
+                'car_class_name' => $value->car_class_name,
+                'vehicle' => $value->vehicle,
+                'distance_to_search_location_in_km' => $value->distance_to_search_location_in_km,
+                'geo_info' => json_decode($value->geo_info),
+                'fuel_type' => $value->fuel_type,
+                'fuel_policy' => $value->fuel_policy,
+                'theft_protection_insurance' => $value->theft_protection_insurance,
+                'third_party_cover_insurance' => $value->third_party_cover_insurance,
+                'free_collision_waiver_insurance' => $value->free_collision_waiver_insurance,
+                'free_damage_refund_insurance' => $value->free_damage_refund_insurance,
+                'free_cancellation' => $value->free_cancellation,
+                'free_breakdown_assistance' => $value->free_breakdown_assistance,
+                'unlimited' => $value->unlimited,
+                'included' =>$value->included,
+                'unit' => $value->unit,
                 'user' => array(
                     'full_name' => $value->full_name,
                     'email' => $value->email,
                     'address' => $value->address,
                     'phone' => $value->phone,
                     'gender' => $value->gender
-                    ) 
+                    )
                 ));
+            $paymentId = $value->payment_id;
+            $payments  = DB::table('payments')->where('paypal_id', $paymentId)->get();
+            foreach ($payments as $result) {
+                # code...
+            
+                array_push($payment, array(
+                    'name' => $result->payer_name,
+                    'email' => $result->payer_email,
+                    'amount_total'=> $result->amount_total,
+                    'amount_currency'=> $result->amount_currency,
+                    'payment_time' => $result->created_at
+                    ));
+            }
         }
-        return $data;
+
+        return array('Car' => $data, 'Payment'=> $payment);
+
     }
 
     public function getReport($tourId)
@@ -145,15 +245,14 @@ class ReportController extends Controller
     	if(!$tour) return $this->jsonResponse(null);
 
         $returnArray = array('flights' => $this->flightsRespone($tourId),
-                            'hotels' => $this->hotelResponse($tourId)
+                            'hotels' => $this->hotelResponse($tourId),
+                            'cars' => $this->carResponse($tourId)
                         );
 
     	return view('pages.report')->with(
     			'data',  $returnArray
     		);
     }
-
-
 
     // api: get available tours
     public function postTour(Request $request)
@@ -179,4 +278,6 @@ class ReportController extends Controller
 
         return $this->jsonResponse($tour);
     }
+
+   
 }
