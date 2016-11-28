@@ -2336,8 +2336,9 @@ p.car-class {
 #hotelModal .listing-item:hover {
   background: #f9f9f9;
 }
-.img-responsive {
+.listing-details__image img {
   height: 100%;
+  width: 100%;
 }
 #imageModal .carousel-inner > .item > img {
     width: 100%;
@@ -2428,11 +2429,14 @@ p.car-class {
 }
 
 /* place review */
+.tab-content .col-md-6 {
+  margin: 0 -1px -1px 0;
+  border: 1px solid lightgrey;
+}
 .place-review {
-  width: 48%;
-  height: auto;
-  padding: 10px;
-  border: 1px solid grey;
+  width: 100%;
+  height: 280px;
+  padding: 10px 0;
   float: left;
   margin: 1px;
   max-height: 400px;
@@ -2440,7 +2444,13 @@ p.car-class {
 }
 .place-review img {
   width: 100%;
-  max-height: 200px;
+  max-height: 125px;
+}
+.review-details {
+  height: 100%;
+}
+.place-review h4 a:hover {
+  color: #e7745c;
 }
 #thingsModal .tab-content {
   padding: 10px;
@@ -2454,7 +2464,7 @@ p.car-class {
 #flight-booking .panel-heading, #hotel-booking .panel-heading, #car-booking .panel-heading  {
   border-bottom: 1px dashed #68a19a;
 }
-#accordion-hotel .panel-body {
+#accordion-hotel .panel-body, #accordion-car .panel-body {
   border-top: 1px solid #ddd;
 }
 #car-booking .panel-body div {

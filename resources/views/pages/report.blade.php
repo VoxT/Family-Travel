@@ -1,11 +1,12 @@
 @extends('layouts.master')
-@section('title', 'Trang Đặt Chỗ')
+@section('title', 'Tổng hợp chuyến đi')
 
 @section('content')
 
 @php
 	$flight_round = json_decode(json_encode($data['flights']));
 	$hotels = json_decode(json_encode($data['hotels']));
+	$cars = json_decode(json_encode($data['cars']));
 @endphp
 <div class="container" style="padding-top: 62px;">
 
@@ -36,7 +37,7 @@
 					          	<div class="panel-group" id="accordion-flight" role="tablist" aria-multiselectable="true">
 								@foreach($flight_round as $key => $flights)
 									<div class="panel panel-default">
-								       	<a role="button" data-toggle="collapse" data-parent="#accordion-flight" href="#collapse{{$key}}" aria-expanded="true" aria-controls="collapseOne">
+								       	<a role="button" data-toggle="collapse" data-parent="#accordion-flight" href="#collapse-flight-{{$key}}" aria-expanded="true" aria-controls="collapseOne">
 										    <div class="panel-heading" role="tab" id="headingOne">
 										      <h4 class="panel-title clearfix">
 										          <div class="col-md-12">
@@ -49,7 +50,7 @@
 										    </div>
 								        </a>
 
-									    <div id="collapse{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+									    <div id="collapse-flight-{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
 										    <div class="details" id="flightdetailsmodal">
 												<div class="details-row">
@@ -173,9 +174,13 @@
 					    <div id="collapse-hotel" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 					      <div class="panel-body">
 					          	<div class="panel-group" id="accordion-hotel" role="tablist" aria-multiselectable="true">
-					          	@foreach($hotels as $key => $hotel_details)
+					          	@foreach($hotels as $key => $hotel)
+					          		@php 
+					          			$hotel_details = $hotel->Hotel;
+					          			$payment = $hotel->Payment;
+					          		@endphp
 									<div class="panel panel-default  col-md-12">
-								       	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								       	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-hotel-{{$key}}" aria-expanded="true" aria-controls="collapseOne">
 										    <div class="panel-heading" role="tab" id="headingOne">
 										      	<div class="row">
 										          	<div class="col-md-8">
@@ -201,7 +206,7 @@
 										        </div>
 										    </div>
 								        </a>
-									    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+									    <div id="collapse-hotel-{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
 									      	
 										      <div class="details" data-target='@{{data-target}}'>
@@ -288,8 +293,148 @@
 		      		</div>
 		     	</div>
 		     </div>
-	   </li>
-	   @endif
+	    </li>
+	   	@endif
+	   	@if(count($cars) > 0)
+	    <li class="timeline-inverted">
+		     <div class="timeline-badge car"><i class="fa fa-car" aria-hidden="true"></i></div>
+		     <div class="timeline-panel">
+		        <div class="timeline-heading">
+		        </div>
+		        <div class="timeline-body">
+			        <div class="panel panel-default">
+				       <a role="button" data-toggle="collapse" data-parent="#report-list" href="#collapse-car" aria-expanded="true" aria-controls="collapseOne">
+						    <div class="panel-heading" role="tab" id="headingOne">
+						      <h4 class="panel-title clearfix">
+						          <div class="col-md-12">
+						          		<h4>Danh sách Xe thuê</h4>
+						          </div>
+						      </h4>
+						    </div>
+				        </a>
+
+					    <div id="collapse-car" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+					      <div class="panel-body">
+					          	<div class="panel-group" id="accordion-car" role="tablist" aria-multiselectable="true">
+					          	@foreach($cars as $key => $car)
+					          	@php
+					          		$car_details = $car->Car;
+					          		$payment = $car->Payment;
+					          	@endphp
+									<div class="panel panel-default  col-md-12">
+								       	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-car-{{$key}}" aria-expanded="true" aria-controls="collapseOne">
+										    <div class="panel-heading" role="tab" id="headingOne">
+										      	<div class="row">
+										          	<div class="col-md-8">
+										          		<h4>{{ $car_details->vehicle }}</h4>
+										          	</div>
+										          	<div class="col-md-4">
+											    	</div>
+											    </div>
+											    <div class="row">
+										          <div class="col-md-8">
+										          		<h4>Tổng giá: <span>{{number_format($car_details->price,0,",",".")}}<sup>đ</sup></span> </h4>
+										          </div>
+											      <div class="col-md-4"></div>
+										        </div>
+										    </div>
+								        </a>
+									    <div id="collapse-car-{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+									      <div class="panel-body">
+									      	<div class="row">
+									      		<div class="col-md-6">
+									      			<h4><b>{{ $car_details->vehicle }}</b></h4>
+									      			<img class="img-responsive car-img" src="{{  $car_details->image }}">
+									      			<br/>
+									      			<div class="info">
+									      				<div class="col-md-6">
+									      					<ul>
+									      						<li>{{ $car_details->seats}} Chỗ </li>
+									      						<li>{{ $car_details->doors}} Cửa </li>
+									      						<li>{{ $car_details->doors}} Túi có thể đựng </li>
+									      					</ul>
+									      				</div>
+									      				<div class="col-md-6">
+									      					<ul>
+									      						@if($car_details->air_conditioning)
+									      							<li><i class="fa fa-check" aria-hidden="true"></i> Điều hoà</li>
+									      						@else
+									      							<li><i class="fa fa-times" aria-hidden="true"></i> Điều hoà </li>
+									      						@endif
+									      						@if($car_details->manual)
+									      							<li><i class="fa fa-check" aria-hidden="true"></i> Số Tự Động</li>
+									      						@else
+									      							<li><i class="fa fa-times" aria-hidden="true"></i>  Số Tự Động</li>
+									      						@endif
+									      						@if($car_details->mandatory_chauffeur)
+									      							<li><i class="fa fa-check" aria-hidden="true"></i> Tài Xế</li>
+									      						@else
+									      							<li><i class="fa fa-times" aria-hidden="true"></i> Tài Xế</li>
+									      						@endif
+									      					</ul>
+									      				</div>
+									      			</div>
+									      		</div>
+									      		<div class="col-md-6 car-details">
+									      			<div class="col-md-12">
+									      				<h5>Loại xe: {{ $car_details->car_class_name}}</h5>
+									      				<h5>
+									      					<span><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+															<span>Điểm nhận xe:</span>
+															<span>{{ $car_details->pick_up_place }}</span>
+														</h5>
+									      			</div>
+									      			<div class="col-md-12"  style="margin-top: 10px; border-top: 1px solid lightgrey; padding-top: 15px;">
+									      				<h5>Thông tin khác:</h5>
+									      				<ul>
+								      						@if($car_details->fuel_policy)
+								      							<li><i class="fa fa-check" aria-hidden="true"></i> Nguyên liệu đầy bình</li>
+								      						@else
+								      							<li><i class="fa fa-times" aria-hidden="true"></i> Nguyên liệu đầy bình</li>
+								      						@endif
+								      						@if(!$car_details->unlimited)
+								      							<li><i class="fa fa-check" aria-hidden="true"></i> Không giới hạn quãng đường</li>
+								      						@else
+								      							<li><i class="fa fa-times" aria-hidden="true"></i> Giới hạn quãng đường  {{$car_details->unit}}</li>
+								      						@endif
+								      						@if($car_details->free_breakdown_assistance)
+								      							<li><i class="fa fa-check" aria-hidden="true"></i> Hỗ trợ hỏng xe</li>
+								      						@else
+								      							<li><i class="fa fa-times" aria-hidden="true"></i> Hỗ trợ hỏng xe</li>
+								      						@endif
+								      						@if($car_details->free_damage_refund_insurance)
+								      							<li><i class="fa fa-check" aria-hidden="true"></i> Bảo hiểm tai nạn</li>
+								      						@else
+								      							<li><i class="fa fa-times" aria-hidden="true"></i> Bảo hiểm tai nạn</li>
+								      						@endif
+								      						@if($car_details->theft_protection_insurance)
+								      							<li><i class="fa fa-check" aria-hidden="true"></i> Bảo hiểm chống trộm</li>
+								      						@else
+								      							<li><i class="fa fa-times" aria-hidden="true"></i> Bảo hiểm chống trộm</li>
+								      						@endif
+								      						@if($car_details->third_party_cover_insurance)
+								      							<li><i class="fa fa-check" aria-hidden="true"></i> Bảo hiểm bên thứ ba</li>
+								      						@else
+								      							<li><i class="fa fa-times" aria-hidden="true"></i> Bảo hiểm bên thứ ba</li>
+								      						@endif
+
+								      					</ul>
+									      			</div>
+									      		</div>
+									      	</div>
+									      </div>
+									   	</div>
+
+					 				</div>
+								@endforeach
+		      					</div>
+		      			  </div>
+		      			</div>
+		      		</div>
+		     	</div>
+		     </div>
+	    </li>
+	   	@endif
 	</ul>
 </div>
 

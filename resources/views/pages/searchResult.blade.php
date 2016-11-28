@@ -320,6 +320,7 @@
         </ul>
          <div class="clearfix"> </div>
         <div class="tab-content">
+          <div class="place-review-first"></div>
           <div id="museum" class="tab-pane fade in active">
           </div>
           <div id="parks" class="tab-pane fade">    
@@ -368,7 +369,6 @@
 <form action="/booking/" method="post" target="_blank" id="book" enctype='application/json'>
    {{ csrf_field() }}
   <input type="hidden" name="details" value="">
-  <input type="hidden" name="tourId" value="">
 </form>
 
   

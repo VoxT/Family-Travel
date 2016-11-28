@@ -234,6 +234,7 @@ $(function(){
         .done(function(data) {
             $('.alert-success').removeClass('hidden');
             if(data.message === 'success') {
+              isLogin = true;
               $('#registerModal').modal('hide');
               $('#user-dropdown .dropdown a').first().remove();
               $('#user-dropdown .dropdown').prepend('<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-secret" aria-hidden="true"></i> ' + data.user_name + ' <span class="caret"></span></a>');

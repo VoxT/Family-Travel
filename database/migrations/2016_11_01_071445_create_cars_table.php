@@ -50,7 +50,7 @@ class CreateCarsTable extends Migration
             $table->string('payment_id')->nullable();
             $table->foreign('payment_id')->references('paypal_id')->on('payments');
             $table->integer('tour_id')->unsigned();
-            $table->foreign('tour_id')->references('id')->on('tours');
+            $table->foreign('tour_id')->references('id')->on('tours')->onDelete('cascade');;
             $table->timestamps();
         });
     }

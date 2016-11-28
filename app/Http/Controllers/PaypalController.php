@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 use Illuminate\Support\Facades\Input;
 use PayPal\Rest\ApiContext;
@@ -292,12 +293,11 @@ class PaypalController extends Controller
 		\Session::put('user_phone', $request->phone);
 		\Session::put('user_email', $request->email);
 		\Session::put('address',$request->address);
-		\Session::put('tourID', $request->tourId);
+		\Session::put('tourID', Cache::get('tourId'));
 	}
 
 	public function forgetSession($details)
 	{
-		
         \Session::forget($details);
         \Session::forget('user_name');
         \Session::forget('user_phone');

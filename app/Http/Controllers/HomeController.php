@@ -68,10 +68,13 @@ class HomeController extends Controller
 
             if(count($tour) != 0)
                 $tourId = $tour->first()->id;
-            else $tourId = '';
+            else {
+                $tourId = '';
+                Cache::put('tourId', $tourId, $expiresAt);
+            }
         }
         
-        return $tourId;
+        return Cache::get('tourId');
     }
 
 }

@@ -127,7 +127,6 @@
 					<form action="postCar" method="post" id="postCar" enctype='application/json'>
 							 {{ csrf_field() }}
 						<input type="hidden" name="cardetails" value="">
-  						<input type="hidden" name="tourId" value="{{$tourId}}">
 						
 						<div class="col-md-5" style="padding-left: 30px;">
 							<div class="form-group">

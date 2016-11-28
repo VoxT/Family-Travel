@@ -267,7 +267,7 @@ function addMarker(place) {
   placeService.getDetails({placeId: place.place_id},
     function(result, status) {
        
-      if (status !== google.maps.places.PlacesServiceStatus.OK) {
+      if (status !== google.maps.places.PlacesServiceStatus.OK || !result.photos) {
         return;
       }
 
@@ -324,7 +324,7 @@ function addMarker(place) {
           buildIWContent(result);
       }); 
       google.maps.event.addListener(marker, 'mouseout', function() {
-          infoWindow.close();
+         // infoWindow.close();
       }); 
       google.maps.event.addListener(marker, 'click', function() {
            PlaceReviews(result);
@@ -392,6 +392,8 @@ function buildIWContent(place) {
       'src="' + place.photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100}) + '"/>';
     }
 
+  $('.views').text(place.formatted_address);
+
   document.getElementById('iw-url').innerHTML = '<b><a   href="' + place.url +
       '">' + place.name + '</a></b>';
   if (place.rating) {
@@ -440,9 +442,9 @@ function PlaceReviews(place)
     var reviewsHtml = '<div class="review-details">';
     if(place.reviews){
         for (var j = 0; j < place.reviews.length; j++) {
-          reviewsHtml += '<p class="review-text">' + place.reviews[j].text + '</p>'
           reviewsHtml += '<p class="review-author"><b>' + place.reviews[j].author_name
                       + '</b><span class="review-rating"> Đánh giá:' + place.reviews[j].rating + '</span></p>'
+          reviewsHtml += '<p class="review-text">' + place.reviews[j].text + '</p>'
          // user_idHtml +=  (place.reviews[j].author_url) 
          // avartaHtml = user_idHtml.substr(24);
  //   document.getElementById('iw-reviews').style.display = '';
@@ -450,7 +452,7 @@ function PlaceReviews(place)
      }
      reviewsHtml += '</div>';
    }
-   return '<div class="place-review">' + urlHtml + ResImageHtml + reviewsHtml + '</div>';
+   return '<div class="col-md-6"><div class="place-review">' + ResImageHtml + urlHtml + reviewsHtml + '</div></div>';
  //  console.log(reviewsHtml);
  
 }
