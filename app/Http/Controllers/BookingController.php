@@ -120,6 +120,7 @@ class BookingController extends Controller
                 'address' => \Session::get('address'),
                 'phone' => \Session::get('user_phone'),
                 'gender' => 'other',
+                'payment_id' => \Session::get('paypal_payment_id'),
                 'tour_id' =>  $tourId
             ]);
     }
@@ -167,6 +168,7 @@ class BookingController extends Controller
                 'address' => \Session::get('address'),
                 'phone' => \Session::get('user_phone'),
                 'gender' => 'other',
+                'payment_id' => \Session::get('paypal_payment_id'),
                 'tour_id' =>  $tourId
             ]);
     }
