@@ -290,8 +290,48 @@ $(document).on('click', '#carModal .item-select-button', function (e) {
 });
 
 $(document).on('click', '#info-content .btn', function (e) {
-	console.log(placeDetails);
+	if(isLogin)
+		postPlace();
+	else $('#loginModal').modal();
 });
+
+function postPlace() {
+	var photos = [];
+	for(var i in placeDetails.photos) {
+		photos.push(placeDetails.photos[i].getUrl({'maxWidth': 1000, 'maxHeight': 1000})) ;
+	}
+
+	if(tourId != "") {
+		$.ajax({
+			url: 'api/v1/postPlace',
+			method: 'post',
+			data: {
+				place: {
+					name: placeDetails.name,
+					address: placeDetails.formatted_address,
+					place_type: placeDetails.types[0],
+					place_id: placeDetails.place_id,
+					images: photos,
+					location: {
+						lat: placeDetails.geometry.location.lat(),
+						lng: placeDetails.geometry.location.lng()
+					},
+					reviews: placeDetails.reviews,
+					rates: placeDetails.rating,
+					phone: placeDetails.international_phone_number,
+					website: placeDetails.website
+				},
+				tourId: tourId
+			}
+		}).done(function (data) {
+			
+		}).fail(function (e) {
+			
+		});
+	} else {
+		tourHandler();
+	}
+}
 
 function renderFlightDetails(id) {
 	var flight = flightlist[id];
@@ -454,25 +494,7 @@ function redirectToBook(details, action) {
 	$('#book input[name="details"]').val(JSON.stringify(details));
 	$('#book').attr('action', action);
 	if(!isLogin) {
-		$.ajax({
-			url: 'api/v1/getuser',
-			method: 'get'
-		}).done(function(status) {
-			isLogin = status.login;
-			if(status.login) 
-				{
-					if(tourId != "") {
-						$('input[name="tourId"]').val(tourId);
-						$('#book').submit();
-					}
-					else {
-						tourHandler();
-					}
-				}
-				else $('#loginModal').modal();
-		}).fail(function(){
-
-		});
+		$('#loginModal').modal();
 	}
 	else 
 		if(tourId != "") {

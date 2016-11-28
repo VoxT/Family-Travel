@@ -323,6 +323,9 @@ function addMarker(place) {
           infoWindow.open(map, marker);
           buildIWContent(result);
       }); 
+      google.maps.event.addListener(marker, 'mouseout', function() {
+          infoWindow.close();
+      }); 
       google.maps.event.addListener(marker, 'click', function() {
            PlaceReviews(result);
       });    
@@ -423,7 +426,7 @@ function PlaceReviews(place)
      for (var i = 0; i< place.photos.length ; i++){
    
       ResImageHtml +=  '<img class="ResImage img-responsive"' +
-            'src="' + place.photos[i].getUrl({'maxWidth': 500, 'maxHeight': 500}) + '"/>' 
+            'src="' + place.photos[i].getUrl({'maxWidth': 1000, 'maxHeight': 1000}) + '"/>' 
  //    document.getElementById('res-image').innerHTML= ResImageHtml;
         break;
       }

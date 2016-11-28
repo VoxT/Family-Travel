@@ -14,8 +14,6 @@ var carList = {};
 
 var entityid = '';
 
-var isLogin = false;
-
 //var tourId = request.tourId;
 
 function Flight(originplace, destinationplace, outbounddate, inbounddate, adults, children, infants, cabinclass) {

@@ -117,7 +117,7 @@ class BookingController extends Controller
 
     public function postBookingCar()
     {
-         $cardetails = json_decode(\Session::get('carDetails')); 
+        $cardetails = json_decode(\Session::get('carDetails')); 
 
         $tourId = \Session::get('tourID');
         
@@ -157,6 +157,28 @@ class BookingController extends Controller
                 'gender' => 'other',
                 'tour_id' =>  $tourId
             ]);
+    }
+
+    public function postPlace(Request $request)
+    {
+        $place = $request->place;
+        array_key_exists('phone', $place)? $phone = $place['phone'] : $phone = '';
+        array_key_exists('website', $place)? $website = $place['website'] : $website = '';
+
+        DB::table('places')->insert([
+                'name' => $place['name'],
+                'address' => $place['address'],
+                'place_type' => $place['place_type'],
+                'place_id' => $place['place_id'],
+                'images' => json_encode($place['images']),
+                'location' => json_encode($place['location']),
+                'reviews' => json_encode($place['reviews']),
+                'rates' => $place['rates'],
+                'phone' => $phone,
+                'website' => $website,
+                'tour_id' => $request->tourId
+            ]);
         
+        return response(['place_id' => $place['place_id']]);
     }
 }

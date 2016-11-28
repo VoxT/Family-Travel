@@ -347,8 +347,20 @@
           <!--Begin Previous and Next buttons-->
           <a class="left carousel-control" href="#myGallery" role="button" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#myGallery" role="button" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span></a>
         <!--end carousel--></div>
-
+        </div>
       </div><!--end modal-content-->
+  </div><!--end modal-dialoge-->
+</div><!--end myModal-->
+
+
+<!--begin modal window-->
+<div class="modal animated zoomIn" id="tourModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+      <p>lol</p>
+      </div>
+    </div><!--end modal-content-->
   </div><!--end modal-dialoge-->
 </div><!--end myModal-->
 
@@ -372,6 +384,7 @@
 <script type="text/javascript">
   var request = JSON.parse('{{ $request}}'.replace(/&quot;/g,'"'));
   var tourId = '{{$tourId}}';
+  var isLogin = {{$login? 'true':'false'}};
 
   $('#switch').click(function(){
     var originInput = $('#origin-input').val();

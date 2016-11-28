@@ -29,7 +29,9 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if($request->remember == 'on') $remember = true; else $remember = false;
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $remember)) {
             // Authentication passed...
             return response()->json(['message' => 'success', 'user_name' => Auth::user()->full_name]);
         } else {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Skyscanner\Utils\NetworkUtils;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use App;
 use Illuminate\Support\Facades\Cache;
 
@@ -34,7 +35,8 @@ class HomeController extends Controller
     public function searchResult()
     {
         return view('pages.searchResult')->with('request', json_encode(Input::get()))
-                                            ->with('tourId', $this->getTourId() );
+                                            ->with('tourId', $this->getTourId() )
+                                            ->with('login', Auth::check());
     }
 
     public function getDataByRequestURL(Request $request) 

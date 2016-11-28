@@ -44,3 +44,5 @@ Route::get('getHotelListByIndex', 'GetHotelListController@getHotelListByIndex');
 Route::get('getEnityId', 'GetHotelListController@getEnityId');
 
 Route::post('postTour', 'ReportController@postTour');
+
+Route::post('postPlace', 'BookingController@postPlace')->middleware('checklogin');
