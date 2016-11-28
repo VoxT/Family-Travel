@@ -120,10 +120,10 @@ class ReportController extends Controller
         $hotels  = DB::table('hotels')->where('tour_id', $tourId)->get();
 
         $data = array();
-        $payment = array();
+        
         foreach ($hotels as $key => $value) 
         {
-           array_push($data,array(
+            $arrayHotel = array(
             'checkindate' => $value->check_in_date,
             'checkoutdate' => $value->check_out_date,
             'guests' => $value->guests,
@@ -150,7 +150,8 @@ class ReportController extends Controller
                 'phone' => $value->phone,
                 'gender' => $value->gender
                 ) 
-            ));
+            );
+            $payment = array();
             $paymentId = $value->payment_id;
             $payments  = DB::table('payments')->where('paypal_id', $paymentId)->get();
             foreach ($payments as $result) {
@@ -164,9 +165,14 @@ class ReportController extends Controller
                     'payment_time' => $result->created_at
                     ));
             }
+
+            array_push($data, array(
+                'Hotel' => $arrayHotel,
+                'Payment' => $payment
+                ));
         }
 
-        return array('Hotel' => $data,'Payment'=>$payment);
+        return $data;
     }
 
     public function carResponse($tourId)
@@ -176,10 +182,10 @@ class ReportController extends Controller
         $flight_round_trip  = DB::table('flight_round_trip')->where('tour_id', $tourId)->get();
 
         $data =  array();
-        $payment = array();
         foreach ($cars as $key => $value)
         {
-            array_push($data, array(
+            $carArray = array();
+            $carArray =  array(
 
                 'pick_up_place' => $value->pick_up_place,
                 'drop_off_place' => $value->drop_off_place,
@@ -215,12 +221,11 @@ class ReportController extends Controller
                     'phone' => $value->phone,
                     'gender' => $value->gender
                     )
-                ));
+                );
+            $payment = array();
             $paymentId = $value->payment_id;
             $payments  = DB::table('payments')->where('paypal_id', $paymentId)->get();
             foreach ($payments as $result) {
-                # code...
-            
                 array_push($payment, array(
                     'name' => $result->payer_name,
                     'email' => $result->payer_email,
@@ -229,9 +234,14 @@ class ReportController extends Controller
                     'payment_time' => $result->created_at
                     ));
             }
+
+            array_push($data, array(
+                'Car' => $carArray,
+                'Payment' => $payment
+                ));
         }
 
-        return array('Car' => $data, 'Payment'=> $payment);
+        return $data;
 
     }
 
