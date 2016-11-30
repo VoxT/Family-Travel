@@ -27,6 +27,7 @@ class ReportController extends Controller
     								'seats' => $value->number_of_seat,
     								'fullName' => $value->full_name,
     								'email' => $value->email,
+                                    'phone' => $value->phone,
     								'created' => $value->created_at
     							);
     		array_push($flightsRespone, $temp);

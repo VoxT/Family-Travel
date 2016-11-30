@@ -183,6 +183,7 @@ class BookingController extends Controller
         $place = $request->place;
         array_key_exists('phone', $place)? $phone = $place['phone'] : $phone = '';
         array_key_exists('website', $place)? $website = $place['website'] : $website = '';
+        array_key_exists('rates', $place)? $rates = $place['rates'] : $rates = 0;
 
         DB::table('places')->insert([
                 'name' => $place['name'],
@@ -192,7 +193,7 @@ class BookingController extends Controller
                 'images' => json_encode($place['images']),
                 'location' => json_encode($place['location']),
                 'reviews' => json_encode($place['reviews']),
-                'rates' => $place['rates'],
+                'rates' =>  $rates,
                 'phone' => $phone,
                 'website' => $website,
                 'tour_id' => $tourId

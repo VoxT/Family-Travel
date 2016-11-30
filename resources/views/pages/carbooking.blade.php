@@ -126,7 +126,7 @@
 
 					<form action="postCar" method="post" id="postCar" enctype='application/json'>
 							 {{ csrf_field() }}
-						<input type="hidden" name="cardetails" value="">
+						<input type="hidden" name="cardetails" value="{{$carDetails}}">
 						
 						<div class="col-md-5" style="padding-left: 30px;">
 							<div class="form-group">
@@ -155,7 +155,7 @@
 							</div>
 							<div class="form-group">
 		                        <div class="">
-		                            <button type="button" class="btn btn-primary col-md-12" id="book">
+		                            <button type="submit" class="btn btn-primary col-md-12" id="book">
 		                                Đặt và Thanh Toán
 		                            </button>
 		                        </div>
@@ -178,14 +178,5 @@
 
 @section('scripts')
   @parent
-
-<script type="text/javascript">
-	var json = @php echo $carDetails; @endphp;
-	var carJson = JSON.stringify(json);
-	$(document).on('click', '#book', function() {
-		$('input[name="cardetails"').val(carJson);
-		$('#postCar').submit();
-	});
-</script>
 
 @endsection

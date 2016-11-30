@@ -289,7 +289,7 @@ $(document).on('click', '#carModal .item-select-button', function (e) {
 	redirectToBook(details, 'booking/car');
 });
 
-$(document).on('click', '#info-content .btn', function (e) {
+$(document).on('click', '#addPlace', function (e) {
 	if(isLogin)
 		postPlace();
 	else $('#loginModal').modal();
@@ -321,7 +321,12 @@ function postPlace() {
 			}
 		}
 	}).done(function (data) {
+		bookPlaceList.push(data.place_id);
 		
+	    $('.add .btn').html('<i class="fa fa-check" aria-hidden="true"></i>');
+	    $('.add .btn').css('background', '#04c9a6');
+	    $('.add .btn').attr('title', 'Đã thêm vào chuyến đi');
+	    $('.add .btn').attr('id', 'removePlace');
 	}).fail(function (e) {
 		
 	});
@@ -534,3 +539,47 @@ function nextweek(){
 }
 
 getEnityId(request.destinationplace, request.outbounddate, request.inbounddate, request.adults, request.adults);
+
+$(document).on('click', '#plane', function(){
+	routePlane();
+})
+
+$('#thingsModal').on('shown.bs.modal', function () {
+	$('#thingsModal li.active a').trigger( "click" );
+});
+$('#thingsModal').on('hidden.bs.modal', function () {
+	switch($('#thingsModal li.active a').attr('href')) {
+		case '#museum': clearMarkers(museumMarkers); break;
+		case '#parks': clearMarkers(parkMarkers); break;
+		case '#restaurant': clearMarkers(restaurantMarkers); break;
+		case '#other': clearMarkers(otherMarkers); break;
+	}
+   google.maps.event.clearListeners(map, 'idle');  
+  routePlane();
+})
+$('#hotelModal').on('hidden.bs.modal', function () {
+  clearMarkers(hotelMarkers);
+  routePlane();
+})
+$('#carModal').on('hidden.bs.modal', function () {
+ // clearMarkers(hotelMarkers);
+  routePlane();
+})
+$('#hotelModal').on('shown.bs.modal', function () {
+   expandViewportToFitPlace(request.dlat, request.dlng);
+   if(hotelMarkers.length == 0)
+	   for(var i in hoteldetails) {
+	   		var myLatLng = {lat: hoteldetails[i].hotel.latitude, lng: hoteldetails[i].hotel.longitude};
+	   		var marker = new google.maps.Marker({
+			    position: myLatLng,
+			    map: map,
+			    title: 'Hello World!'
+			  });
+	   		marker.setMap(map);
+	   		hotelMarkers.push(marker);
+	   }
+	 else dropMarker(hotelMarkers);
+})
+$('#carModal').on('shown.bs.modal', function () {
+   expandViewportToFitPlace(request.dlat, request.dlng);
+})

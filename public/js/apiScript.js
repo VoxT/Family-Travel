@@ -299,6 +299,10 @@ function getAirPortCode(outbounddate, inbounddate,
 
 			originAirCode = places[depPlace].code;
 			destinationAirCode = places[arrPlace].code;
+
+			flightPlanCoordinates = [{lat: places[depPlace].lat, lng: places[depPlace].lng},
+									{lat: places[arrPlace].lat, lng: places[arrPlace].lng}
+									];
 			
 			Flight(originAirCode + '-sky', destinationAirCode + '-sky', outbounddate, inbounddate,
 					 adults, children, infants, cabinclass);

@@ -1805,6 +1805,7 @@ input#checkindate, input#checkoutdate{
   padding: 10px 0;
   color: #444;
   position: relative;
+  border-left: 1px solid lightgrey;
 }
 .item-car-details {
   width: 320px;
@@ -2249,10 +2250,10 @@ p.car-class {
 .image-gallery {
   width: 250px;
 }
-#hotel-booking .image-gallery {
+#hotel-booking .image-gallery, #accordion-hotel .image-gallery {
   width: 100%;
 }
-#hotel-booking .image-gallery li img {
+#hotel-booking .image-gallery li img, #accordion-hotel .image-gallery li img{
   width: 100px;
   height: 100px;
   margin-left: 2px;
@@ -2263,7 +2264,8 @@ p.car-class {
   height: 50px;
   padding: 1px;
 }
-.image-gallery li:first-child img, #hotel-booking .image-gallery li:first-child img {
+.image-gallery li:first-child img, #hotel-booking .image-gallery li:first-child img,
+#accordion-hotel .image-gallery li:first-child img {
   width: 200px;
   height: 200px;
   float: left;
@@ -2309,15 +2311,18 @@ p.car-class {
 #hoteldetailsmodal .nav {
   margin-top: 5px;
 }
+#collapse-hotel .nav li a,
 #hotel-booking .nav li a,
 #hoteldetailsmodal .nav li a{
   border: none;
 }
+#collapse-hotel .nav li a:hover,
 #hotel-booking .nav li a:hover,
 #hoteldetailsmodal .nav li a:hover{
   background: white;
   color: #0b91d8;
 }
+#collapse-hotel .nav li.active a,
 #hotel-booking .nav li.active a,
 #hoteldetailsmodal .nav li.active a {
   background: white;
@@ -2429,20 +2434,22 @@ p.car-class {
 }
 
 /* place review */
-.tab-content .col-md-6 {
+#thingsModal .tab-content .col-md-6 {
   margin: 0 -1px -1px 0;
   border: 1px solid lightgrey;
 }
 .place-review {
   width: 100%;
-  height: 280px;
-  padding: 10px 0;
+  height: 150px;
   float: left;
   margin: 1px;
   max-height: 400px;
   overflow: hidden;
 }
-.place-review img {
+.fill {
+  padding: 10px 0 0 0;
+}
+.fill img {
   width: 100%;
   max-height: 125px;
 }
@@ -2451,6 +2458,30 @@ p.car-class {
 }
 .place-review h4 a:hover {
   color: #e7745c;
+}
+.place-review-first {
+  border-bottom: 1px dashed lightgrey;
+  overflow: auto; 
+}
+.place-review-first .fill {
+  padding: 0;
+}
+.place-review-first .carousel-inner {
+  margin-top: 0;
+}
+.place-review-first .place-review {
+  height: auto !important;
+    max-height: 1000px;
+    margin:0;
+    padding: 0 15px 15px 15px;
+}
+img {
+
+  object-fit: cover;
+}
+.place-review-first img {
+  height: 300px !important;
+    max-height: 300px;
 }
 #thingsModal .tab-content {
   padding: 10px;
@@ -2464,7 +2495,7 @@ p.car-class {
 #flight-booking .panel-heading, #hotel-booking .panel-heading, #car-booking .panel-heading  {
   border-bottom: 1px dashed #68a19a;
 }
-#accordion-hotel .panel-body, #accordion-car .panel-body {
+#accordion-hotel .panel-body, #accordion-car .panel-body,#accordion-flight .panel-body {
   border-top: 1px solid #ddd;
 }
 #car-booking .panel-body div {
@@ -2479,29 +2510,72 @@ p.car-class {
 #car-booking .car-details ul li {
     padding: 5px 0 0 0px; 
 }
-#car-booking .car-img {
+#accordion-car ul li {
+  padding: 5px 0;
+}
+#car-booking .car-img, #accordion-car .car-img {
   width: 80%;
   height: auto;
 }
-#car-booking .info {
+#car-booking .info, #accordion-car .info {
     border-top: 1px solid lightgrey;
     padding: 15px 0 15px 15px !important;
     overflow: auto;
     background: #f8f8f8;
 }
 .add .btn {
-  position: absolute;
+  position: relative;
   padding: 0 !important;
   text-align: center;
   vertical-align: middle;
-  bottom: 13px;
-  right: 35px;
+  float: right;
   border-radius: 50%;
   width: 35px;
   height: 35px;
+  margin-top: -30px;
+  color: white;
+}
+#removePlace {
+  background: #04c9a6;
+}
+#addPlace {
   background: #e47225;
+}
+.add .btn .fa-check {
   color: white;
 }
 .add .btn:hover i{
   transform: scale(1.5);
+}
+.place-review .add .btn {
+  display: none;
+}
+.place-review-first .place-review .add .btn {
+  display: inline-block;
+}
+#report ul.timeline .row .col-md-8 {
+  padding-left: 0;
+}
+ul.timeline .panel-body .details-row {
+  border-top: none !important;
+  padding: 0 !important;
+}
+ul.timeline .panel-body .row {
+  margin: 0;
+}
+#accordion-flight .row .col-md-12 {
+  padding-left: 0;
+}
+#collapse-hotel .tab-content {
+  padding-top: 10px;
+}
+td {
+    border-bottom: 1px solid white !important;
+}
+.book-payment {
+  background: #f9f9f9;
+}
+.payment-info {
+      padding-top: 10px;
+    border-top: 1px dashed grey;
 }

@@ -132,7 +132,7 @@
 
 					<form action="postHotel" method="post" id="postHotel" enctype='application/json'>
 							 {{ csrf_field() }}
-						<input type="hidden" name="hoteldetails" value="">
+						<input type="hidden" name="hoteldetails" value="{{ $hotelDetails }}">
 						
 						<div class="col-md-5" style="padding-left: 30px;">
 							<div class="form-group">
@@ -161,7 +161,7 @@
 							</div>
 							<div class="form-group">
 		                        <div class="">
-		                            <button type="button" class="btn btn-primary col-md-12" id="book">
+		                            <button type="submit" class="btn btn-primary col-md-12" id="book">
 		                                Đặt và Thanh Toán
 		                            </button>
 		                        </div>
@@ -205,13 +205,5 @@
 @section('scripts')
   @parent
 
-<script type="text/javascript">
-	var json = @php echo $hotelDetails; @endphp;
-	var hotelJson = JSON.stringify(json);
-	$(document).on('click', '#book', function() {
-		$('input[name="hoteldetails"').val(hotelJson);
-		$('#postHotel').submit();
-	});
-</script>
 
 @endsection

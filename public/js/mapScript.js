@@ -7,10 +7,12 @@ var stop = false, typeofthing = 'all';
 
 var restaurantListener = null, museumListener = null, parkListener = null;
 var placeDetails = null;
+var bookPlaceList = [];
 
+var flightPath, flightPlanCoordinates ;
 // begin result search map
 var map, placeService, infoWindow;
-var museumMarkers = [], restaurantMarkers = [], parkMarkers = [], otherMarkers= [] ;
+var museumMarkers = [], restaurantMarkers = [], parkMarkers = [], otherMarkers= [], hotelMarkers = [] ;
 var iconType = {
           'restaurant':
                 {
@@ -60,7 +62,7 @@ function initMap() {
 
     var travel_mode = 'DRIVING';
     var mapOptions = {
-      center: {lat: -33.8688, lng: 151.2195},
+      center: {lat: parseFloat(dlat), lng: parseFloat(dlng)},
       zoom: 13,
       
       mapTypeControl: true,
@@ -148,7 +150,6 @@ function initMap() {
     route(origin_place_id, destination_place_id, travel_mode,
             directionsService, directionsDisplay);
    
- 
     // handler result item
     // $('#things').click( function() {
     //  showInterestingThings(destination_place_id);
@@ -177,13 +178,9 @@ function initMap() {
 
 }
 
-function expandViewportToFitPlace(place) {
-  if (place.geometry.viewport) {
-    map.fitBounds(place.geometry.viewport);
-  } else {
-    map.setCenter(place.geometry.location);
-    map.setZoom(17);
-  }
+function expandViewportToFitPlace(lat, lng) {
+    map.setCenter({lat: parseFloat(lat), lng: parseFloat(lng)});
+    map.setZoom(13);
 }
 
 function route(origin_place_id, destination_place_id, travel_mode, directionsService, directionsDisplay) {
@@ -198,11 +195,27 @@ function route(origin_place_id, destination_place_id, travel_mode, directionsSer
       if (status === 'OK') {
         directionsDisplay.setDirections(response);
       } else {
-        window.alert('Directions request failed due to ' + status);
       }
     });
 }
 
+function routePlane() {
+
+  var bounds = new google.maps.LatLngBounds();
+  flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          geodesic: true,
+          strokeColor: '#04c9a6',
+          strokeOpacity: 1.0,
+          strokeWeight: 3
+        });
+
+  flightPath.setMap(map);
+  for(var i in flightPlanCoordinates)
+    bounds.extend(flightPlanCoordinates[i]);
+
+  map.fitBounds(bounds);
+}
 
 function showInterestingThings(place_id) {
   placeService.getDetails({
@@ -324,10 +337,12 @@ function addMarker(place) {
           buildIWContent(result);
       }); 
       google.maps.event.addListener(marker, 'mouseout', function() {
-         // infoWindow.close();
+         infoWindow.close();
       }); 
       google.maps.event.addListener(marker, 'click', function() {
-           PlaceReviews(result);
+           $('.place-review-first').html(PlaceReviews(result, true));
+           $('.place-review-first .col-md-6').attr('class', 'haha');
+           $('#thingsModal').scrollTop(0);
       });    
       google.maps.event.addListener(map, 'click', function() {
            infoWindow.close();
@@ -382,7 +397,6 @@ function showInfoWindow(result) {
   // Load the place information into the HTML elements used by the info window.
 function buildIWContent(place) {
 
-  placeDetails = place;
   if(!place.photos)
   {
   document.getElementById('iw-icon').innerHTML = '<img class=" image_place"'+
@@ -420,25 +434,48 @@ function buildIWContent(place) {
 
 //REVIEW PLACE 
 
-function PlaceReviews(place) 
+function PlaceReviews(place, review = false) 
 {
   placeDetails = place;
    var ResImageHtml='';
   if (!place.photos) {} else {
-     for (var i = 0; i< place.photos.length ; i++){
-   
-      ResImageHtml +=  '<img class="ResImage img-responsive"' +
-            'src="' + place.photos[i].getUrl({'maxWidth': 1000, 'maxHeight': 1000}) + '"/>' 
- //    document.getElementById('res-image').innerHTML= ResImageHtml;
-        break;
-      }
-         // console.log(ResImageHtml);
+    if(review){
+      ResImageHtml += '<div id="myPlaceCarousel" class="carousel" data-interval="false">'
+           +'<div class="carousel-inner" role="listbox">';
+       for (var i = 0; i< place.photos.length ; i++){
+     
+        ResImageHtml +=  '<div class="item"><div class="fill"><img class="ResImage img-responsive"' +
+              'src="' + place.photos[i].getUrl({'maxWidth': 1000, 'maxHeight': 1000}) + '"/></div></div>' 
+   //    document.getElementById('res-image').innerHTML= ResImageHtml;
+      //    break;
+        }
+        ResImageHtml += '</div>';
+        ResImageHtml = ResImageHtml.replace('item', 'item active');
+        ResImageHtml += '<a class="left carousel-control" href="#myPlaceCarousel" role="button" data-slide="prev">'
+      + '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>'
+      + '<span class="sr-only">Previous</span></a>'
+      + '<a class="right carousel-control" href="#myPlaceCarousel" role="button" data-slide="next">'
+      + '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'
+      + '<span class="sr-only">Next</span></a></div>';
+           // console.log(ResImageHtml);
+    } else {
+      ResImageHtml = '<div class="fill"><img class="ResImage img-responsive"' +
+              'src="' + place.photos[0].getUrl({'maxWidth': 1000, 'maxHeight': 1000}) + '"/>';
+    }
   }
    var  urlHtml = '<h4><a target="_blank"  href="' + place.url +'">' + place.name + '</a></h4>';
  //   document.getElementById('res-url').innerHTML = urlHtml;
     
   //  document.getElementById('res-address').textContent = place.vicinity;
-      
+    var button ='';
+    if($.inArray(place.place_id, bookPlaceList) == -1)
+       button = '<div class="add">'
+                   +'<button type="button" class="btn" id="addPlace" title="Thêm vào chuyến đi"><i class="fa fa-plus" aria-hidden="true"></i></button>'
+                 +'</div>';
+    else 
+        button = '<div class="add">'
+                   +'<button type="button" class="btn" id="removePlace" title="Thêm vào chuyến đi"><i class="fa fa-check" aria-hidden="true"></i></button>'
+                 +'</div>';
     var reviewsHtml = '<div class="review-details">';
     if(place.reviews){
         for (var j = 0; j < place.reviews.length; j++) {
@@ -452,7 +489,7 @@ function PlaceReviews(place)
      }
      reviewsHtml += '</div>';
    }
-   return '<div class="col-md-6"><div class="place-review">' + ResImageHtml + urlHtml + reviewsHtml + '</div></div>';
+   return '<div class="col-md-6">' + ResImageHtml + '<div class="place-review">'+ urlHtml + button + reviewsHtml + '</div></div>';
  //  console.log(reviewsHtml);
  
 }
