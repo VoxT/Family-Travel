@@ -38,7 +38,7 @@
                <div id="iw-icon"></div>
                <div id="iw-url" class="url_name"></div>
                <p class="views"> Cảnh đẹp, nơi giải trí ,....</p>
-               <div> <hr/></div>
+               <div> <hr class="line" /></div>
                <div id="iw-rating-row" > 
                    <p class="iw-rating"> Đánh giá: <span id="iw-rating"></span></p>
 <!-- 

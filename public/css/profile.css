@@ -1,0 +1,31 @@
+.header{
+	border-style: solid;
+    border-color: #ffffff;
+    background-color: #0b8483;
+}
+#top {
+	color: white;
+	text-align: center;
+}
+.profile {
+	margin-top: 30px;
+	color: #0b8483;
+}
+p.size {
+	font-size: 18px;
+}
+.row a{
+	color: #0b8483;
+	font-size: 18px;
+}
+
+.contact {
+	margin-top: 30px;
+	color: #0b8483;
+}
+.row a:hover{
+	color : red;
+}
+.form-control {
+	font-size: 18px;
+}
