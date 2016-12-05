@@ -204,6 +204,15 @@ function HotelDetails(url, hotel_id) {
 		},
 		success: function (data) {			
 			$.extend(hoteldetails, data.data);
+
+			var myLatLng = {lat: hoteldetails[hotel_id].hotel.latitude, lng: hoteldetails[hotel_id].hotel.longitude};
+	   		var marker = new google.maps.Marker({
+			    position: myLatLng,
+			    map: map,
+			    title: 'Hello World!'
+			  });
+	   		hotelMarkers.push(marker);
+	   		
 			renderHotel(hotel_id);
 		}
 	})

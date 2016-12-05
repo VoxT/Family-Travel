@@ -7,6 +7,7 @@
 	$flight_round = json_decode(json_encode($data['flights']));
 	$hotels = json_decode(json_encode($data['hotels']));
 	$cars = json_decode(json_encode($data['cars']));
+	$places = json_decode(json_encode($data['places']));
 @endphp
 <div class="container" id="report" style="padding-top: 62px;">
 
@@ -223,7 +224,7 @@
 						    <div class="panel-heading" role="tab" id="headingOne">
 						      <h4 class="panel-title clearfix">
 						          <div class="col-md-12">
-						          		<h4>Khách sạn tại đâu đó xử lý sau</h4>
+						          		<h4>Danh Sách Đặt Phòng Khách sạn</h4>
 						          </div>
 						      </h4>
 						    </div>
@@ -612,9 +613,62 @@
 		     </div>
 	    </li>
 	   	@endif
+	   	@if(count($places) > 0)
+	   	<li class="timeline-inverted">
+		     <div class="timeline-badge place"><i class="fa fa-university" aria-hidden="true"></i></div>
+		     <div class="timeline-panel">
+		        <div class="timeline-heading">
+		        </div>
+		        <div class="timeline-body">
+			        <div class="panel panel-default">
+				       <a role="button" data-toggle="collapse" data-parent="#report-list" href="#collapse-place" aria-expanded="true" aria-controls="collapseOne">
+						    <div class="panel-heading" role="tab" id="headingOne">
+						      <h4 class="panel-title clearfix">
+						          <div class="col-md-12">
+						          		<h4>Danh sách Địa Điểm</h4>
+						          </div>
+						      </h4>
+						    </div>
+				        </a>
+
+					    <div id="collapse-place" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+					      <div class="panel-body">
+					      	<div class="col-md-4">
+					      		<div class="list-group">
+					      		@foreach ($places as $key => $value)
+								  <a href="#{{$key}}" class="list-group-item" geo-id="{{$key}}">
+								    <div class="details">
+									    <h4 class="list-group-item-heading">{{ $value->name }}</h4>
+									    <p class="list-group-item-text">
+									    	@for($i = 0; $i < 5; $i++)
+									    		@if($i < $value->rates)
+									    		<span style="font-size: 120%;color:#F9C81F;">&#9733;</span>
+									    		@else
+									    		<span style="font-size:120%;color:#E7E5E5;" >&#9734;</span>
+									    		@endif
+									    	@endfor
+									    </p>
+									    <p>{{ $value->address }}</p>
+									</div>
+								    <div class="images">
+								    	<img src="{{ json_decode($value->images)[0] }}">
+								    </div>
+								  </a>
+								 @endforeach
+								</div>
+					      	</div>
+					      	<div class="col-md-8">
+					      		<div id="reportMap" style="height: 400px;"></div>
+					      	</div>
+					      </div>
+		      			</div>
+		      		</div>
+		     	</div>
+		     </div>
+	    </li>
+	   	@endif
 	</ul>
 </div>
-
 
 
 @endsection
@@ -625,7 +679,9 @@
 
 @section('scripts')
   @parent
+
   <script type="text/javascript">
+	  $('#collapse-place').collapse('show');
 	  if($('#accordion-flight').children('.panel-default').length == 1) {
 	  	$('#collapse0').collapse('show');
 	  }
@@ -633,4 +689,14 @@
 	  	$('#collapse0').collapse('show');
 	  }
   </script>
+  <script type="text/javascript">
+  	var place_list = [];
+  	@foreach ($places as $key => $value)
+  		@php( $location = json_decode($value->location) )
+  		place_list.push({lat: {{ $location->lat }}, lng: {{ $location->lng }}, type: '{{ $value->place_type }}' });
+  	@endforeach
+  </script>
+  <script src="{{ elixir('js/report.js') }}"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40&callback=reportMap&language=vi&region=VN&libraries=places">
+</script>
 @endsection

@@ -567,18 +567,8 @@ $('#carModal').on('hidden.bs.modal', function () {
 })
 $('#hotelModal').on('shown.bs.modal', function () {
    expandViewportToFitPlace(request.dlat, request.dlng);
-   if(hotelMarkers.length == 0)
-	   for(var i in hoteldetails) {
-	   		var myLatLng = {lat: hoteldetails[i].hotel.latitude, lng: hoteldetails[i].hotel.longitude};
-	   		var marker = new google.maps.Marker({
-			    position: myLatLng,
-			    map: map,
-			    title: 'Hello World!'
-			  });
-	   		marker.setMap(map);
-	   		hotelMarkers.push(marker);
-	   }
-	 else dropMarker(hotelMarkers);
+   dropMarker(hotelMarkers);
+
 })
 $('#carModal').on('shown.bs.modal', function () {
    expandViewportToFitPlace(request.dlat, request.dlng);

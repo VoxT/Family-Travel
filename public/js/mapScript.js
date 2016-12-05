@@ -379,11 +379,14 @@ function clearResults() {
 } 
 
 function dropMarker(markers) {
+  var bounds = new google.maps.LatLngBounds();
   for (var i = 0; i < markers.length; i++) {
       if (markers[i]) {
       markers[i].setMap(map);
     }
   }
+
+  map.fitBounds(bounds);
 }
 
 function showInfoWindow(result) {

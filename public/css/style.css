@@ -297,7 +297,7 @@ button.list-group-item > p {
   background-color: white;
   color: #0b91d8;
 }
-.things {
+.things, .place {
   background-color: #e47225;
 }
 #things:hover {
@@ -2578,4 +2578,38 @@ td {
 .payment-info {
       padding-top: 10px;
     border-top: 1px dashed grey;
+}
+
+#reportMap {
+  height: 400px;
+}
+#collapse-place .col-md-4, #collapse-place .col-md-8 {
+  padding: 0;
+  overflow: auto;
+}
+#collapse-place .images {
+  position: relative;
+  float: right;
+}
+#collapse-place .images img {
+  width: 80px;
+  height: 92px;
+}
+#collapse-place .details {
+  float: left;
+  width: calc(100% - 80px);
+}
+#collapse-place .details h4 {
+  margin: 0;
+}
+#collapse-place .list-group-item {
+  overflow: auto;
+  padding: 10px;
+  color: #8c8c8c;
+}
+#collapse-place .list-group {
+  max-height: 400px;
+}
+#collapse-place .list-group-item:hover {
+  color: #8c8c8c;
 }

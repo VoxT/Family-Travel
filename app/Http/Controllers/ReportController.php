@@ -180,8 +180,6 @@ class ReportController extends Controller
     {
         $cars  = DB::table('cars')->where('tour_id', $tourId)->get();
 
-        $flight_round_trip  = DB::table('flight_round_trip')->where('tour_id', $tourId)->get();
-
         $data =  array();
         foreach ($cars as $key => $value)
         {
@@ -246,6 +244,11 @@ class ReportController extends Controller
 
     }
 
+    public function placeResponse($tourId)
+    {
+        return DB::table('places')->where('tour_id', $tourId)->get()->toArray();
+    }
+
     public function getReport($tourId)
     {
     	$user = Auth::user();
@@ -257,7 +260,8 @@ class ReportController extends Controller
 
         $returnArray = array('flights' => $this->flightsRespone($tourId),
                             'hotels' => $this->hotelResponse($tourId),
-                            'cars' => $this->carResponse($tourId)
+                            'cars' => $this->carResponse($tourId),
+                            'places' => $this->placeResponse($tourId)
                         );
 
     	return view('pages.report')->with(
@@ -290,5 +294,4 @@ class ReportController extends Controller
         return $this->jsonResponse($tour);
     }
 
-   
 }
