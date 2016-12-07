@@ -226,4 +226,53 @@ class BookingController extends Controller
 
         return $tourId;
     }
+
+    public function bookingFlight(Request $request)
+    {
+        $this->storeSession($request);
+        \Session::put('flightDetails', $request->flightdetails);
+        $this->postBookingFlight();
+        $this->forgetSession('flightDetails');
+        $url = 'report/'.Cache::get('tourId');
+        return redirect($url);
+    }
+
+    public function bookingHotel(Request $request)
+    {
+        $this->storeSession($request);
+        \Session::put('hotelDetails', $request->flightdetails);
+        $this->postBookingFlight();
+        $this->forgetSession('hotelDetails');
+        $url = 'report/'.Cache::get('tourId');
+        return redirect($url);
+    }
+
+    public function bookingCar(Request $request)
+    {
+        $this->storeSession($request);
+        \Session::put('carDetails', $request->flightdetails);
+        $this->postBookingFlight();
+        $this->forgetSession('carDetails');
+        $url = 'report/'.Cache::get('tourId');
+        return redirect($url);
+    }
+
+    public function storeSession($request)
+    {
+        \Session::put('user_name', $request->full_name);
+        \Session::put('user_phone', $request->phone);
+        \Session::put('user_email', $request->email);
+        \Session::put('address',$request->address);
+        \Session::put('tourID', Cache::get('tourId'));
+    }
+
+    public function forgetSession($details)
+    {
+        \Session::forget($details);
+        \Session::forget('user_name');
+        \Session::forget('user_phone');
+        \Session::forget('user_email');
+        \Session::forget('paypal_payment_id');
+        \Session::forget('tourID');
+    }
 }

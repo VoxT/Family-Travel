@@ -162,8 +162,15 @@
 								</div>
 							</div>
 							<div class="form-group">
-		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="book">
+		                        <div class="book">
+		                            <button type="button" class="btn btn-primary col-md-12" id="book">
+		                                Đặt
+		                            </button>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <div class="payment">
+		                            <button type="submit" class="btn btn-primary col-md-12" id="paymet">
 		                                Đặt và Thanh Toán
 		                            </button>
 		                        </div>
@@ -188,6 +195,10 @@
 
 @section('scripts')
   @parent
-
-
+  <script type="text/javascript">
+  	$(document).on('click','#book',function(){
+	  	$('#postFlight').attr('action', '/bookingflight');
+	  	$('#postFlight').submit();
+  	});
+	</script>
 @endsection

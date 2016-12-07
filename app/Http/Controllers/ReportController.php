@@ -293,5 +293,4 @@ class ReportController extends Controller
 
         return $this->jsonResponse($tour);
     }
-
 }
