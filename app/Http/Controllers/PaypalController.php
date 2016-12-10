@@ -145,6 +145,9 @@ class PaypalController extends Controller
  		$hotel_price = 0;
  		$car_price = 0;
  		$items = array();
+ 		$flights_list_id = array();
+ 		$hotels_list_id = array();
+ 		$cars_list_id = array();
  		//print_r($flights);
         foreach ($flights as $key => $value)
         {
@@ -155,9 +158,11 @@ class PaypalController extends Controller
 	       		->setPrice($value['price'] / $exchange_rate); // unit price
 	       	array_push($items, $item);
 	       	$flight_price = $flight_price + (int)$value['price'];
+	       	array_push($flights_list_id, array(
+	       		'id' => $value['id']));
 	    }
 
-	   
+	   \Session::put('flights_list_id',$flights_list_id);
 
 	    foreach ($hotels as $key => $value)
         {
@@ -168,9 +173,11 @@ class PaypalController extends Controller
 	       		->setPrice($value->price / $exchange_rate); // unit price
 	       	array_push($items, $item);
 	       	$hotel_price = $hotel_price + (int)$value->price;
+	       	array_push($hotels_list_id, array(
+	       		'id' => $value->id));
 	    }
 
-
+	    \Session::put('hotels_list_id',$hotels_list_id);
 	     foreach ($cars as $key => $value)
         {
 	   		$item = new Item();
@@ -180,8 +187,10 @@ class PaypalController extends Controller
 	       		->setPrice($value->price / $exchange_rate); // unit price
 	       	array_push($items, $item);
 	       	$car_price = $car_price + (int)$value->price;
+	       	array_push($cars_list_id, array(
+	       		'id' => $value->id));
 	    }
-
+	    \Session::put('cars_list_id',$cars_list_id);
 	     $price = ($flight_price + $hotel_price + $car_price) / $exchange_rate;
 	    // add item to list
 	    $item_list = new ItemList();
@@ -207,7 +216,26 @@ class PaypalController extends Controller
 	    	// Store payment	    	
 	    	$this->storePayment();
 	    	// Store Flight if payment is success
-
+	    	$flights_list_id = \Session::get('flights_list_id');
+ 			$hotels_list_id = \Session::get('hotels_list_id');
+ 			$cars_list_id = \Session::get('cars_list_id');
+ 			$paypal_payment_id = \Session::get('paypal_payment_id')
+	    	foreach ($flights_list_id as $key => $value) {
+	    		DB::table('flight_round_trip')->where('id',$value['id'])
+	    									  ->update('payment_id',$paypal_payment_id);
+	    	}
+	    	foreach ($hotels_list_id as $key => $value) {
+	    		DB::table('hotels')->where('id',$value['id'])
+	    							->update('payment_id',$paypal_payment_id);
+	    	}
+	    	foreach ($cars_list_id as $key => $value) {
+	    		DB::table('cars')->where('id',$value['id'])
+	    						->update('payment_id',$paypal_payment_id);
+	    	}
+	    	\Session::forget('flights_list_id');
+ 			\Session::forget('hotels_list_id');
+ 			\Session::forget('cars_list_id');
+ 			\Session::forget('paypal_payment_id')
 	        $tourId = \Session::get('tourID'); 
 
 	        return redirect('report/'.$tourId)
@@ -318,7 +346,6 @@ class PaypalController extends Controller
 	    // add payment ID to session
 	    if(isset($redirect_url)) {
 	        // redirect to paypal
-	        print 'aaa';
 	       return redirect($redirect_url);
 	    }
 
