@@ -35,7 +35,7 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 			var flights = data.data.flight;
 
 			if($.isEmptyObject(flights))
-				$('#carModal .loading').html('<b> Không có chuyến bay phù hợp!</b>');
+				$('#planeModal .loading').html('<b> Không có chuyến bay phù hợp!</b>');
 
 			$.extend(flightinput, data.data.input);
 			$.extend(flightlist, flights);

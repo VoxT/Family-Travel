@@ -140,7 +140,7 @@ class PaypalController extends Controller
 
 	 public function postTourPayment($flights,$hotels,$cars)
 	{
- 		
+ 		$exchange_rate = \Currency::conv($from = 'USD', $to = 'VND', $value = 1, $decimals = 2);
  		$flight_price = 0;
  		$hotel_price = 0;
  		$car_price = 0;
@@ -152,7 +152,7 @@ class PaypalController extends Controller
 	    	$item->setName($value['origin_place'] . "-" . $value['destination_place']) // item name
 	        	->setCurrency('USD')
 	        	->setQuantity(1)
-	       		->setPrice($value['price']); // unit price
+	       		->setPrice($value['price'] / $exchange_rate); // unit price
 	       	array_push($items, $item);
 	       	$flight_price = $flight_price + (int)$value['price'];
 	    }
@@ -162,27 +162,27 @@ class PaypalController extends Controller
 	    foreach ($hotels as $key => $value)
         {
 	   		$item = new Item();
-	    	$item->setName($value['name']) // item name
+	    	$item->setName($value->name) // item name
 	        	->setCurrency('USD')
 	        	->setQuantity(1)
-	       		->setPrice($value['price']); // unit price
+	       		->setPrice($value->price / $exchange_rate); // unit price
 	       	array_push($items, $item);
-	       	$hotel_price = $hotel_price + (int)$value['price'];
+	       	$hotel_price = $hotel_price + (int)$value->price;
 	    }
 
 
-	     foreach ($hotels as $key => $value)
+	     foreach ($cars as $key => $value)
         {
 	   		$item = new Item();
-	    	$item->setName($value['vehicle']) // item name
+	    	$item->setName($value->vehicle) // item name
 	        	->setCurrency('USD')
 	        	->setQuantity(1)
-	       		->setPrice($value['price']); // unit price
+	       		->setPrice($value->price / $exchange_rate); // unit price
 	       	array_push($items, $item);
-	       	$car_price = $hotel_price + (int)$value['price'];
+	       	$car_price = $car_price + (int)$value->price;
 	    }
 
-	     $price = ($flight_price + $hotel_price + $car_price) / \Currency::conv($from = 'USD', $to = 'VND', $value = 1, $decimals = 2);
+	     $price = ($flight_price + $hotel_price + $car_price) / $exchange_rate;
 	    // add item to list
 	    $item_list = new ItemList();
 	    $item_list->setItems($items);	
@@ -367,11 +367,13 @@ class PaypalController extends Controller
 			]);
 	}
 	
-	public function paymentAll(Request $request)
+	public function paymentAll($tourId)
 	{
-
-		$flights = $this->flightPayment($request->tourId);
-		return $this->postTourPayment($flights,array(),array());
+		\Session::put('tourId',$tourId);
+		$flights = $this->flightPayment($tourId);
+		$hotels = $this->hotelPayment($tourId);
+		$cars = $this->carPayment($tourId);
+		return $this->postTourPayment($flights,$hotels,$cars);
 
 	}
 	public function flightPayment($tourId)

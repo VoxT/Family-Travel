@@ -89,6 +89,7 @@ class BookingController extends Controller
         if($tourId == '') {
             $tourId = $this->createTour();
         }
+
         (object)$input = $hoteldetails['input'];
 
         (object)$hotel = $hoteldetails['hotel'];
@@ -240,8 +241,8 @@ class BookingController extends Controller
     public function bookingHotel(Request $request)
     {
         $this->storeSession($request);
-        \Session::put('hotelDetails', $request->flightdetails);
-        $this->postBookingFlight();
+        \Session::put('hotelDetails', $request->hoteldetails);
+        $this->postBookingHotel();
         $this->forgetSession('hotelDetails');
         $url = 'report/'.Cache::get('tourId');
         return redirect($url);
@@ -250,8 +251,8 @@ class BookingController extends Controller
     public function bookingCar(Request $request)
     {
         $this->storeSession($request);
-        \Session::put('carDetails', $request->flightdetails);
-        $this->postBookingFlight();
+        \Session::put('carDetails', $request->cardetails);
+        $this->postBookingCar();
         $this->forgetSession('carDetails');
         $url = 'report/'.Cache::get('tourId');
         return redirect($url);

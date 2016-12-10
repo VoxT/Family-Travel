@@ -8,11 +8,41 @@
 	$hotels = json_decode(json_encode($data['hotels']));
 	$cars = json_decode(json_encode($data['cars']));
 	$places = json_decode(json_encode($data['places']));
+	$count_unpayment = 0;
 @endphp
 <div class="container" id="report" style="padding-top: 62px;">
 
 	<div class="page-header">
-        <h1 id="timeline">Tổng Hợp Chuyến Đi</h1>
+		<div class="col-md-9">
+        	<h1 id="timeline">Tổng Hợp Chuyến Đi</h1>
+        	<h3>{{$currentTour->origin_place.' - '.$currentTour->destination_place}}</h3>
+        	<p>{{ 'Đi: '.$currentTour->outbound_date.' | Về:'.$currentTour->inbound_date}}</p>
+        	<p>{{ $currentTour->adults.' Người lớn | '.$currentTour->children.' Trẻ em'}}</p>
+       	</div>
+		<div class="col-md-3">
+        @if(count($tours) > 1)
+		 <div class="dropdown">
+		    <button class="btn btn-default dropdown-toggle" type="button" id="tour-menu" data-toggle="dropdown">Xem Báo Cáo Chuyến Đi Khác 
+		    <span class="caret"></span></button>
+		    <ul class="dropdown-menu tour-menu" role="menu" aria-labelledby="tour-menu">
+		    @foreach($tours as $tour)
+		      <li role="presentation">
+		      	<a role="menuitem" tabindex="-1" href="{{url('report/'.$tour->id)}}">
+			      <div class="content-left">{{$tour->origin_place}}
+			      	<p>{{$tour->outbound_date}}</p>
+			      </div>
+			      <div class="go"><i class="fa fa-angle-double-right" aria-hidden="true"></i></div>
+			      <div class="content-right">{{$tour->destination_place}}
+			      	<p>{{$tour->inbound_date}}</p>
+			      </div>
+		      	</a>
+		      </li>
+		    @endforeach
+		    </ul>
+		  </div>
+		@endif
+		<div id="payment-all"></div>
+		</div>
     </div>
 	<ul class="timeline col-md-12">
 		@if(count($flight_round) > 0)
@@ -170,6 +200,7 @@
 														</tbody>
 													</table>
 												</div>
+												@if(count($flights->Payment) > 0)
 												<div class="payment-info">
 													<table class="table table-hover">
 														<thead>
@@ -199,6 +230,9 @@
 														</tbody>
 													</table>
 												</div>
+												@else 
+												@php($count_unpayment++)
+												@endif
 											</div>
 									      </div>
 									   	</div>
@@ -370,6 +404,7 @@
 															</tbody>
 														</table>
 													</div>
+													@if(count($payment) > 0)
 													<div class="payment-info">
 														<table class="table table-hover">
 															<thead>
@@ -399,6 +434,9 @@
 															</tbody>
 														</table>
 													</div>
+													@else 
+													@php($count_unpayment++)
+													@endif
 												 </div>
 											</div>
 									      </div>
@@ -569,6 +607,7 @@
 															</tbody>
 														</table>
 													</div>
+													@if(count($payment) > 0)
 													<div class="payment-info">
 														<table class="table table-hover">
 															<thead>
@@ -598,6 +637,9 @@
 															</tbody>
 														</table>
 													</div>
+													@else 
+													@php($count_unpayment++)
+													@endif
 										      	</div>
 										      </div>
 									      </div>
@@ -673,13 +715,18 @@
 
 @endsection
 @section('footer')
-	@include('layouts.footer')
 @endsection
 
 
 @section('scripts')
   @parent
 
+	@if($count_unpayment > 0)
+	<script type="text/javascript">
+	var btn = '' + '<a id="payment-all-button" class="btn btn-default" type="button" href="'+ '{{url("payment_all/".$currentTour->id)}}' + '"> <p>THANH TOÁN NGAY<p><p>('+ {{$count_unpayment}} +' khoản chưa thanh toán) </p> </a>';
+	$('#payment-all').html(btn);
+	</script>
+	@endif
   <script type="text/javascript">
 	  $('#collapse-place').collapse('show');
 	  if($('#accordion-flight').children('.panel-default').length == 1) {

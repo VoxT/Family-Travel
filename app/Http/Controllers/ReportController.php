@@ -255,7 +255,8 @@ class ReportController extends Controller
     	if(!$user) return redirect('/');
 
     	$tour = App\Tours::where('id', $tourId)
-    						->where('user_id', $user->id)->get();
+    						->where('user_id', $user->id)->get()->first();
+
     	if(!$tour) return $this->jsonResponse(null);
 
         $returnArray = array('flights' => $this->flightsRespone($tourId),
@@ -264,9 +265,11 @@ class ReportController extends Controller
                             'places' => $this->placeResponse($tourId)
                         );
 
-    	return view('pages.report')->with(
-    			'data',  $returnArray
-    		);
+        $allTour = App\Tours::where('user_id', $user->id)->get();
+
+    	return view('pages.report')->with('data',  $returnArray)
+                                    ->with('tours', $allTour)
+                                    ->with('currentTour', $tour);
     }
 
     // api: get available tours

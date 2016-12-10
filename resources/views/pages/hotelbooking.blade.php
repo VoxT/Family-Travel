@@ -160,8 +160,15 @@
 								</div>
 							</div>
 							<div class="form-group">
-		                        <div class="">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="book">
+		                        <div class="book">
+		                            <button type="submit" class="btn btn-primary col-md-12" id="book" onclick="$('#postHotel').attr('action', '/bookinghotel');">
+		                                Đặt
+		                            </button>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <div class="payment">
+		                            <button type="submit" class="btn btn-primary col-md-12" id="payment">
 		                                Đặt và Thanh Toán
 		                            </button>
 		                        </div>

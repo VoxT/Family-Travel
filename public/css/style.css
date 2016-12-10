@@ -1893,7 +1893,7 @@ p.car-class {
 }
  
 #accordion button, #formLogin button, #formRegister button,.margin-top button {
-  background: #68a19a !important;
+  background: #68a19a;
   border-radius: 0;
   border: none;
 }
@@ -2130,7 +2130,7 @@ p.car-class {
   border: none;
 }
 #accordion button[id='book'] {
-  background: #68a19a !important;
+  background: #04c9a6  !important;
 }
 #accordion button:hover {
   background: #e7745c !important
@@ -2612,4 +2612,50 @@ td {
 }
 #collapse-place .list-group-item:hover {
   color: #8c8c8c;
+}
+#payment {
+  margin-top: 10px;
+  background: #0b91d8 !important;
+}
+.page-header {
+  overflow: visible;
+}
+.page-header .dropdown-toggle, #payment-all {
+  line-height: 25px;
+  text-align: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+#tour-menu {
+  background: #e7745c;
+  color: white;
+}
+.tour-menu li:hover a {
+  color: #e7745c;
+  overflow: auto;
+}
+.tour-menu li {
+  color: white;
+  padding: 2px;
+  border-bottom: 1px solid lightgrey;
+  overflow: auto;
+}
+.content-right, .content-left {
+  width: 45%;
+  float: left;
+}
+.go {
+    position: relative;
+    float: left;
+    width: 10%;
+}
+#payment-all-button {
+  width: 100%;
+  background: #04c9a6;
+  color: white;
+  border-radius: 0;
+}
+#payment-all-button:hover {
+  background: #e7745c;
 }
