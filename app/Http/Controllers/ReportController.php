@@ -286,7 +286,8 @@ class ReportController extends Controller
                 'adults' => $request->adults,
                 'children' => $request->children,
                 'infants' => $request->infants,
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'created_at' => new \DateTime()
                 ]
             );
         $tour = App\Tours::where('id', $tourId)->get()->first();
@@ -295,5 +296,10 @@ class ReportController extends Controller
         Cache::put('tourId', $tour->id , $expiresAt);
 
         return $this->jsonResponse($tour);
+    }
+
+    public function getCurrentReport()
+    {
+       return App\Tours::where('user_id', Auth::id())->orderBy('created_at', 'aesc')->get();
     }
 }

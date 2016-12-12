@@ -59,4 +59,6 @@ Route::group(['middleware' => ['web']], function () {
 	    'as' => 'payment.status.tour',
 	    'uses' => 'PaypalController@saveTourPayment',
 	));
+
+	Route::get('current_report', 'ReportController@getCurrentReport');
 });

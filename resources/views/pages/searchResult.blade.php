@@ -26,6 +26,10 @@
         </div>
       </div>
       </form>
+
+      <div class="view-report">
+        <a href="{{ url('current_report') }}" target="_blank"><i class="fa fa-print" aria-hidden="true"></i> Xem Chuyến Đi</a>
+      </div>
     </div>
     <!-- /.form -->
 

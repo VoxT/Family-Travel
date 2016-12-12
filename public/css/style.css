@@ -2659,3 +2659,14 @@ td {
 #payment-all-button:hover {
   background: #e7745c;
 }
+.view-report {
+  padding: 15px;
+  float: right;
+}
+#search-bar form {
+  float: left;
+}
+.view-report a {
+  color: white;
+  font-size: 18px;
+}

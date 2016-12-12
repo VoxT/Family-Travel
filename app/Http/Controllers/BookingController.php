@@ -216,7 +216,8 @@ class BookingController extends Controller
                 'adults' => Cache::get('adults'),
                 'children' => Cache::get('children'),
                 'infants' => Cache::get('infants'),
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'created_at' => new \DateTime()
                 ]
             );
         $tour = App\Tours::where('id', $tourId)->get()->first();
