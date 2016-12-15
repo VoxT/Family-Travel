@@ -28,7 +28,7 @@ class ReportController extends Controller
     								'fullName' => $value->full_name,
     								'email' => $value->email,
                                     'phone' => $value->phone,
-    								'created' => $value->created_at
+    								'created_at' => (string) $value->created_at
     							);
     		array_push($flightsRespone, $temp);
     	}
@@ -150,7 +150,8 @@ class ReportController extends Controller
                 'address' => $value->address,
                 'phone' => $value->phone,
                 'gender' => $value->gender
-                ) 
+                ) ,
+                'created_at' => (string) $value->created_at
             );
             $payment = array();
             $paymentId = $value->payment_id;
@@ -219,7 +220,8 @@ class ReportController extends Controller
                     'address' => $value->address,
                     'phone' => $value->phone,
                     'gender' => $value->gender
-                    )
+                    ),
+                'created_at' => (string) $value->created_at
                 );
             $payment = array();
             $paymentId = $value->payment_id;
@@ -257,7 +259,7 @@ class ReportController extends Controller
     	$tour = App\Tours::where('id', $tourId)
     						->where('user_id', $user->id)->get()->first();
 
-    	if(!$tour) return $this->jsonResponse(null);
+    	if(!$tour) return view('errors.404');
 
         $returnArray = array('flights' => $this->flightsRespone($tourId),
                             'hotels' => $this->hotelResponse($tourId),
@@ -267,7 +269,7 @@ class ReportController extends Controller
 
         $allTour = App\Tours::where('user_id', $user->id)->get();
 
-    	return view('pages.report')->with('data',  $returnArray)
+    	return view('pages.report')->with('error', false)->with('data',  $returnArray)
                                     ->with('tours', $allTour)
                                     ->with('currentTour', $tour);
     }
@@ -300,6 +302,9 @@ class ReportController extends Controller
 
     public function getCurrentReport()
     {
-       return App\Tours::where('user_id', Auth::id())->orderBy('created_at', 'aesc')->get();
+        if(Cache::get('tourId') != '')
+            return redirect('report/'.Cache::get('tourId'));
+
+        return redirect('report/'.App\Tours::where('user_id', Auth::id())->orderBy('created_at', 'aesc')->get()->first()->id);
     }
 }

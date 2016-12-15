@@ -13,13 +13,13 @@
 <div class="container" id="report" style="padding-top: 62px;">
 
 	<div class="page-header">
-		<div class="col-md-9">
+		<div class="col-xs-9">
         	<h1 id="timeline">Tổng Hợp Chuyến Đi</h1>
         	<h3>{{$currentTour->origin_place.' - '.$currentTour->destination_place}}</h3>
         	<p>{{ 'Đi: '.$currentTour->outbound_date.' | Về:'.$currentTour->inbound_date}}</p>
         	<p>{{ $currentTour->adults.' Người lớn | '.$currentTour->children.' Trẻ em'}}</p>
        	</div>
-		<div class="col-md-3">
+		<div class="col-xs-3">
         @if(count($tours) > 1)
 		 <div class="dropdown">
 		    <button class="btn btn-default dropdown-toggle" type="button" id="tour-menu" data-toggle="dropdown">Xem Báo Cáo Chuyến Đi Khác 
@@ -44,7 +44,7 @@
 		<div id="payment-all"></div>
 		</div>
     </div>
-	<ul class="timeline col-md-12">
+	<ul class="timeline col-xs-12">
 		@if(count($flight_round) > 0)
 	    <li class="timeline-inverted">
 		     <div class="timeline-badge flight"><i class="fa fa-plane" aria-hidden="true"></i></div>
@@ -56,7 +56,7 @@
 				       	<a role="button" data-toggle="collapse" data-parent="#report-list" href="#collapse-flight" aria-expanded="true" aria-controls="collapseOne">
 						    <div class="panel-heading" role="tab" id="headingOne">
 						      <h4 class="panel-title clearfix">
-						          <div class="col-md-12">
+						          <div class="col-xs-12">
 						          		<h4>{{$flight_round[0]->Outbound[0]->originName}} - {{$flight_round[0]->Outbound[count($flight_round[0]->Outbound) - 1]->destinationName}}</h4>
 						          </div>
 						      </h4>
@@ -67,14 +67,15 @@
 					      <div class="panel-body">
 					          	<div class="panel-group" id="accordion-flight" role="tablist" aria-multiselectable="true">
 								@foreach($flight_round as $key => $flights)
-									<div class="panel panel-default col-md-12">
+									<div class="print-flight">
+									<div class="panel panel-default col-xs-12">
 								       	<a role="button" data-toggle="collapse" data-parent="#accordion-flight" href="#collapse-flight-{{$key}}" aria-expanded="true" aria-controls="collapseOne">
 										    <div class="panel-heading" role="tab" id="headingOne">
 										      	<div class="row">
-										          <div class="col-md-12">
+										          <div class="col-xs-12">
 										          		<h4>{{$flights->Outbound[0]->originName}} - {{$flights->Outbound[count($flights->Outbound) - 1]->destinationName}}</h4>
 										          </div>
-										          <div class="col-md-12">
+										          <div class="col-xs-12">
 										          		<h4>Tổng giá <span>{{number_format($flights->Round->price,0,",",".")}}<sup>đ</sup></span></h4>
 										          </div>
 										         </div>
@@ -83,7 +84,7 @@
 
 									    <div id="collapse-flight-{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
-									      	<div class="col-md-8">
+									      	<div class="col-xs-8">
 											    <div class="details" id="flightdetailsmodal">
 													<div class="details-row">
 														<h3 class="row-title"><b>Lượt đi</b> {{$flights->Outbound[0]->departureDate}}</h3>
@@ -174,7 +175,7 @@
 													@endif
 												</div>
 											</div>
-											<div class="col-md-4 book-payment">
+											<div class="col-xs-4 book-payment">
 												<div class="book-info">
 													<table class="table table-hover">
 														<thead>
@@ -196,6 +197,10 @@
 															<tr>
 																<td>Số Điện Thoại:</td>
 																<td>{{$flights->Round->phone}}</td>
+															</tr>
+															<tr>
+																<td>Ngày Đặt:</td>
+																<td>{{ $flights->Round->created_at }}</td>
 															</tr>
 														</tbody>
 													</table>
@@ -237,6 +242,7 @@
 									      </div>
 									   	</div>
 									 </div>
+									</div>
 					      		@endforeach
 					     		</div>
 					      </div>
@@ -257,7 +263,7 @@
 				       <a role="button" data-toggle="collapse" data-parent="#report-list" href="#collapse-hotel" aria-expanded="true" aria-controls="collapseOne">
 						    <div class="panel-heading" role="tab" id="headingOne">
 						      <h4 class="panel-title clearfix">
-						          <div class="col-md-12">
+						          <div class="col-xs-12">
 						          		<h4>Danh Sách Đặt Phòng Khách sạn</h4>
 						          </div>
 						      </h4>
@@ -272,119 +278,62 @@
 					          			$hotel_details = $hotel->Hotel;
 					          			$payment = $hotel->Payment;
 					          		@endphp
-									<div class="panel panel-default  col-md-12">
+					          		<div class="print-hotel">
+									<div class="panel panel-default  col-xs-12 hotel-panel">
 								       	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-hotel-{{$key}}" aria-expanded="true" aria-controls="collapseOne">
 										    <div class="panel-heading" role="tab" id="headingOne">
 										      	<div class="row">
-										          	<div class="col-md-8">
+										          	<div class="col-xs-12">
 										          		<h4>{{ $hotel_details->hotel->name }}</h4>
 										          	</div>
-										          	<div class="col-md-4">
-											            <h4 style="color: #ffad00; text-align: right;"><div class="stars">
-											            @for($i = 1; $i <= 5; $i++)
-															@if($i <= $hotel_details->hotel->star_rating)
-																<span><i class="fa fa-star" aria-hidden="true"></i></span>
-															@else 
-																<span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-															@endif
-														@endfor
-											            </div></h4>
-											    	</div>
-											    </div>
-											    <div class="row">
-										          <div class="col-md-8">
+										          <div class="col-xs-12">
 										          		<h4>Tổng giá <span>{{number_format($hotel_details->price,0,",",".")}}<sup>đ</sup></span> <span style="color: grey; font-size: 14px;">({{$hotel_details->rooms}} x {{$hotel_details->room_type}})</span></h4>
 										          </div>
-											      <div class="col-md-4"><h4 style="color: grey; text-align: right;">{{$hotel_details->reviews->reviews_count}} nhận xét</h4></div>
 										        </div>
 										    </div>
 								        </a>
 									    <div id="collapse-hotel-{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
 									      	<div class="row">
-										      	<div class="col-md-8">
+										      	<div class="col-xs-8">
 											      <div class="details" data-target='@{{data-target}}'>
 												       <div class="image-gallery">
 												          <ul>
 												            @foreach ($hotel_details->hotel->image_url as $i => $value)
-												            	@if($i == 9) @break; @endif
+												            	@if($i == 1) @break; @endif
 															    <li data-toggle="modal" data-target="#imageModal"><a href="#myGallery" data-slide-to="{{$i}}"><img class="img-responsive first}}" src="http://{{$value->url}}" alt="{{$hotel_details->hotel->name}}"></a></li>
 															@endforeach
 												          <!--end of thumbnails-->
 												          </ul>
 												        </div>  
-												        <div class="clearfix"> </div>
-												      <div class="">
-												          <ul class="nav nav-tabs">
-												            <li class="active"><a data-toggle="tab" href="#home">Mô Tả</a></li>
-												            <li><a data-toggle="tab" href="#menu1">Cơ Sở Vật Chất</a></li>
-												            <li><a data-toggle="tab" href="#menu2">Nhận Xét</a></li>
-												          </ul>
-												        <div class="tab-content">
-												          <div id="home" class="tab-pane fade in active">
-												            <h3>Mô Tả</h3> 								            
-												            <p style="padding-top: 10px;">Địa Chỉ: {{$hotel_details->hotel->location}}</p>
-												            <p>{{$hotel_details->hotel->description}}</p>
-												          </div>
-												          <div id="menu1" class="tab-pane fade">
-												            <h3>Cơ Sơ Vật Chất</h3>
-												              @foreach($hotel_details->hotel->amenities as $i => $value) 
-																@if (($i%2) == 0)
-														            <div class="row">
+												      <div class="listing-details">
+												          <h2 title="{{$hotel_details->hotel->name}}">{{$hotel_details->hotel->name}}</h2>
+												          <div class="listing-details__details">
+												          	<div class="stars">
+												          	@for($i = 1; $i <= 5; $i++)
+																@if($i <= $hotel_details->hotel->star_rating)
+																	<span><i class="fa fa-star" aria-hidden="true"></i></span>
+																@else 
+																	<span><i class="fa fa-star-o" aria-hidden="true"></i></span>
 																@endif
-														             <div class="col-md-6">
-														                <img src="{{$value->image_url}}">
-														                <h5> {{$value->name}} </h5>
-														                <p>
-														        @foreach($value->amenities_details as $j => $cmt)
-														        	{{ $cmt->name }} ,
-														        @endforeach
-														        </p> </div>
-														        @if ((($i+1)%2) == 0)
-														           </div>
-																@endif 
-															@endforeach
-														    @if ((count($hotel_details->hotel->amenities))%2 != 0)
-														        </div>
-															@endif
+															@endfor
+															</div>
+															<h4>Địa chỉ: {{$hotel_details->hotel->location}}</4>
+															<h4>Ngày Nhận Phòng: {{ $hotel_details->checkindate }}</h4>
+															<h4>Ngày Trả Phòng: {{ $hotel_details->checkoutdate }}</h4>
+															<h4>Số Người: {{ $hotel_details->guests }}</h4>
+															<h4>Số Phòng: {{ $hotel_details->rooms.' ('.$hotel_details->room_type.')' }}</h4>
 												          </div>
-												          <div id="menu2" class="tab-pane fade">
-												            <h3>Nhận Xét</h3>
-												            @if($hotel_details->reviews->reviews_count > 0)
-													            @foreach($hotel_details->reviews->categories as $i => $value)
-																	@if (($i%2) == 0) 
-																       <div class="row">
-																	@endif
-																          <div class="col-md-6">
-																          <span class="badge">{{ $value->score/10 }}</span>
-																            <h5> {{$value->name}}</h5>
-																            <p>
-																    @foreach($value->entries as $j => $entries)
-																    	{{$entries}} ,
-																    @endforeach
-																    </p> </div>
-																    
-																    @if ((($i + 1)%2) == 0) 
-																        </div>
-																	@endif
-																@endforeach
-															    @if ((count($hotel_details->reviews->categories))%2 != 0)
-															        </div>
-																@endif
-															@else <p style="text-align: center;"> Không có nhận xét nào cho khách sạn này. </p>
-															@endif	
-												          </div>
-												        </div>
 												      </div>
 												   </div>
 												 </div>
-												 <div class="col-md-4 book-payment">
+												 <div class="col-xs-4 book-payment">
 												 	<div class="book-info">
 														<table class="table table-hover">
 															<thead>
 														      	<tr>
 															        <th colspan="2">
-																		<h3>Thông Tin Đặt Vé</h3>
+																		<h3>Thông Tin Đặt Phòng</h3>
 																	</th>
 																</tr>
 															</thead>
@@ -400,6 +349,10 @@
 																<tr>
 																	<td>Số Điện Thoại:</td>
 																	<td>{{$hotel_details->user->phone}}</td>
+																</tr>
+																<tr>
+																	<td>Ngày Đặt:</td>
+																	<td>{{ $hotel_details->created_at }}</td>
 																</tr>
 															</tbody>
 														</table>
@@ -442,6 +395,7 @@
 									      </div>
 									   	</div>
 									 </div>
+									</div>
 								@endforeach
 		      					</div>
 		      			  </div>
@@ -462,7 +416,7 @@
 				       <a role="button" data-toggle="collapse" data-parent="#report-list" href="#collapse-car" aria-expanded="true" aria-controls="collapseOne">
 						    <div class="panel-heading" role="tab" id="headingOne">
 						      <h4 class="panel-title clearfix">
-						          <div class="col-md-12">
+						          <div class="col-xs-12">
 						          		<h4>Danh sách Xe thuê</h4>
 						          </div>
 						      </h4>
@@ -477,42 +431,43 @@
 					          		$car_details = $car->Car;
 					          		$payment = $car->Payment;
 					          	@endphp
-									<div class="panel panel-default  col-md-12">
+					          	<div class="print-car">
+									<div class="panel panel-default  col-xs-12">
 								       	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-car-{{$key}}" aria-expanded="true" aria-controls="collapseOne">
 										    <div class="panel-heading" role="tab" id="headingOne">
 										      	<div class="row">
-										          	<div class="col-md-8">
+										          	<div class="col-xs-8">
 										          		<h4>{{ $car_details->vehicle }}</h4>
 										          	</div>
-										          	<div class="col-md-4">
+										          	<div class="col-xs-4">
 											    	</div>
 											    </div>
 											    <div class="row">
-										          <div class="col-md-8">
+										          <div class="col-xs-8">
 										          		<h4>Tổng giá: <span>{{number_format($car_details->price,0,",",".")}}<sup>đ</sup></span> </h4>
 										          </div>
-											      <div class="col-md-4"></div>
+											      <div class="col-xs-4"></div>
 										        </div>
 										    </div>
 								        </a>
 									    <div id="collapse-car-{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
 										      <div class="row">
-										      	<div class="col-md-8">
+										      	<div class="col-xs-8">
 											      	<div class="row">
-											      		<div class="col-md-6">
+											      		<div class="col-xs-6">
 											      			<h4><b>{{ $car_details->vehicle }}</b></h4>
 											      			<img class="img-responsive car-img" src="{{  $car_details->image }}">
 											      			<br/>
 											      			<div class="info">
-											      				<div class="col-md-6">
+											      				<div class="col-xs-6">
 											      					<ul>
 											      						<li>{{ $car_details->seats}} Chỗ </li>
 											      						<li>{{ $car_details->doors}} Cửa </li>
 											      						<li>{{ $car_details->doors}} Túi có thể đựng </li>
 											      					</ul>
 											      				</div>
-											      				<div class="col-md-6">
+											      				<div class="col-xs-6">
 											      					<ul>
 											      						@if($car_details->air_conditioning)
 											      							<li><i class="fa fa-check" aria-hidden="true"></i> Điều hoà</li>
@@ -533,22 +488,22 @@
 											      				</div>
 											      			</div>
 											      		</div>
-											      		<div class="col-md-6 car-details">
-											      			<div class="col-md-12">
+											      		<div class="col-xs-6 car-details">
+											      			<div class="col-xs-12">
 											      				<h4>Loại xe: {{ $car_details->car_class_name}}</h4>
-											      				<h5>
+											      				<h4>
 											      					<span><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-																	<span>Điểm nhận xe:</span>
+																	<span>Điểm nhận trả xe: </span>
 																	<span>{{ $car_details->pick_up_place }}</span>
-																</h5>
+																</h4>
+																<h4>Thời gian nhận xe: {{ $car_details->pick_up_datetime }}</h4>
+																<h4>Thời gian trả xe: {{ $car_details->drop_off_datetime }}</h4>
 											      			</div>
-											      			<div class="col-md-12"  style="margin-top: 10px; border-top: 1px solid lightgrey; padding-top: 15px;">
+											      			<div class="col-xs-12"  style="margin-top: 10px; border-top: 1px solid lightgrey; padding-top: 15px;">
 											      				<h5>Thông tin khác:</h5>
 											      				<ul>
 										      						@if($car_details->fuel_policy)
 										      							<li><i class="fa fa-check" aria-hidden="true"></i> Nguyên liệu đầy bình</li>
-										      						@else
-										      							<li><i class="fa fa-times" aria-hidden="true"></i> Nguyên liệu đầy bình</li>
 										      						@endif
 										      						@if(!$car_details->unlimited)
 										      							<li><i class="fa fa-check" aria-hidden="true"></i> Không giới hạn quãng đường</li>
@@ -557,23 +512,15 @@
 										      						@endif
 										      						@if($car_details->free_breakdown_assistance)
 										      							<li><i class="fa fa-check" aria-hidden="true"></i> Hỗ trợ hỏng xe</li>
-										      						@else
-										      							<li><i class="fa fa-times" aria-hidden="true"></i> Hỗ trợ hỏng xe</li>
 										      						@endif
 										      						@if($car_details->free_damage_refund_insurance)
 										      							<li><i class="fa fa-check" aria-hidden="true"></i> Bảo hiểm tai nạn</li>
-										      						@else
-										      							<li><i class="fa fa-times" aria-hidden="true"></i> Bảo hiểm tai nạn</li>
 										      						@endif
 										      						@if($car_details->theft_protection_insurance)
 										      							<li><i class="fa fa-check" aria-hidden="true"></i> Bảo hiểm chống trộm</li>
-										      						@else
-										      							<li><i class="fa fa-times" aria-hidden="true"></i> Bảo hiểm chống trộm</li>
 										      						@endif
 										      						@if($car_details->third_party_cover_insurance)
 										      							<li><i class="fa fa-check" aria-hidden="true"></i> Bảo hiểm bên thứ ba</li>
-										      						@else
-										      							<li><i class="fa fa-times" aria-hidden="true"></i> Bảo hiểm bên thứ ba</li>
 										      						@endif
 
 										      					</ul>
@@ -581,13 +528,13 @@
 											      		</div>
 											      	</div>
 										      	</div>
-										      	<div class="col-md-4 book-payment">
+										      	<div class="col-xs-4 book-payment">
 										      		<div class="book-info">
 														<table class="table table-hover">
 															<thead>
 														      	<tr>
 															        <th colspan="2">
-																		<h3>Thông Tin Đặt Vé</h3>
+																		<h3>Thông Tin Đặt Xe</h3>
 																	</th>
 																</tr>
 															</thead>
@@ -603,6 +550,10 @@
 																<tr>
 																	<td>Số Điện Thoại:</td>
 																	<td>{{$car_details->user->phone}}</td>
+																</tr>
+																<tr>
+																	<td>Ngày Đặt:</td>
+																	<td>{{ $car_details->created_at }}</td>
 																</tr>
 															</tbody>
 														</table>
@@ -646,6 +597,7 @@
 									   	</div>
 
 					 				</div>
+					 			</div>
 								@endforeach
 		      					</div>
 		      			  </div>
@@ -666,7 +618,7 @@
 				       <a role="button" data-toggle="collapse" data-parent="#report-list" href="#collapse-place" aria-expanded="true" aria-controls="collapseOne">
 						    <div class="panel-heading" role="tab" id="headingOne">
 						      <h4 class="panel-title clearfix">
-						          <div class="col-md-12">
+						          <div class="col-xs-12">
 						          		<h4>Danh sách Địa Điểm</h4>
 						          </div>
 						      </h4>
@@ -675,7 +627,7 @@
 
 					    <div id="collapse-place" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 					      <div class="panel-body">
-					      	<div class="col-md-4">
+					      	<div class="col-xs-4">
 					      		<div class="list-group">
 					      		@foreach ($places as $key => $value)
 								  <a href="#{{$key}}" class="list-group-item" geo-id="{{$key}}">
@@ -699,7 +651,7 @@
 								 @endforeach
 								</div>
 					      	</div>
-					      	<div class="col-md-8">
+					      	<div class="col-xs-8">
 					      		<div id="reportMap" style="height: 400px;"></div>
 					      	</div>
 					      </div>
@@ -712,14 +664,62 @@
 	</ul>
 </div>
 
+<div class="print-report">
+	<button class="btn btn-danger" type="button" onclick="print_report()">
+		<i class="fa fa-print" aria-hidden="true"></i> In Báo Cáo 
+	</button>
+</div>
 
 @endsection
+
 @section('footer')
+	@include('layouts.footer')
 @endsection
 
 
 @section('scripts')
   @parent
+
+  	<script type="text/javascript">
+  		function print_report() {
+  			var content = '<div class="container">';
+  			content += '<h1 style="text-align: center;">MÁY BAY</h1>';
+  			$('#accordion-flight').children('.print-flight').each(function(){
+  				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')
+  				.replace('data-toggle="collapse"', '');
+  				content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
+  			});
+  			content += '<h1 style="text-align: center;">KHÁCH SẠN</h1>';
+  			$('#accordion-hotel').children('.print-hotel').each(function(){
+  				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')
+  				.replace('data-toggle="collapse"', '');
+  			});
+
+  			content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
+  			content += '<h1 style="text-align: center;">THUÊ XE</h1>';
+  			$('#accordion-car').children('.print-car').each(function(){
+  				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')  				.replace('data-toggle="collapse"', '');
+  			});
+  			content += '</div>';
+  			createPopup(content);
+  		}
+
+  		function createPopup( data ) {
+		    var mywindow = window.open( "", "new div", "height=980px,width=1000px" );
+		    mywindow.document.write( "<html><head>" );
+		    mywindow.document.write( $('head').html() );
+		    mywindow.document.write( "</head><body>" );
+		    mywindow.document.write( data );
+		    mywindow.document.write( "</body></html>" );
+
+		    setTimeout(function() {mywindow.print(); }, 100);
+		    setTimeout(function() {mywindow.close(); }, 110);
+
+		    return true;
+
+		}
+
+  	</script>
 
 	@if($count_unpayment > 0)
 	<script type="text/javascript">
@@ -727,23 +727,23 @@
 	$('#payment-all').html(btn);
 	</script>
 	@endif
-  <script type="text/javascript">
-	  $('#collapse-place').collapse('show');
-	  if($('#accordion-flight').children('.panel-default').length == 1) {
-	  	$('#collapse0').collapse('show');
-	  }
-	  if($('#accordion-hotel').children('.panel-default').length == 1) {
-	  	$('#collapse0').collapse('show');
-	  }
-  </script>
-  <script type="text/javascript">
-  	var place_list = [];
-  	@foreach ($places as $key => $value)
-  		@php( $location = json_decode($value->location) )
-  		place_list.push({lat: {{ $location->lat }}, lng: {{ $location->lng }}, type: '{{ $value->place_type }}' });
-  	@endforeach
-  </script>
-  <script src="{{ elixir('js/report.js') }}"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40&callback=reportMap&language=vi&region=VN&libraries=places">
-</script>
+	  <script type="text/javascript">
+		  $('#collapse-place').collapse('show');
+		  if($('#accordion-flight').children('.panel-default').length == 1) {
+		  	$('#collapse0').collapse('show');
+		  }
+		  if($('#accordion-hotel').children('.panel-default').length == 1) {
+		  	$('#collapse0').collapse('show');
+		  }
+	  </script>
+	  <script type="text/javascript">
+	  	var place_list = [];
+	  	@foreach ($places as $key => $value)
+	  		@php( $location = json_decode($value->location) )
+	  		place_list.push({lat: {{ $location->lat }}, lng: {{ $location->lng }}, type: '{{ $value->place_type }}' });
+	  	@endforeach
+	  </script>
+	  <script src="{{ elixir('js/report.js') }}"></script>
+	  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40&callback=reportMap&language=vi&region=VN&libraries=places">
+	</script>
 @endsection

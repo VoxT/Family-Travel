@@ -40,7 +40,8 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 			$.extend(flightinput, data.data.input);
 			$.extend(flightlist, flights);
 			
-			renderFlight();
+			renderFlight(flights);
+			FlightIndex(1, data.data.sessionUrl);
 		},
 		error: function () {
 			console.log("flight fails");
@@ -48,8 +49,33 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 	});
 }
 
-function renderFlight() {
-	var flights = flightlist;
+function FlightIndex(index, url) {
+	$.ajax({
+		url: 'api/v1/getLivePriceFlightByIndex',
+		method: 'get',
+		data: {
+			index: index,
+			url: url
+		},
+		success: function(data) {
+			var flights = data.data.flight;
+
+			if($.isEmptyObject(flights))
+				console.log('get flight stop');
+			else {
+				renderFlight(flights);
+				$.extend(flightlist, flights);
+				FlightIndex(++index, url);
+			}
+		},
+		error: function() {
+			console.log('get flight stop');
+		}
+	})
+}
+
+function renderFlight(data) {
+	var flights = data;
 	for(var i in flights) {
 		$('#planeModal .loading').hide();
 		var outbound = flights[i].Outbound.overall;
@@ -184,10 +210,37 @@ function Hotel(checkindate, checkoutdate, guests, rooms) {
 				var hotel_param = hotels[hotel_id];
 				HotelDetails(hotel_param.url, hotel_id);
 			}
+			HotelIndex(1, data.data.SessionUrl);
 			
 		},
 		error: function () {
 			console.log(" hotel fail");
+		}
+	})
+}
+
+function HotelIndex(index, url) {
+	console.log(index+ ' - ');
+	$.ajax({
+		url: 'api/v1/getHotelListByIndex',
+		method: 'get',
+		data: {
+			url: url,
+			index: index
+		},
+		success: function(data) {
+			var hotels = data.data.Hotels;
+			$.extend(hotellist, hotels);
+
+			for(var hotel_id in hotels) {
+				var hotel_param = hotels[hotel_id];
+				HotelDetails(hotel_param.url, hotel_id);
+			}
+
+			HotelIndex(++index, url);
+		},
+		error: function(e){
+			console.log('get hotel stop')
 		}
 	})
 }

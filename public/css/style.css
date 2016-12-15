@@ -1222,7 +1222,7 @@ ul li {
 #flightdetailsmodal .info-cell {
     width: 38%;
     display: table-cell;    
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     table-layout: fixed;
     vertical-align: bottom;
     padding-right: 20px;
@@ -1802,7 +1802,6 @@ input#checkindate, input#checkoutdate{
 }
 .car-details {
   background: #fff;
-  padding: 10px 0;
   color: #444;
   position: relative;
   border-left: 1px solid lightgrey;
@@ -2177,7 +2176,7 @@ p.car-class {
     line-height: 18px;
     font-weight: 300;
     color: #a5a5a5;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     text-overflow: ellipsis;
     overflow: hidden;
     margin-top: 2px;
@@ -2553,7 +2552,7 @@ img {
 .place-review-first .place-review .add .btn {
   display: inline-block;
 }
-#report ul.timeline .row .col-md-8 {
+#report ul.timeline .row .col-xs-8,#report ul.timeline .row .col-xs-12 {
   padding-left: 0;
 }
 ul.timeline .panel-body .details-row {
@@ -2563,7 +2562,8 @@ ul.timeline .panel-body .details-row {
 ul.timeline .panel-body .row {
   margin: 0;
 }
-#accordion-flight .row .col-md-12 {
+
+#accordion-flight .row .col-xs-12 {
   padding-left: 0;
 }
 #collapse-hotel .tab-content {
@@ -2583,7 +2583,7 @@ td {
 #reportMap {
   height: 400px;
 }
-#collapse-place .col-md-4, #collapse-place .col-md-8 {
+#collapse-place .col-xs-4, #collapse-place .col-xs-8 {
   padding: 0;
   overflow: auto;
 }
@@ -2669,4 +2669,35 @@ td {
 .view-report a {
   color: white;
   font-size: 18px;
+}
+
+.print-report {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  overflow: auto;
+  z-index: 9999;
+}
+.print-report button {
+  font-size: 18px;
+}
+
+.hotel-panel .listing-details {
+  padding-left: 20px;
+}
+.hotel-panel .listing-details h2 {
+  margin: 0;
+}
+.hotel-panel .listing-details__details {
+  color: black;
+}
+
+.notfound {
+  height: 500px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.panel-group .panel-default {
+  margin-bottom: 10px;
 }

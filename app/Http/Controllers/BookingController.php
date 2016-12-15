@@ -52,7 +52,8 @@ class BookingController extends Controller
              'email' => \Session::get('user_email'),
              'gender' => 'other',
              'tour_id' => $tourId,
-             'payment_id' => \Session::get('paypal_payment_id')
+             'payment_id' => \Session::get('paypal_payment_id'),
+             'created_at' => new \DateTime()
              ]
         );	
 
@@ -122,7 +123,8 @@ class BookingController extends Controller
                 'phone' => \Session::get('user_phone'),
                 'gender' => 'other',
                 'payment_id' => \Session::get('paypal_payment_id'),
-                'tour_id' =>  $tourId
+                'tour_id' =>  $tourId,
+                'created_at' => new \DateTime()
             ]);
     }
 
@@ -170,7 +172,8 @@ class BookingController extends Controller
                 'phone' => \Session::get('user_phone'),
                 'gender' => 'other',
                 'payment_id' => \Session::get('paypal_payment_id'),
-                'tour_id' =>  $tourId
+                'tour_id' =>  $tourId,
+                'created_at' => new \DateTime()
             ]);
     }
 

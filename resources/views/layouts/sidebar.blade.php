@@ -22,7 +22,7 @@
         @endif
           <ul class="dropdown-menu">
             <li><a href="{{ url('userInfo') }}">Thông tin tài khoản</a></li>
-            <li><a href="#">Another action</a></li>
+            <li><a href="{{ url('current_report')}}">Xem Tour đã đăng kí</a></li>
             <li><a href="#">Something else here</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="#">Separated link</a></li>

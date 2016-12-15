@@ -232,12 +232,12 @@ class FlightController extends Controller
         $array = json_decode($json,true);
 
 
-        $data = $this->responeData($array,$url);
+        $data = $this->responeData($array,$url, $request->index);
 
         return $this->jsonResponse($data);
     }
 
-    public function responeData(array $array,$sessionUrl)
+    public function responeData(array $array,$sessionUrl, $index=0)
     {
         if ($array != null)
         {
@@ -353,7 +353,7 @@ class FlightController extends Controller
                     $segment_outbound_list = array();
                 }
 
-                $flightArray["0".(string)$countId] = array(
+                $flightArray[$index.(string)$countId] = array(
                         'Outbound' => array(
                             'overall' =>$outbound_overall,
                             'segment' =>$segment_outbound_list
