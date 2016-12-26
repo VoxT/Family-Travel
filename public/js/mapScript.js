@@ -12,7 +12,7 @@ var bookPlaceList = [];
 var flightPath, flightPlanCoordinates ;
 // begin result search map
 var map, placeService, infoWindow;
-var museumMarkers = [], restaurantMarkers = [], parkMarkers = [], otherMarkers= [], hotelMarkers = [] ;
+var museumMarkers = [], restaurantMarkers = [], parkMarkers = [], otherMarkers= [], hotelMarkers = [], carMarkers = [] ;
 var iconType = {
           'restaurant':
                 {
@@ -293,6 +293,7 @@ function addMarker(place) {
             id: place.place_id,
             position: result.geometry.location,
             //animation: google.maps.Animation.DROP,
+            type: icon[0],
             icon : iconType[icon[0]].icon
           });
 
@@ -301,14 +302,23 @@ function addMarker(place) {
                       if(icon == 'museum') {
                         museumMarkers.push.apply(museumMarkers, [marker]);
                         $('#museum').append(PlaceReviews(result));
+                        var marker_num = museumMarkers.length - 1;
+                        $('#thingsModal #'+place.place_id).attr('onmouseover', 'museumHoverMaker('+marker_num+')');
+                        $('#thingsModal #'+place.place_id).attr('onmouseout', 'museumUnHoverMaker('+marker_num+')');
+                        $('#thingsModal #'+place.place_id).attr('onclick', 'museumClickMaker('+marker_num+')');
                       } else {
                         marker.setMap(null);
                       }
+  
                       break;
         case 'restaurant': 
                       if(icon == 'restaurant') {
                         restaurantMarkers.push.apply(restaurantMarkers, [marker]);
                         $('#restaurant').append(PlaceReviews(result));
+                        var marker_num =restaurantMarkers.length - 1;
+                        $('#thingsModal #'+place.place_id).attr('onmouseover', 'restaurantHoverMaker('+marker_num+')');
+                        $('#thingsModal #'+place.place_id).attr('onmouseout', 'restaurantUnHoverMaker('+marker_num+')');
+                        $('#thingsModal #'+place.place_id).attr('onclick', 'restaurantClickMaker('+marker_num+')');                        
                       }else {
                         marker.setMap(null);
                       }
@@ -317,6 +327,10 @@ function addMarker(place) {
                       if(icon == 'park' || icon == 'amusement_park') {
                         parkMarkers.push.apply(parkMarkers, [marker]);
                         $('#parks').append(PlaceReviews(result)); 
+                        var marker_num = parkMarkers.length - 1;
+                        $('#thingsModal #'+place.place_id).attr('onmouseover', 'parkHoverMaker('+marker_num+')');
+                        $('#thingsModal #'+place.place_id).attr('onmouseout', 'parkUnHoverMaker('+marker_num+')');
+                        $('#thingsModal #'+place.place_id).attr('onclick', 'parkClickMaker('+marker_num+')');                      
                       } else {
                         marker.setMap(null);
                       }
@@ -325,6 +339,10 @@ function addMarker(place) {
                       if(icon == 'zoo' || icon == 'art_gallery' || icon == 'church') {
                         otherMarkers.push.apply(otherMarkers, [marker]);
                         $('#other').append(PlaceReviews(result)); 
+                        var marker_num = otherMarkers.length - 1;
+                        $('#thingsModal #'+place.place_id).attr('onmouseover', 'otherHoverMaker('+marker_num+')');
+                        $('#thingsModal #'+place.place_id).attr('onmouseout', 'otherUnHoverMaker('+marker_num+')');
+                        $('#thingsModal #'+place.place_id).attr('onclick', 'otherClickMaker('+marker_num+')');                      
                       } else {
                         marker.setMap(null);
                       }
@@ -483,8 +501,16 @@ function PlaceReviews(place, review = false)
     var reviewsHtml = '<div class="review-details">';
     if(place.reviews){
         for (var j = 0; j < place.reviews.length; j++) {
+          var ratingHtml = '';
+          for (var i = 0; i < 5; i++) {
+            if (place.reviews[j].rating  < (i + 0.5)) {
+                  ratingHtml += '<span style="font-size:120%;color:#E7E5E5;" >&#9734;</span>'
+                } else {
+                  ratingHtml += '<span style="font-size: 120%;color:#F9C81F;">&#9733;</span>'
+                }
+          }
           reviewsHtml += '<p class="review-author"><b>' + place.reviews[j].author_name
-                      + '</b><span class="review-rating"> Đánh giá:' + place.reviews[j].rating + '</span></p>'
+                      + '</b><span class="review-rating"> ' + ratingHtml + '</span></p>'
           reviewsHtml += '<p class="review-text">' + place.reviews[j].text + '</p>'
          // user_idHtml +=  (place.reviews[j].author_url) 
          // avartaHtml = user_idHtml.substr(24);
@@ -493,7 +519,8 @@ function PlaceReviews(place, review = false)
      }
      reviewsHtml += '</div>';
    }
-   return '<div class="col-md-6">' + ResImageHtml + '<div class="place-review">'+ urlHtml + button + reviewsHtml + '</div></div>';
+
+   return '<div class="col-md-6" id="'+ place.place_id +'">' + ResImageHtml + '<div class="place-review">'+ urlHtml + button + reviewsHtml + '</div></div>';
  //  console.log(reviewsHtml);
  
 }
@@ -582,7 +609,7 @@ function searchPark() {
  
   var search = {
     bounds: map.getBounds(),
-    types: ['park','amusement_park'],
+    types: ['park'],
     keyword:  " (attractions) OR (point_of_interest)OR (establishment) "
   };
    placeService.radarSearch(search, callback);
@@ -619,5 +646,56 @@ function searchOther() {
 }
 
 
-    
+function parkHoverMaker(marker_num) {
+  parkMarkers[marker_num].setIcon('/images/icons/art.png');
+        google.maps.event.trigger(parkMarkers[marker_num], 'mouseover');
+}
 
+function parkUnHoverMaker(marker_num) {
+  parkMarkers[marker_num].setIcon(iconType[parkMarkers[marker_num].type].icon);
+}
+
+function museumHoverMaker(marker_num) {
+  museumMarkers[marker_num].setIcon('/images/icons/art.png');
+      google.maps.event.trigger(museumMarkers[marker_num], 'mouseover');
+}
+function museumUnHoverMaker(marker_num) {
+  museumMarkers[marker_num].setIcon(iconType[museumMarkers[marker_num].type].icon);
+}
+
+function restaurantHoverMaker(marker_num) {
+  restaurantMarkers[marker_num].setIcon('/images/icons/art.png');
+    google.maps.event.trigger(restaurantMarkers[marker_num], 'mouseover');
+
+}
+function restaurantUnHoverMaker(marker_num) {
+  restaurantMarkers[marker_num].setIcon(iconType[restaurantMarkers[marker_num].type].icon);
+}
+
+function otherHoverMaker(marker_num) {
+  otherMarkers[marker_num].setIcon('/images/icons/art.png');
+  google.maps.event.trigger(otherMarkers[marker_num], 'mouseover');
+}
+
+function otherUnHoverMaker(marker_num) {
+  otherMarkers[marker_num].setIcon(iconType[otherMarkers[marker_num].type].icon);
+}
+
+
+function otherClickMaker(marker_num) {
+  google.maps.event.trigger(otherMarkers[marker_num], 'click');
+}
+function parkClickMaker(marker_num) {
+  google.maps.event.trigger(parkMarkers[marker_num], 'click');
+}
+function museumClickMaker(marker_num) {
+  google.maps.event.trigger(museumMarkers[marker_num], 'click');
+}
+function restaurantClickMaker(marker_num) {
+  google.maps.event.trigger(restaurantMarkers[marker_num], 'click');
+}
+
+$(document).on('click', '.nav-tabs li a', function() {
+  $('.place-review-first').html('');
+  google.maps.event.trigger('click');
+})

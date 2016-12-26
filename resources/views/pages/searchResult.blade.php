@@ -1,6 +1,5 @@
 @extends('layouts.master')
 
-
 @section('content')
 <div class="container-fluid">
 <div class="raw">
@@ -12,7 +11,7 @@
         <label class="sr-only" for="origin-input">Nhập địa điểm</label>
         <div class="input-group">
           <div class="input-group-addon" id="from-label">Đi</div>
-          <input type="text" class="form-control" name="originplace" id="origin-input" placeholder="Nhập điểm đi" required="Vui lòng nhập điểm đi">
+          <input type="text" class="form-control" name="originplace" id="origin-input" placeholder="Nhập điểm đi" required="Vui lòng nhập điểm đi" disabled="">
           <div class="input-group-addon"><i class="fa fa-times" aria-hidden="true"></i></div>
         </div>
         <div id="switch" class="form-control"><i class="fa fa-exchange" aria-hidden="true"></i></div>
@@ -21,7 +20,7 @@
         <label class="sr-only" for="destination-input">Nhập địa điểm</label>
         <div class="input-group">
           <div class="input-group-addon">Đến</div>
-          <input type="text" class="form-control" name="destinationplace" id="destination-input" placeholder="Nhập điểm đến" required="Vui lòng nhập điểm đến">
+          <input type="text" class="form-control" name="destinationplace" id="destination-input" placeholder="Nhập điểm đến" required="Vui lòng nhập điểm đến" disabled="">
           <div class="input-group-addon"><i class="fa fa-times" aria-hidden="true"></i></div>
         </div>
       </div>
@@ -66,26 +65,26 @@
       <button type="button" class="list-group-item" id="plane"  data-toggle="modal" data-target="#planeModal">
         <span class="badge plane"><i class="fa fa-plane" aria-hidden="true"></i></span>
         <span class="chevron-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
-        <h4>Bay từ Hà Nội</h2>
+        <h4>Bay từ {{ json_decode($request)->originplace }}</h2>
         <p>Sắp xếp theo giá rẻ nhất</p>
         <span class="price-right"></span>
       </button>
       <button type="button" class="list-group-item" id="hotel" data-toggle="modal" data-target="#hotelModal">
         <span class="badge hotel"><i class="fa fa-bed" aria-hidden="true"></i></span>
         <span class="chevron-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
-        <h4>Đặt khách sạn tại Hồ Chí Minh</h2>
+        <h4>Đặt khách sạn tại {{ json_decode($request)->destinationplace}}</h2>
         <p>Theo giá hợp lý nhất</p>
       </button>
       <button type="button" class="list-group-item" id="car" data-toggle="modal" data-target="#carModal">
         <span class="badge car"><i class="fa fa-car" aria-hidden="true"></i></span>
         <span class="chevron-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
-        <h4>Thuê xe tại Hồ Chí Minh</h2>
+        <h4>Thuê xe tại {{ json_decode($request)->destinationplace}}</h2>
         <p>Theo giá hợp lý nhất</p>
       </button>
       <button type="button" class="list-group-item" id="things" data-toggle="modal" data-target="#thingsModal">
         <span class="badge things"><i class="fa fa-university" aria-hidden="true"></i></span>
         <span class="chevron-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
-        <h4>Địa điểm vui chơi tại Hồ Chí Minh</h2>
+        <h4>Địa điểm vui chơi tại {{ json_decode($request)->destinationplace}}</h2>
         <p>Những địa điểm hấp dẫn nhất</p>
       </button>
     </div>
@@ -287,7 +286,6 @@
             <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
             <p>Đang tìm kiếm ...</p>
           </div>
-          <!-- list item here -->
         </div>
       </div>
     </div>

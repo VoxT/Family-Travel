@@ -1797,6 +1797,9 @@ input#checkindate, input#checkoutdate{
   height: 100%;
     border-right: 1px solid #e6e6e6;
 }
+.car-logo img {
+  width: 190px;
+}
 .car-logo p {
   margin-bottom: 20px;
 }
@@ -2700,4 +2703,11 @@ td {
 
 .panel-group .panel-default {
   margin-bottom: 10px;
+}
+
+.review-details .review-author b {
+  color: #e7745c;
+}
+#thingsModal .col-md-6 {
+  cursor: pointer;
 }

@@ -8,7 +8,7 @@ var itemsTemplate =
      +' </div>'
     +'</div>'
     +'<div class="item-summary">'
-    +'  <div class="summary-details">1 người lớn | Economy</div>'
+    +'  <div class="summary-details">{{passenger}} Hành Khách | {{cabinclass}}</div>'
     +'  <div class="price-select-block">'
     +'    <div class="flight-price"><span>{{price}}</span><sup>đ</sup></div>'
     +'    <a class="item-select-button" href="javascript:void(0)">Đặt Ngay <i class="fa fa-plane" aria-hidden="true" style="transform: rotate(0deg); margin-left: 10px"></i></a>'
@@ -90,7 +90,7 @@ var detailsrow =
 +'      </div>';
 
 var carItemTemplate =
-'  <div class="result-item">'
+'  <div class="result-item" map-id={{id}}>'
  +'   <div class="car-details">'
 +'      <div class="car-logo">'
 +'        <p><strong>{{vehicle}}</strong></p>'

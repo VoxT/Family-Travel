@@ -14,6 +14,9 @@ var carList = {};
 
 var entityid = '';
 
+var hotelFlag = false;
+var flightFlag = false;
+
 //var tourId = request.tourId;
 
 function Flight(originplace, destinationplace, outbounddate, inbounddate, adults, children, infants, cabinclass) {
@@ -32,6 +35,7 @@ function Flight(originplace, destinationplace, outbounddate, inbounddate, adults
 	        cabinclass: cabinclass
 		},
 		success: function (data) {
+			flightFlag = true;
 			var flights = data.data.flight;
 
 			if($.isEmptyObject(flights))
@@ -65,7 +69,8 @@ function FlightIndex(index, url) {
 			else {
 				renderFlight(flights);
 				$.extend(flightlist, flights);
-				FlightIndex(++index, url);
+				if(flightFlag && (index < 20))
+					FlightIndex(++index, url);
 			}
 		},
 		error: function() {
@@ -77,6 +82,7 @@ function FlightIndex(index, url) {
 function renderFlight(data) {
 	var flights = data;
 	for(var i in flights) {
+		if(!flightFlag) break;
 		$('#planeModal .loading').hide();
 		var outbound = flights[i].Outbound.overall;
 		var inbound = flights[i].Inbound.overall;
@@ -130,8 +136,10 @@ function renderFlight(data) {
 												replace('{{Arrival}}', inbound.arrivalTime).
 												replace('{{NameDestination}}', inbound.destinationName + ' ('+ inbound.destinationCode + ')')
 								: '')
-								.replace('{{price}}', numberWithCommas(flights[i].Price))
-								.replace('{{data-id}}', i));			
+							.replace('{{price}}', numberWithCommas(flights[i].Price))
+							.replace('{{data-id}}', i)
+							.replace('{{passenger}}', parseInt(flightinput.adults) + parseInt(flightinput.children) + parseInt(flightinput.infants))
+							.replace('{{cabinclass}}', flightinput.cabinClass));			
 }
 }
 
@@ -157,11 +165,23 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 			$.extend(carList, cars);
 
 			for(var i in cars) {
+
+				var myLatLng = {lat: cars[i].geo_info[0], lng: cars[i].geo_info[1]};
+		   		var marker = new google.maps.Marker({
+				    position: myLatLng,
+				    map: map,
+				    car_id: i,
+				    icon: 'http://maps.google.com/mapfiles/ms/icons/orange.png',
+				    title: 'Car!'
+				  });
+		   		marker.setMap(null);
+		   		carMarkers.push(marker);
+
 				$('#carModal .loading').hide();
 				var item = cars[i];
 				var template = carItemTemplate;
 				$('#carModal .result-list').append(
-					template.replace('{{id}}', i)
+					template.replace(/{{id}}/g, i)
 							.replace('{{vehicle}}', item.vehicle)
 							.replace('{{image_url}}', item.image_url)
 							.replace('{{car_class_name}}', item.car_class_name)
@@ -178,7 +198,11 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 							.replace('{{free_breakdown_assistance_icon}}', item.free_breakdown_assistance ? " fa-check-circle ":" fa-times-circle")
 							.replace('{{fuel_policy}}', (item.fuel_policy === "full_to_full")? "":"Không ")
 							.replace('{{price_all_days}}', numberWithCommas(item.price_all_days))
-					)
+					);
+				var marker_num = carMarkers.length - 1;
+			$('.result-item[map-id="'+ i + '"]').attr('onmouseover', 'CarHoverMaker('+marker_num+')');
+			$('.result-item[map-id="'+ i + '"]').attr('onmouseout', 'CarUnHoverMaker('+marker_num+')');
+			
 			}
 		},
 		error: function () {
@@ -210,6 +234,7 @@ function Hotel(checkindate, checkoutdate, guests, rooms) {
 				var hotel_param = hotels[hotel_id];
 				HotelDetails(hotel_param.url, hotel_id);
 			}
+			hotelFlag = true;
 			HotelIndex(1, data.data.SessionUrl);
 			
 		},
@@ -236,8 +261,8 @@ function HotelIndex(index, url) {
 				var hotel_param = hotels[hotel_id];
 				HotelDetails(hotel_param.url, hotel_id);
 			}
-
-			HotelIndex(++index, url);
+			if(hotelFlag && (index < 20))
+				HotelIndex(++index, url);
 		},
 		error: function(e){
 			console.log('get hotel stop')
@@ -246,6 +271,7 @@ function HotelIndex(index, url) {
 }
 
 function HotelDetails(url, hotel_id) {
+	if(hotelFlag)
 	$.ajax({
 		type: 'GET',
 		url: '/api/v1/gethoteldetails',
@@ -291,7 +317,7 @@ function renderHotel(hotel_id) {
 					stars += '<span><i class="fa fa-star-o" aria-hidden="true"></i></span>';
 
 			}
-			$('#hotelModal .result-list').append(
+			$('#hotelModal .result-list ').append(
 					template.replace('{{id}}', hotel_id)
 							.replace('{{image}}', hotel.hotel.image_url[0].url)
 							.replace(/{{name}}/g, hotel.hotel.name)
@@ -299,7 +325,7 @@ function renderHotel(hotel_id) {
 							.replace('{{price}}', numberWithCommas(hotel.price_total))
 							.replace('{{popularity}}', hotel.hotel.popularity)
 							.replace('{{review}}', hotel.reviews.reviews_count)
-							.replace('{{stars}}', stars)
+							.replace('{{stars}}', stars) 
 				);
 
 	var marker_num = hotelMarkers.length - 1;
@@ -421,3 +447,13 @@ function HotelHoverMaker(marker_num) {
 function HotelUnHoverMaker(marker_num) {
 	hotelMarkers[marker_num].setIcon('http://maps.google.com/mapfiles/ms/icons/blue.png');
 }
+
+
+function CarHoverMaker(marker_num) {
+	carMarkers[marker_num].setIcon('/images/icons/art.png');
+}
+
+function CarUnHoverMaker(marker_num) {
+	carMarkers[marker_num].setIcon('http://maps.google.com/mapfiles/ms/icons/orange.png');
+}
+

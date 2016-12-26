@@ -266,20 +266,24 @@ $(document).on('click', '#hoteldetailsmodal #hotelbooking', function(e){
 
 
 $(document).on('click', '#flight-search', function(e) {
+	flightFlag = false;
 	flightlist = {};
 	flightinput = {};
 	getAirPortCode($('#outbounddate').val(), $('#inbounddate').val(),
-		 $('#adults').val(), $('#childrens').val(), $('#kid').val(), $('.cabinclass input[name="gender"]:checked').val());
+		 $('#adults').val(), $('#childrens').val(), $('#kid').val(), $('.cabinclass input[name="cabinclass"]:checked').val());
 });
 
 $(document).on('click', '#car-search', function(e) {
-	Car(destinationAirCode, destinationAirCode, $('#pickupdate-input').val() + 'T' + $('#pickuptime').val(), $('#dropoffdate-input').val() + 'T' + $('#dropofftime').val());
+	Car(entityid, entityid, $('#pickupdate-input').val() + 'T' + $('#pickuptime').val(), $('#dropoffdate-input').val() + 'T' + $('#dropofftime').val());
 });
 
 $(document).on('click', '#hotel-search', function(e){
+	clearMarkers(hotelMarkers);
 	hoteldetails = {};
 	hotellist = {};
 	hotelinput = {};
+	hotelMarkers = [];
+	hotelFlag = false;
 	Hotel($('#checkindate').val(), $('#checkoutdate').val(), $('#guests').val(), $('#rooms').val());
 });
 
@@ -562,14 +566,36 @@ $('#hotelModal').on('hidden.bs.modal', function () {
   routePlane();
 })
 $('#carModal').on('hidden.bs.modal', function () {
- // clearMarkers(hotelMarkers);
+  clearMarkers(carMarkers);
   routePlane();
 })
 $('#hotelModal').on('shown.bs.modal', function () {
    expandViewportToFitPlace(request.dlat, request.dlng);
-   dropMarker(hotelMarkers);
+   if(hotelMarkers.length > 0)
+   	dropMarker(hotelMarkers);
 
 })
 $('#carModal').on('shown.bs.modal', function () {
    expandViewportToFitPlace(request.dlat, request.dlng);
+   if (carMarkers.length > 0) 
+   dropMarker(carMarkers);
 })
+
+
+
+function sortResults(list, prop, asc = true) {
+    var sort_array = [];
+	for (var key in list) {
+	    sort_array.push({key:key,price:list[key].Price});
+	}
+
+	// Now sort it:
+	sort_array.sort(function(x,y){return parseFloat(x.price) - parseFloat(y.price)});
+
+	// Now process that object with it:
+	for (var i=0;i<sort_array.length;i++) {
+	    var item = list[sort_array[i].key];
+	    console.log(item);
+	    // now do stuff with each item
+	}
+}
