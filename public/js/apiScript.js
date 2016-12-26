@@ -262,8 +262,11 @@ function HotelDetails(url, hotel_id) {
 	   		var marker = new google.maps.Marker({
 			    position: myLatLng,
 			    map: map,
-			    title: 'Hello World!'
+			    hotel_id: hotel_id,
+			    icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png',
+			    title: 'Hotel!'
 			  });
+	   		marker.setMap(null);
 	   		hotelMarkers.push(marker);
 	   		
 			renderHotel(hotel_id);
@@ -272,6 +275,7 @@ function HotelDetails(url, hotel_id) {
 }
 
 function renderHotel(hotel_id) {
+
 	var hotel = hoteldetails[hotel_id];
 			var template = hotelItemTemplate;
 
@@ -297,6 +301,11 @@ function renderHotel(hotel_id) {
 							.replace('{{review}}', hotel.reviews.reviews_count)
 							.replace('{{stars}}', stars)
 				);
+
+	var marker_num = hotelMarkers.length - 1;
+	$('.listing-item[data-id="'+ hotel_id + '"]').attr('onmouseover', 'HotelHoverMaker('+marker_num+')');
+	$('.listing-item[data-id="'+ hotel_id + '"]').attr('onmouseout', 'HotelUnHoverMaker('+marker_num+')');
+	
 }
 
 function numberWithCommas(x) {
@@ -402,4 +411,13 @@ function getEnityId(destinationplace, checkindate, checkoutdate, guests, rooms) 
 	}).fail(function (e) {
 		
 	})
+}
+
+
+function HotelHoverMaker(marker_num) {
+	hotelMarkers[marker_num].setIcon('/images/icons/art.png');
+}
+
+function HotelUnHoverMaker(marker_num) {
+	hotelMarkers[marker_num].setIcon('http://maps.google.com/mapfiles/ms/icons/blue.png');
 }

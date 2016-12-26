@@ -67,8 +67,8 @@
         <span class="badge plane"><i class="fa fa-plane" aria-hidden="true"></i></span>
         <span class="chevron-right"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
         <h4>Bay từ Hà Nội</h2>
-        <p>2 giờ 30 phút</p>
-        <span class="price-right">78$ - 98$</span>
+        <p>Sắp xếp theo giá rẻ nhất</p>
+        <span class="price-right"></span>
       </button>
       <button type="button" class="list-group-item" id="hotel" data-toggle="modal" data-target="#hotelModal">
         <span class="badge hotel"><i class="fa fa-bed" aria-hidden="true"></i></span>

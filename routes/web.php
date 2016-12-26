@@ -61,4 +61,13 @@ Route::group(['middleware' => ['web']], function () {
 	));
 
 	Route::get('current_report', 'ReportController@getCurrentReport');
+
+	/// Admin
+	Route::get('admin/login', 'AdminController@login');
+	Route::post('admin/postlogin', 'AdminController@postLogin');
+	Route::group(['prefix' => 'admin', 'middleware' => 'isAdmin'], function() {
+		Route::get('/', 'AdminController@index');
+		Route::get('/logout', 'AdminController@logout');
+		Route::get('/users', 'AdminController@getUsers');
+	});
 });
