@@ -9,7 +9,7 @@ var restaurantListener = null, museumListener = null, parkListener = null;
 var placeDetails = null;
 var bookPlaceList = [];
 
-var flightPath, flightPlanCoordinates ;
+var flightPath, flightPlanCoordinates;
 // begin result search map
 var map, placeService, infoWindow;
 var museumMarkers = [], restaurantMarkers = [], parkMarkers = [], otherMarkers= [], hotelMarkers = [], carMarkers = [] ;
@@ -279,7 +279,6 @@ function addMarker(place) {
 
   placeService.getDetails({placeId: place.place_id},
     function(result, status) {
-       console.log(!result.rating )
       if (status !== google.maps.places.PlacesServiceStatus.OK || !result.photos || !result.rating) {
         return;
       }
@@ -301,6 +300,7 @@ function addMarker(place) {
       switch(typeofthing) {
         case 'museum': 
                       if(icon == 'museum') {
+                      	$('#museum .center').hide();
                         museumMarkers.push.apply(museumMarkers, [marker]);
                         $('#museum').append(PlaceReviews(result));
                         var marker_num = museumMarkers.length - 1;
@@ -314,6 +314,7 @@ function addMarker(place) {
                       break;
         case 'restaurant': 
                       if(icon == 'restaurant') {
+                      	$('#restaurant .center').hide();
                         restaurantMarkers.push.apply(restaurantMarkers, [marker]);
                         $('#restaurant').append(PlaceReviews(result));
                         var marker_num =restaurantMarkers.length - 1;
@@ -326,6 +327,7 @@ function addMarker(place) {
                        break;
         case 'park': 
                       if(icon == 'park' || icon == 'amusement_park') {
+                      	$('#parks .center').hide();
                         parkMarkers.push.apply(parkMarkers, [marker]);
                         $('#parks').append(PlaceReviews(result)); 
                         var marker_num = parkMarkers.length - 1;
@@ -338,6 +340,7 @@ function addMarker(place) {
                       break;
         case 'other': 
                       if(icon == 'zoo' || icon == 'art_gallery' || icon == 'church') {
+                      	$('#other .center').hide();
                         otherMarkers.push.apply(otherMarkers, [marker]);
                         $('#other').append(PlaceReviews(result)); 
                         var marker_num = otherMarkers.length - 1;

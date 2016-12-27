@@ -325,12 +325,16 @@
          <div class="clearfix"> </div>
         <div class="tab-content">
           <div id="museum" class="tab-pane fade in active">
+            <div class="center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
           </div>
           <div id="parks" class="tab-pane fade">    
+            <div class="center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
           </div>
           <div  id="restaurant" class="tab-pane fade">
+            <div class="center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
           </div>
           <div  id="other" class="tab-pane fade">
+            <div class="center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
           </div>
         </div>
       </div>

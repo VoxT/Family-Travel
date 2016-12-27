@@ -2713,3 +2713,11 @@ td {
 #thingsModal .col-md-6 {
   cursor: pointer;
 }
+
+.tab-pane .fa-spinner {
+  text-align: center;
+  color: #e47225;
+}
+.center {
+  text-align: center;
+}
