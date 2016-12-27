@@ -296,7 +296,7 @@ $(function(){
 })
 
 
-$(document).on('click', ' a', function () {
+$(document).on('click', '.row-suggest a', function () {
   $('#destination-input').val($(this).children('.hovereffect').children('.overlay').children('h2').text());
   $('#destination-input').trigger('click');
 });
