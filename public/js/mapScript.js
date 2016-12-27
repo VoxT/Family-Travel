@@ -279,10 +279,11 @@ function addMarker(place) {
 
   placeService.getDetails({placeId: place.place_id},
     function(result, status) {
-       
-      if (status !== google.maps.places.PlacesServiceStatus.OK || !result.photos) {
+       console.log(!result.rating )
+      if (status !== google.maps.places.PlacesServiceStatus.OK || !result.photos || !result.rating) {
         return;
       }
+      if(result.rating < 3) return;
 
       var icon = intersectionJson(iconType, result.types);
       if(!(icon.length > 0)) {
@@ -485,7 +486,17 @@ function PlaceReviews(place, review = false)
               'src="' + place.photos[0].getUrl({'maxWidth': 1000, 'maxHeight': 1000}) + '"/>';
     }
   }
-   var  urlHtml = '<h4><a target="_blank"  href="' + place.url +'">' + place.name + '</a></h4>';
+
+  var place_rateHTML = '';
+      for (var i = 0; i < 5; i++) {
+        if (place.rating < (i + 0.5)) {
+              place_rateHTML += '<span style="font-size:120%;color:#E7E5E5;" >&#9734;</span>'
+            } else {
+              place_rateHTML += '<span style="font-size: 120%;color:#F9C81F;">&#9733;</span>'
+            }
+          }
+
+   var  urlHtml = '<h4><a target="_blank"  href="' + place.url +'">' + place.name + '</a></h4>'+ '<p>Đánh giá: '+place_rateHTML+'</p>';
  //   document.getElementById('res-url').innerHTML = urlHtml;
     
   //  document.getElementById('res-address').textContent = place.vicinity;
@@ -506,7 +517,7 @@ function PlaceReviews(place, review = false)
             if (place.reviews[j].rating  < (i + 0.5)) {
                   ratingHtml += '<span style="font-size:120%;color:#E7E5E5;" >&#9734;</span>'
                 } else {
-                  ratingHtml += '<span style="font-size: 120%;color:#F9C81F;">&#9733;</span>'
+                  ratingHtml += '<span style="font-size: 120%;color:#777777;">&#9733;</span>'
                 }
           }
           reviewsHtml += '<p class="review-author"><b>' + place.reviews[j].author_name
@@ -550,7 +561,7 @@ function searchRestaurant() {
   var search = {
     bounds: map.getBounds(),
     types: ['restaurant'],
-    keyword:   " (restaurant) OR (food)"
+    keyword:   " (attractions) OR (point_of_interest)OR (establishment)"
   };
    placeService.radarSearch(search, callback);
 }

@@ -432,7 +432,7 @@ function getEnityId(destinationplace, checkindate, checkoutdate, guests, rooms) 
 				entityid = list[i].individual_id; break;
 			}
 		}
-		if(entityid !== '') {
+		if(entityid !== '' && request.inbounddate != '') {
 			Hotel(checkindate, checkoutdate, guests, rooms);
 			Car(entityid, entityid, request.outbounddate+'T12:00', request.inbounddate+'T12:00');
 		}

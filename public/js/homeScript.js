@@ -139,7 +139,7 @@ function autocompletePlace() {
   var destination_place = document.getElementById('destination-input');
 
   var options = {
-    types: ['(regions)']
+    types: ['(cities)']
   };
 
   var origin_autocomplete = new google.maps.places.Autocomplete(origin_place, options);
@@ -294,3 +294,13 @@ $(function(){
     });
 
 })
+
+
+$(document).on('click', ' a', function () {
+  $('#destination-input').val($(this).children('.hovereffect').children('.overlay').children('h2').text());
+  $('#destination-input').trigger('click');
+});
+
+$(document).on('focus', "#destination-input", function() {
+      $(".pac-container .pac-item:first").trigger('click');
+  });

@@ -30,7 +30,7 @@ function inbounddatepicker() {
 	    	year = date.getFullYear();
 	    $('#planeModal .arrival span').text(day + '/' + month + '/' + year);
 	  }
-	}).datepicker("setDate", request.inbounddate);;
+	}).datepicker("setDate", request.inbounddate);
 }
 
 outbounddatepicker();
@@ -89,9 +89,9 @@ $('#kid').val(request.infants);
 $('.cabinclass input[name="cabinclass"][value="'+ request.cabinclass +'"]').prop('checked', true);
 $('#moreInfo > span:first-child').text(parseInt(request.adults) + parseInt(request.children) + parseInt(request.infants) + ' Người, Ghế ' + request.cabinclass);
 
-$('#rooms').val(Math.round((parseInt(request.adults) + parseInt(request.children))/2));
+$('#rooms').val(Math.round(parseInt(request.adults)/2));
 $('#guests').val(parseInt(request.adults) + parseInt(request.children));
-$('#moreHotelInfo > span:first-child').text(parseInt(request.adults) + parseInt(request.children) + ' Người, ' + Math.round((parseInt(request.adults) + parseInt(request.children))/2) + ' Phòng');
+$('#moreHotelInfo > span:first-child').text(parseInt(request.adults) + parseInt(request.children) + ' Người, ' + Math.round(parseInt(request.adults)/2) + ' Phòng');
 
 $('#moreHotelInfo').popover({
 	placement: 'bottom',
@@ -148,7 +148,7 @@ $('#dropoffdate-input').datepicker({
 	    	year = date.getFullYear();
 	    $('#dropoffdate span').text(day + '/' + month + '/' + year);
 	  }
-	}).datepicker("setDate", request.outbounddate);
+	}).datepicker("setDate", request.inbounddate);
 
 function changeDropOffDate() {
 	var date = new Date($('#dropoffdate-input').val()),
@@ -274,7 +274,11 @@ $(document).on('click', '#flight-search', function(e) {
 });
 
 $(document).on('click', '#car-search', function(e) {
-	Car(entityid, entityid, $('#pickupdate-input').val() + 'T' + $('#pickuptime').val(), $('#dropoffdate-input').val() + 'T' + $('#dropofftime').val());
+
+	if($('#dropoffdate-input').val() == '')
+		$('#dropoffdate-input').show().focus().hide();
+	else
+		Car(entityid, entityid, $('#pickupdate-input').val() + 'T' + $('#pickuptime').val(), $('#dropoffdate-input').val() + 'T' + $('#dropofftime').val());
 });
 
 $(document).on('click', '#hotel-search', function(e){
@@ -284,7 +288,10 @@ $(document).on('click', '#hotel-search', function(e){
 	hotelinput = {};
 	hotelMarkers = [];
 	hotelFlag = false;
-	Hotel($('#checkindate').val(), $('#checkoutdate').val(), $('#guests').val(), $('#rooms').val());
+	if($('#checkoutdate').val() == '')
+		$('#checkoutdate').show().focus().hide();
+	else
+		Hotel($('#checkindate').val(), $('#checkoutdate').val(), $('#guests').val(), $('#rooms').val());
 });
 
 $(document).on('click', '#carModal .item-select-button', function (e) {
@@ -542,7 +549,7 @@ function nextweek(){
     return nextweek;
 }
 
-getEnityId(request.destinationplace, request.outbounddate, request.inbounddate, request.adults, request.adults);
+getEnityId(request.destinationplace, request.outbounddate, request.inbounddate, request.adults, Math.round(parseInt(request.adults)/2));
 
 $(document).on('click', '#plane', function(){
 	routePlane();
@@ -606,4 +613,9 @@ function sortFlights(list, prop, asc = true) {
 	    console.log(item);
 	    // now do stuff with each item
 	}
+}
+
+if(request.inbounddate === '') {
+	$('#hotelModal .loading').html('<b> Chọn ngày trả phòng trước khi tìm kiếm </b>');
+	$('#carModal .loading').html('<b> Chọn ngày trả phòng trước khi tìm kiếm </b>');
 }

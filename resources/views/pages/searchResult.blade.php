@@ -204,10 +204,10 @@
         </button>
       <i class="fa fa-clock-o" aria-hidden="true"></i>
         <select class="picktime" id="pickuptime">
-          <option>8:00</option>
-          <option>8:30</option>
-          <option>9:00</option>
-          <option>9:30</option>
+          <option>08:00</option>
+          <option>08:30</option>
+          <option>09:00</option>
+          <option>09:30</option>
       </select>
         <button type="button" class="arrival" id="dropoffdate"><i class="fa fa-calendar" aria-hidden="true"></i> 
             <span> --/--/---- </span>
@@ -215,10 +215,10 @@
         </button>
       <i class="fa fa-clock-o" aria-hidden="true"></i>
         <select class="picktime" id="dropofftime">
-          <option>8:00</option>
-          <option>8:30</option>
-          <option>9:00</option>
-          <option>9:30</option>
+          <option>08:00</option>
+          <option>08:30</option>
+          <option>09:00</option>
+          <option>09:30</option>
       </select>
           <input type="date" name="pickupdatetime" id="pickupdatetime">
           <input type="date" name="dropoffdatetime" id="dropoffdatetime">

@@ -9,14 +9,15 @@
 	$cars = json_decode(json_encode($data['cars']));
 	$places = json_decode(json_encode($data['places']));
 	$count_unpayment = 0;
+	$total_money = 0;
 @endphp
 <div class="container" id="report" style="padding-top: 62px;">
 
 	<div class="page-header">
 		<div class="col-xs-9">
         	<h1 id="timeline">Tổng Hợp Chuyến Đi</h1>
-        	<h3>{{$currentTour->origin_place.' - '.$currentTour->destination_place}}</h3>
-        	<p>{{ 'Đi: '.$currentTour->outbound_date.' | Về:'.$currentTour->inbound_date}}</p>
+        	<h3>{{$currentTour->origin_place.' - '.$currentTour->destination_place}} <span id="total_money" style="color: #e7745c"></span></h3>
+        	<p>{{ 'Đi: '.$currentTour->outbound_date.' | Về: '.$currentTour->inbound_date}}</p>
         	<p>{{ $currentTour->adults.' Người lớn | '.$currentTour->children.' Trẻ em'}}</p>
        	</div>
 		<div class="col-xs-3">
@@ -67,6 +68,7 @@
 					      <div class="panel-body">
 					          	<div class="panel-group" id="accordion-flight" role="tablist" aria-multiselectable="true">
 								@foreach($flight_round as $key => $flights)
+									@php( $total_money += $flights->Round->price)
 									<div class="print-flight">
 									<div class="panel panel-default col-xs-12">
 								       	<a role="button" data-toggle="collapse" data-parent="#accordion-flight" href="#collapse-flight-{{$key}}" aria-expanded="true" aria-controls="collapseOne">
@@ -277,6 +279,7 @@
 					          		@php 
 					          			$hotel_details = $hotel->Hotel;
 					          			$payment = $hotel->Payment;
+					          			$total_money += $hotel_details->price;
 					          		@endphp
 					          		<div class="print-hotel">
 									<div class="panel panel-default  col-xs-12 hotel-panel">
@@ -430,6 +433,7 @@
 					          	@php
 					          		$car_details = $car->Car;
 					          		$payment = $car->Payment;
+					          		$total_money += $car_details->price;
 					          	@endphp
 					          	<div class="print-car">
 									<div class="panel panel-default  col-xs-12">
@@ -625,7 +629,7 @@
 						    </div>
 				        </a>
 
-					    <div id="collapse-place"  class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+					    <div id="collapse-place"  class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 					      <div class="panel-body">
 					      	<div class="col-xs-4">
 					      		<div class="list-group">
@@ -704,7 +708,7 @@
   			content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
   			content += '<h1 style="text-align: center;">ĐỊA ĐIỂM</h1>';
   			
-  			content += $('#print_place').html();
+  			content += $('.list-group').html().replace(/img/g, 'img style="height: 80px; width:80px; top: 0; right:0; position:absolute;"');
 
   			content += '</div>';
   			createPopup(content);
@@ -718,7 +722,7 @@
 		    mywindow.document.write( data );
 		    mywindow.document.write( "</body></html>" );
 
-		    setTimeout(function() {mywindow.print(); }, 200);
+		    setTimeout(function() {mywindow.print(); }, 300);
 		   // setTimeout(function() {mywindow.close(); }, 210);
 
 		    return true;
@@ -731,17 +735,10 @@
 	<script type="text/javascript">
 	var btn = '' + '<a id="payment-all-button" class="btn btn-default" type="button" href="'+ '{{url("payment_all/".$currentTour->id)}}' + '"> <p>THANH TOÁN NGAY<p><p>('+ {{$count_unpayment}} +' khoản chưa thanh toán) </p> </a>';
 	$('#payment-all').html(btn);
+	$('#total_money').text('| TỔNG GIÁ: {{number_format($total_money,0,",",".")}}');
 	</script>
 	@endif
-	  <script type="text/javascript">
-		  $('#collapse-place').collapse('show');
-		  if($('#accordion-flight').children('.panel-default').length == 1) {
-		  	$('#collapse0').collapse('show');
-		  }
-		  if($('#accordion-hotel').children('.panel-default').length == 1) {
-		  	$('#collapse0').collapse('show');
-		  }
-	  </script>
+	 
 	  <script type="text/javascript">
 	  	var place_list = [];
 	  	@foreach ($places as $key => $value)

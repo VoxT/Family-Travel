@@ -215,8 +215,8 @@
 			   <div class="hovereffect">
 		        	<img class="img-responsive" src="{{ url('/images/suggest/1.jpg') }}" alt="">
 		            <div class="overlay">
-		                <h2>Mù Cang Chải</h2>
-		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+		                <h2>Thượng Hải</h2>
+		                <h4>Từ 42.000.00 <sup>đ</sup></h4>
 						<p> 
 							Chi Tiết
 						</p> 
@@ -292,7 +292,7 @@
 			   <div class="hovereffect">
 		        	<img class="img-responsive" src="{{ url('/images/suggest/2.jpg') }}" alt="">
 		            <div class="overlay">
-		                <h2>Mù Cang Chải</h2>
+		                <h2>Bangkok</h2>
 		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
 						<p> 
 							Chi Tiết
@@ -306,8 +306,8 @@
 			   <div class="hovereffect">
 		        	<img class="img-responsive" src="{{ url('/images/suggest/4.jpg') }}" alt="">
 		            <div class="overlay">
-		                <h2>Hà Nội</h2>
-		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+		                <h2>Singapore</h2>
+		                <h4>Từ 32.000.00 <sup>đ</sup></h4>
 						<p> 
 							Chi Tiết
 						</p> 
@@ -320,7 +320,7 @@
 			   <div class="hovereffect">
 		        	<img class="img-responsive" src="{{ url('/images/suggest/5.jpg') }}" alt="">
 		            <div class="overlay">
-		                <h2>Đà Nẵng</h2>
+		                <h2>Vienchan</h2>
 		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
 						<p> 
 							Chi Tiết
@@ -334,7 +334,7 @@
 			   <div class="hovereffect">
 		        	<img class="img-responsive" src="{{ url('/images/suggest/1.jpg') }}" alt="">
 		            <div class="overlay">
-		                <h2>Nha Trang</h2>
+		                <h2>HongKong</h2>
 		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
 						<p> 
 							Chi Tiết
@@ -348,8 +348,8 @@
 			   <div class="hovereffect">
 		        	<img class="img-responsive" src="{{ url('/images/suggest/3.jpg') }}" alt="">
 		            <div class="overlay">
-		                <h2>Đà Lạt</h2>
-		                <h4>Từ 12.000.00 <sup>đ</sup></h4>
+		                <h2>New Deli</h2>
+		                <h4>Từ 32.000.00 <sup>đ</sup></h4>
 						<p> 
 							Chi Tiết
 						</p> 
