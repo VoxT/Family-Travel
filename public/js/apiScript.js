@@ -174,7 +174,8 @@ function Car(originplace, destinationplace, pickupdatetime, dropoffdatetime) {
 				    icon: 'http://maps.google.com/mapfiles/ms/icons/orange.png',
 				    title: 'Car!'
 				  });
-		   		marker.setMap(null);
+		   		if(!carModalOpen)
+		   			marker.setMap(null);
 		   		carMarkers.push(marker);
 
 				$('#carModal .loading').hide();
@@ -292,7 +293,8 @@ function HotelDetails(url, hotel_id) {
 			    icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png',
 			    title: 'Hotel!'
 			  });
-	   		marker.setMap(null);
+	   		if(!hotelModalOpen)
+	   			marker.setMap(null);
 	   		hotelMarkers.push(marker);
 	   		
 			renderHotel(hotel_id);

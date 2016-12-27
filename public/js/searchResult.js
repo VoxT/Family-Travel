@@ -561,21 +561,29 @@ $('#thingsModal').on('hidden.bs.modal', function () {
    google.maps.event.clearListeners(map, 'idle');  
   routePlane();
 })
+
+var carModalOpen = false, hotelModalOpen = false;
+
 $('#hotelModal').on('hidden.bs.modal', function () {
+	hotelModalOpen = false;
   clearMarkers(hotelMarkers);
   routePlane();
 })
 $('#carModal').on('hidden.bs.modal', function () {
+	carModalOpen = false;
   clearMarkers(carMarkers);
   routePlane();
 })
 $('#hotelModal').on('shown.bs.modal', function () {
+	hotelModalOpen = true;
    expandViewportToFitPlace(request.dlat, request.dlng);
    if(hotelMarkers.length > 0)
    	dropMarker(hotelMarkers);
 
 })
+
 $('#carModal').on('shown.bs.modal', function () {
+	carModalOpen = false;
    expandViewportToFitPlace(request.dlat, request.dlng);
    if (carMarkers.length > 0) 
    dropMarker(carMarkers);
@@ -583,7 +591,7 @@ $('#carModal').on('shown.bs.modal', function () {
 
 
 
-function sortResults(list, prop, asc = true) {
+function sortFlights(list, prop, asc = true) {
     var sort_array = [];
 	for (var key in list) {
 	    sort_array.push({key:key,price:list[key].Price});

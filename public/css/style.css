@@ -1798,7 +1798,7 @@ input#checkindate, input#checkoutdate{
     border-right: 1px solid #e6e6e6;
 }
 .car-logo img {
-  width: 190px;
+  max-width: 150px;
 }
 .car-logo p {
   margin-bottom: 20px;
@@ -2585,6 +2585,8 @@ td {
 
 #reportMap {
   height: 400px;
+  width: 100%;
+  display: block !important;
 }
 #collapse-place .col-xs-4, #collapse-place .col-xs-8 {
   padding: 0;

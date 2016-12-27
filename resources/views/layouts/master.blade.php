@@ -41,6 +41,8 @@
     @show
 
     @section('scripts')
+
+    <script src="{{ elixir('js/homeScript.js') }}"></script>
     @show
 </body>
 

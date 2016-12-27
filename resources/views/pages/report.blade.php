@@ -82,7 +82,7 @@
 										    </div>
 								        </a>
 
-									    <div id="collapse-flight-{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+									    <div id="collapse-flight-{{$key}}" class="panel-collapse collapse @if($key ==0) in @endif" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
 									      	<div class="col-xs-8">
 											    <div class="details" id="flightdetailsmodal">
@@ -292,7 +292,7 @@
 										        </div>
 										    </div>
 								        </a>
-									    <div id="collapse-hotel-{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+									    <div id="collapse-hotel-{{$key}}" class="panel-collapse collapse @if($key ==0) in @endif" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
 									      	<div class="row">
 										      	<div class="col-xs-8">
@@ -450,7 +450,7 @@
 										        </div>
 										    </div>
 								        </a>
-									    <div id="collapse-car-{{$key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+									    <div id="collapse-car-{{$key}}" class="panel-collapse collapse @if($key ==0) in @endif" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
 										      <div class="row">
 										      	<div class="col-xs-8">
@@ -613,7 +613,7 @@
 		     <div class="timeline-panel">
 		        <div class="timeline-heading">
 		        </div>
-		        <div class="timeline-body">
+		        <div class="timeline-body"  id="print_place">
 			        <div class="panel panel-default">
 				       <a role="button" data-toggle="collapse" data-parent="#report-list" href="#collapse-place" aria-expanded="true" aria-controls="collapseOne">
 						    <div class="panel-heading" role="tab" id="headingOne">
@@ -625,7 +625,7 @@
 						    </div>
 				        </a>
 
-					    <div id="collapse-place" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+					    <div id="collapse-place"  class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 					      <div class="panel-body">
 					      	<div class="col-xs-4">
 					      		<div class="list-group">
@@ -700,6 +700,12 @@
   			$('#accordion-car').children('.print-car').each(function(){
   				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')  				.replace('data-toggle="collapse"', '');
   			});
+
+  			content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
+  			content += '<h1 style="text-align: center;">ĐỊA ĐIỂM</h1>';
+  			
+  			content += $('#print_place').html();
+
   			content += '</div>';
   			createPopup(content);
   		}
@@ -712,8 +718,8 @@
 		    mywindow.document.write( data );
 		    mywindow.document.write( "</body></html>" );
 
-		    setTimeout(function() {mywindow.print(); }, 100);
-		    setTimeout(function() {mywindow.close(); }, 110);
+		    setTimeout(function() {mywindow.print(); }, 200);
+		   // setTimeout(function() {mywindow.close(); }, 210);
 
 		    return true;
 
