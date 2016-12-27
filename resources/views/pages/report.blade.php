@@ -3,6 +3,15 @@
 
 @section('content')
 
+@if(isset($error))
+<div class="container" id="report" style="padding-top: 162px; min-height: 500px; text-align: center;">
+	<div class="alert alert-danger">
+		 {{$error}}
+	</div>
+</div>
+
+@else
+
 @php
 	$flight_round = json_decode(json_encode($data['flights']));
 	$hotels = json_decode(json_encode($data['hotels']));
@@ -674,7 +683,8 @@
 	</button>
 </div>
 
-@endsection
+@endif <!-- for error -->
+@endsection <!-- end section content -->
 
 @section('footer')
 	@include('layouts.footer')
@@ -684,6 +694,7 @@
 @section('scripts')
   @parent
 
+@if(!isset($error))
   	<script type="text/javascript">
   		function print_report() {
   			var content = '<div class="container">';
@@ -749,4 +760,5 @@
 	  <script src="{{ elixir('js/report.js') }}"></script>
 	  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40&callback=reportMap&language=vi&region=VN&libraries=places">
 	</script>
+@endif
 @endsection

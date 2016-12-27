@@ -269,7 +269,7 @@ class ReportController extends Controller
 
         $allTour = App\Tours::where('user_id', $user->id)->get();
 
-    	return view('pages.report')->with('error', false)->with('data',  $returnArray)
+    	return view('pages.report')->with('data',  $returnArray)
                                     ->with('tours', $allTour)
                                     ->with('currentTour', $tour);
     }
@@ -305,6 +305,10 @@ class ReportController extends Controller
         if(Cache::get('tourId') != '')
             return redirect('report/'.Cache::get('tourId'));
 
-        return redirect('report/'.App\Tours::where('user_id', Auth::id())->orderBy('created_at', 'aesc')->get()->first()->id);
+        $current = App\Tours::where('user_id', Auth::id())->orderBy('created_at', 'aesc')->get();
+
+        if($current->count() > 0)
+            return redirect('report/'.$current->first()->id);
+        else return View('pages.report')->with('error', 'Bạn Chưa Đăng Kí Bất Kì Chuyến Đi Nào');
     }
 }

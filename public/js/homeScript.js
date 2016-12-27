@@ -288,8 +288,12 @@ $(function(){
         })
         .done(function(data) {
             isLogin = false;
-            $('#user-dropdown .dropdown a').first().remove();
-            $('#user-dropdown .dropdown').prepend('<a href="#" id="login"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng Nhập</a>');
+            if((window.location.href).indexOf('search') !== -1) {
+                $('#user-dropdown .dropdown a').first().remove();
+                $('#user-dropdown .dropdown').prepend('<a href="#" id="login"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng Nhập</a>');
+              } else {
+                location.reload();
+              }
         })
     });
 

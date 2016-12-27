@@ -14,8 +14,8 @@
               @if(isset($error))
               <div class="alert alert-danger">
               	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				  {{$error}}
-				</div>
+    				     {{$error}}
+    				  </div>
 				@endif
               <div>
                 <input type="text" class="form-control" placeholder="Username" required="" name="email">
