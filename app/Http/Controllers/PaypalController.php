@@ -151,13 +151,14 @@ class PaypalController extends Controller
  		//print_r($flights);
         foreach ($flights as $key => $value)
         {
+        	$p = $value['price'] / $exchange_rate;
 	   		$item = new Item();
 	    	$item->setName($value['origin_place'] . "-" . $value['destination_place']) // item name
 	        	->setCurrency('USD')
 	        	->setQuantity(1)
-	       		->setPrice($value['price'] / $exchange_rate); // unit price
+	       		->setPrice($p); // unit price
 	       	array_push($items, $item);
-	       	$flight_price = $flight_price + (int)$value['price'];
+	       	$flight_price = $flight_price + (float)$p;
 	       	array_push($flights_list_id, array(
 	       		'id' => $value['id']));
 	    }
@@ -165,13 +166,15 @@ class PaypalController extends Controller
 
 	    foreach ($hotels as $key => $value)
         {
+
+        	$p = $value->price / $exchange_rate;
 	   		$item = new Item();
 	    	$item->setName($value->name) // item name
 	        	->setCurrency('USD')
 	        	->setQuantity(1)
-	       		->setPrice($value->price / $exchange_rate); // unit price
+	       		->setPrice($p); // unit price
 	       	array_push($items, $item);
-	       	$hotel_price = $hotel_price + (int)$value->price;
+	       	$hotel_price = $hotel_price + (float)$p;
 	       	array_push($hotels_list_id, array(
 	       		'id' => $value->id));
 	    }
@@ -179,18 +182,19 @@ class PaypalController extends Controller
 	    \Session::put('hotels_list_id',$hotels_list_id);
 	     foreach ($cars as $key => $value)
         {
+        	$p = $value->price / $exchange_rate;
 	   		$item = new Item();
 	    	$item->setName($value->vehicle) // item name
 	        	->setCurrency('USD')
 	        	->setQuantity(1)
-	       		->setPrice($value->price / $exchange_rate); // unit price
+	       		->setPrice($p); // unit price
 	       	array_push($items, $item);
-	       	$car_price = $car_price + (int)$value->price;
+	       	$car_price = $car_price + (float)$p;
 	       	array_push($cars_list_id, array(
 	       		'id' => $value->id));
 	    }
 	    \Session::put('cars_list_id',$cars_list_id);
-	     $price = ($flight_price + $hotel_price + $car_price) / $exchange_rate;
+	     $price = ($flight_price + $hotel_price + $car_price);
 	    // add item to list
 	    $item_list = new ItemList();
 	    $item_list->setItems($items);	
