@@ -139,7 +139,7 @@ function autocompletePlace() {
   var destination_place = document.getElementById('destination-input');
 
   var options = {
-    types: ['(cities)']
+    types: ['(regions)']
   };
 
   var origin_autocomplete = new google.maps.places.Autocomplete(origin_place, options);

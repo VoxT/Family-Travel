@@ -696,6 +696,8 @@
 
 @if(!isset($error))
   	<script type="text/javascript">
+
+		$('#total_money').text('| TỔNG GIÁ: {{number_format($total_money,0,",",".")}}');
   		function print_report() {
   			var content = '<div class="container">';
   			content += '<h1 style="text-align: center;">MÁY BAY</h1>';
@@ -746,7 +748,6 @@
 	<script type="text/javascript">
 	var btn = '' + '<a id="payment-all-button" class="btn btn-default" type="button" href="'+ '{{url("payment_all/".$currentTour->id)}}' + '"> <p>THANH TOÁN NGAY<p><p>('+ {{$count_unpayment}} +' khoản chưa thanh toán) </p> </a>';
 	$('#payment-all').html(btn);
-	$('#total_money').text('| TỔNG GIÁ: {{number_format($total_money,0,",",".")}}');
 	</script>
 	@endif
 	 

@@ -311,6 +311,10 @@ function postPlace() {
 	for(var i in placeDetails.photos) {
 		photos.push(placeDetails.photos[i].getUrl({'maxWidth': 1000, 'maxHeight': 1000})) ;
 	}
+	var icon = intersectionJson(iconType, result.types);
+      if(!(icon.length > 0)) {
+        icon.push('art_gallery');
+      }
 	$.ajax({
 		url: 'api/v1/postPlace',
 		method: 'post',
@@ -318,7 +322,7 @@ function postPlace() {
 			place: {
 				name: placeDetails.name,
 				address: placeDetails.formatted_address,
-				place_type: placeDetails.types[0],
+				place_type: iconType[icon[0]].icon,
 				place_id: placeDetails.place_id,
 				images: photos,
 				location: {

@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div class="col-md-8 col-md-offset-2">
                     <p>Đăng Kí để đặt vé máy bay, thuê xe, đặt phòng khách sạn.</p>
-                    <p>Đã có tài khoản? <a href="#" id="login">Đăng Nhập</a></p>
+                    <p>Đã có tài khoản? <a href="#" id="login">Đăng nhập</a></p>
                 </div>
                 <div class="clearfix"></div>
                     <form class="form-horizontal" id="formRegister" role="form" method="POST" action="{{ url('/register') }}">
