@@ -206,6 +206,42 @@ class PaypalController extends Controller
 	    return $this->Payment($transaction, 'payment.status.tour');
 	}
 
+	public function payFlights($flights)
+	{
+
+		$exchange_rate = \Currency::conv($from = 'USD', $to = 'VND', $value = 1, $decimals = 2);
+ 		$flight_price = 0;
+ 		$items = array();
+ 		$flights_list_id = array();
+		foreach ($flights as $key => $value)
+        {
+	   		$item = new Item();
+	    	$item->setName($value['origin_place'] . "-" . $value['destination_place']) // item name
+	        	->setCurrency('USD')
+	        	->setQuantity(1)
+	       		->setPrice($value['price'] / $exchange_rate); // unit price
+	       	array_push($items, $item);
+	       	$flight_price = $flight_price + (int)$value['price'];
+	       	array_push($flights_list_id, array(
+	       		'id' => $value['id']));
+	    }
+	   \Session::put('flights_list_id',$flights_list_id);
+	   $price = $flight_price / $exchange_rate;
+	    // add item to list
+	    $item_list = new ItemList();
+	    $item_list->setItems($items);	
+	    $amount = new Amount();
+	    $amount->setCurrency('USD')
+	        ->setTotal($price);
+
+	    $transaction = new Transaction();
+	    $transaction->setAmount($amount)
+	        ->setItemList($item_list)
+	        ->setDescription('Your transaction description');
+
+	    return $this->Payment($transaction, 'payment.status.tour');
+
+	}
 	public function saveTourPayment()
 	{
 		$this->getPaymentStatus();
@@ -317,7 +353,6 @@ class PaypalController extends Controller
 	    $redirect_urls->setReturnUrl(\URL::route($redirect_target))
 	        ->setCancelUrl(\URL::route('home'));
 
-	    print  $redirect_urls;
 	    $payment = new Payment();
 	    $payment->setIntent('Sale')
 	        ->setPayer($payer)
@@ -401,6 +436,7 @@ class PaypalController extends Controller
 		$hotels = $this->hotelPayment($tourId);
 		$cars = $this->carPayment($tourId);
 		return $this->postTourPayment($flights,$hotels,$cars);
+		//return $this->payFlights($flights);
 
 	}
 	public function flightPayment($tourId)

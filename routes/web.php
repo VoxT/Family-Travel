@@ -69,5 +69,14 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/', 'AdminController@index');
 		Route::get('/logout', 'AdminController@logout');
 		Route::get('/users', 'AdminController@getUsers');
+		Route::get('/users/{id}', 'AdminController@getUserDetails');
+		Route::get('/tours/{id}', 'AdminController@getTourList');
+		Route::get('/tours/details/{tourId}', 'AdminController@getTourDetails');
+		Route::get('/hotels', 'AdminController@getHotelList');
+		Route::get('/flights', 'AdminController@getFlightList');
+		Route::get('/cars', 'AdminController@getCarList');
+		Route::get('/places', 'AdminController@getPlaceList');
+		Route::get('/payments', 'AdminController@getPaymentList');
+		Route::get('/payments/{id}', 'AdminController@getPaymentDetails');
 	});
 });

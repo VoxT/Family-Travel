@@ -9,7 +9,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Danh sách người dùng</h2>
+            <h2>Default Example <small>Users</small></h2>
             <ul class="nav navbar-right panel_toolbox">
               <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
               </li>
@@ -28,16 +28,15 @@
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
-            <table id="datatable" class="table table-striped table-bordered datatable">
+            <h2> Danh sách địa điểm </h2>
+            <table class="table table-striped table-bordered datatable">
               <thead>
                 <tr>
-                  <th>Họ tên</th>
-                  <th>Email</th>
-                  <th>Ngày sinh</th>
-                  <th>Giới tính</th>
-                  <th>Số điện thoại</th>
-                  <th>Số tour</th>
-                  <th>Xem thông tin tour</th>
+                  <th>Tên người dùng</th>
+                  <th>Tên địa điểm</th>
+                  <th>Vị trí</th>
+                  <th>Loại địa điểm</th>
+                  <th>Ngày tạo</th>
                 </tr>
               </thead>
 
@@ -45,18 +44,17 @@
               <tbody>
                @foreach ($data as $value)
                 <tr>
-                  <td>{{$value['name']}} </td>
-                  <td>{{$value['email']}}</td>
-                  <td>{{$value['birthday']}}</td>
-                  <td>{{$value['gender']}}</td>
-                  <td>{{$value['phone']}}</td>
-                  <td>{{$value['total_tour']}}</td>
-                  <td><a href="tours/ {{$value['id']}}" style="color: blue"> Xem </a> </td>
-                </tr>
+                  <td><a href="users/{{$value['user_id']}}" style="color: blue">{{$value['user_name']}}</a></td>
+                  <td>{{$value['place']->name}}</td>
+                  <td>{{$value['place']->address}}</td>
+                  <td>{{$value['place']->place_type}}</td>
+                  <td>{{$value['place']->created_at}}</td>
+                 </tr>
                 @endforeach
               </tbody>
             </table>
           </div>
+
         </div>
       </div>
 

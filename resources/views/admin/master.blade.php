@@ -25,7 +25,7 @@
 		<script src="{{ elixir('js/app.js') }}"></script> 
 		<script src="{{ elixir('js/custom.min.js') }}"></script> 
 		<script type="text/javascript">
-			$('#datatable').DataTable();
+			$('.datatable').DataTable();
 		</script>
 	 </body> 
  </html>

@@ -25,14 +25,11 @@
             <h3>Menu</h3>
             <ul class="nav child_menu" style="display: inherit;">
               <li><a href="{{url('admin/users')}}">Người dùng</a></li>
-              <li><a href="media_gallery.html">Media Gallery</a></li>
-              <li><a href="typography.html">Typography</a></li>
-              <li><a href="icons.html">Icons</a></li>
-              <li><a href="glyphicons.html">Glyphicons</a></li>
-              <li><a href="widgets.html">Widgets</a></li>
-              <li><a href="invoice.html">Invoice</a></li>
-              <li><a href="inbox.html">Inbox</a></li>
-              <li><a href="calendar.html">Calendar</a></li>
+              <li><a href="{{url('admin/flights')}}">Danh sách chuyến bay</a></li>
+              <li><a href="{{url('admin/hotels')}}">Danh sách khách sạn</a></li>
+              <li><a href="{{url('admin/cars')}}">Danh sách thuê xe</a></li>
+              <li><a href="{{url('admin/places')}}">Danh sách địa điểm</a></li>
+              <li><a href="{{url('admin/payments')}}">Thanh toán</a></li>
             </ul>
           </div>
 
