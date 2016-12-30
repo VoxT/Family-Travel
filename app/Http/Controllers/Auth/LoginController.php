@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class LoginController extends Controller
 {
@@ -42,6 +43,7 @@ class LoginController extends Controller
     public function logout(Request $request)
     {           
         Auth::logout();
+        Cache::flush();
         return response()->json(['message' => 'success']);
     }
 

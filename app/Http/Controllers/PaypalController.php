@@ -180,7 +180,7 @@ class PaypalController extends Controller
 	    }
 
 	    \Session::put('hotels_list_id',$hotels_list_id);
-	     foreach ($cars as $key => $value)
+	    foreach ($cars as $key => $value)
         {
         	$p = $value->price / $exchange_rate;
 	   		$item = new Item();
@@ -229,6 +229,8 @@ class PaypalController extends Controller
 	       	array_push($flights_list_id, array(
 	       		'id' => $value['id']));
 	    }
+	   \Session::put('hotels_list_id',array());
+	   \Session::put('cars_list_id',array());
 	   \Session::put('flights_list_id',$flights_list_id);
 	   $price = $flight_price / $exchange_rate;
 	    // add item to list
@@ -246,6 +248,92 @@ class PaypalController extends Controller
 	    return $this->Payment($transaction, 'payment.status.tour');
 
 	}
+
+	public function payHotels($hotels)
+	{
+		$exchange_rate = \Currency::conv($from = 'USD', $to = 'VND', $value = 1, $decimals = 2);
+		$hotel_price = 0;
+ 		$items = array();
+ 		$hotels_list_id = array();
+
+ 		foreach ($hotels as $key => $value)
+        {
+
+        	$p = $value->price / $exchange_rate;
+	   		$item = new Item();
+	    	$item->setName($value->name) // item name
+	        	->setCurrency('USD')
+	        	->setQuantity(1)
+	       		->setPrice($p); // unit price
+	       	array_push($items, $item);
+	       	$hotel_price = $hotel_price + (float)$p;
+	       	array_push($hotels_list_id, array(
+	       		'id' => $value->id));
+	    }
+	   \Session::put('cars_list_id',array());
+	   \Session::put('flights_list_id',array());
+	    \Session::put('hotels_list_id',$hotels_list_id);
+
+	    $price = $hotel_price;
+	    // add item to list
+	    $item_list = new ItemList();
+	    $item_list->setItems($items);	
+	    $amount = new Amount();
+	    $amount->setCurrency('USD')
+	        ->setTotal($price);
+
+	    $transaction = new Transaction();
+	    $transaction->setAmount($amount)
+	        ->setItemList($item_list)
+	        ->setDescription('Your transaction description');
+
+	    return $this->Payment($transaction, 'payment.status.tour');
+
+
+	}
+
+	public function payCars($cars)
+	{
+		$exchange_rate = \Currency::conv($from = 'USD', $to = 'VND', $value = 1, $decimals = 2);
+		$car_price = 0;
+ 		$items = array();
+ 		$cars_list_id = array();
+
+ 		foreach ($cars as $key => $value)
+        {
+        	$p = $value->price / $exchange_rate;
+	   		$item = new Item();
+	    	$item->setName($value->vehicle) // item name
+	        	->setCurrency('USD')
+	        	->setQuantity(1)
+	       		->setPrice($p); // unit price
+	       	array_push($items, $item);
+	       	$car_price = $car_price + (float)$p;
+	       	array_push($cars_list_id, array(
+	       		'id' => $value->id));
+	    }
+	    \Session::put('cars_list_id',$cars_list_id);
+	   \Session::put('flights_list_id',array());
+	    \Session::put('hotels_list_id',array());
+
+	    $price = $car_price;
+	    // add item to list
+	    $item_list = new ItemList();
+	    $item_list->setItems($items);	
+	    $amount = new Amount();
+	    $amount->setCurrency('USD')
+	        ->setTotal($price);
+
+	    $transaction = new Transaction();
+	    $transaction->setAmount($amount)
+	        ->setItemList($item_list)
+	        ->setDescription('Your transaction description');
+
+	    return $this->Payment($transaction, 'payment.status.tour');
+
+
+	}
+
 	public function saveTourPayment()
 	{
 		$this->getPaymentStatus();
@@ -256,22 +344,32 @@ class PaypalController extends Controller
 	    	$this->storePayment();
 	    	// Store Flight if payment is success
 	    	$flights_list_id = \Session::get('flights_list_id');
-
  			$hotels_list_id = \Session::get('hotels_list_id');
  			$cars_list_id = \Session::get('cars_list_id');
  			$paypal_payment_id = \Session::get('paypal_payment_id');
-	    	foreach ($flights_list_id as $key => $value) {
-	    		DB::table('flight_round_trip')->where('id',$value['id'])
-	    							->update(['payment_id' => $paypal_payment_id]);
-	    	}
-	    	foreach ($hotels_list_id as $key => $value) {
-	    		DB::table('hotels')->where('id',$value['id'])
-	    							->update(['payment_id' => $paypal_payment_id]);
-	    	}
-	    	foreach ($cars_list_id as $key => $value) {
-	    		DB::table('cars')->where('id',$value['id'])
-	    							->update(['payment_id' => $paypal_payment_id]);
-	    	}
+ 			if ($flights_list_id != null)
+ 			{
+		    	foreach ($flights_list_id as $key => $value) 
+		    	{
+		    		DB::table('flight_round_trip')->where('id',$value['id'])
+		    							->update(['payment_id' => $paypal_payment_id]);
+		    	}
+		    }
+	    	if ($hotels_list_id != null)
+	    	{
+		    	foreach ($hotels_list_id as $key => $value) 
+		    	{
+		    		DB::table('hotels')->where('id',$value['id'])
+		    							->update(['payment_id' => $paypal_payment_id]);
+		    	}
+		    }
+		    if ($cars_list_id != null)
+		    {
+		    	foreach ($cars_list_id as $key => $value) {
+		    		DB::table('cars')->where('id',$value['id'])
+		    							->update(['payment_id' => $paypal_payment_id]);
+		    	}
+		    }
 	    	\Session::forget('flights_list_id');
  			\Session::forget('hotels_list_id');
  			\Session::forget('cars_list_id');
@@ -436,14 +534,16 @@ class PaypalController extends Controller
 	public function paymentAll($tourId)
 	{
 		\Session::put('tourID',$tourId);
-		$flights = $this->flightPayment($tourId);
-		$hotels = $this->hotelPayment($tourId);
-		$cars = $this->carPayment($tourId);
+		$flights = $this->flightPaymentByTour($tourId);
+		$hotels = $this->hotelPaymentByTour($tourId);
+		$cars = $this->carPaymentByTour($tourId);
+		
 		return $this->postTourPayment($flights,$hotels,$cars);
 		//return $this->payFlights($flights);
+		//return $this->payHotels($hotels);
 
 	}
-	public function flightPayment($tourId)
+	public function flightPaymentByTour($tourId)
     {
     	$flight_round = DB::table('flight_round_trip')
     					->select('id','price')
@@ -451,7 +551,26 @@ class PaypalController extends Controller
     					->wherenull('payment_id')
     					->get()
     					->toArray();
+    	$flightsPayment = $this->responseData($flight_round);
 
+    	return $flightsPayment;
+    }
+
+    public function flightPaymentById($id)
+    {
+    	$flight_round = DB::table('flight_round_trip')
+    					->select('id','price')
+    					->where('id',$id)
+    					->wherenull('payment_id')
+    					->get()
+    					->toArray();
+    	$flightsPayment = $this->responseData($flight_round);
+
+    	return $this->payFlights($flightsPayment);
+    }
+
+    public function responseData($flight_round)
+    {
     	$flightsPayment = array();
     	foreach ($flight_round as $key => $value)
     	{
@@ -472,7 +591,7 @@ class PaypalController extends Controller
    		return $flightsPayment;
     }
 
-    public function hotelPayment($tourId)
+    public function hotelPaymentByTour($tourId)
     {
    		$hotelsPayment = DB::table('hotels')
    						->select('id','name','price')
@@ -483,7 +602,19 @@ class PaypalController extends Controller
    		return $hotelsPayment;
     }
 
-    public function carPayment($tourId)
+
+    public function hotelPaymentById($id)
+    {
+   		$hotelsPayment = DB::table('hotels')
+   						->select('id','name','price')
+   						->where('id',$id)
+   						->wherenull('payment_id')
+   						->get()
+   						->toArray();
+   		return $this->payHotels($hotelsPayment);
+    }
+
+    public function carPaymentByTour($tourId)
     {
     	
    		$carsPayment = DB::table('cars')
@@ -493,6 +624,19 @@ class PaypalController extends Controller
    						->get()
    						->toArray();
    		return $carsPayment;
+    }
+
+    public function carPaymentById($id)
+    {
+    	
+   		$carsPayment = DB::table('cars')
+   						->select('id','vehicle','price')
+   						->where('id',$id)
+   						->wherenull('payment_id')
+   						->get()
+   						->toArray();
+   		return $this->payCars($carsPayment);
+
     }
 
 	// store user info for booking. get it when payment success, or forget it when user cancelled, payment fail
