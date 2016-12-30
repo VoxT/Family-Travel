@@ -142,6 +142,19 @@
 								</div>
 							</div>
 							<div class="form-group">
+								<div class="form-check">
+									<label>Giới tính:</label>
+							      <label class="form-check-label">
+							        <input type="radio" class="form-check-input" name="gender" id="optionsRadios1" value="male" required="">
+							        Nam
+							      </label> 
+							      <label class="form-check-label" style="margin-left: 10px;">
+							        <input type="radio" class="form-check-input" name="gender" id="optionsRadios2" value="female" required="">
+							        Nữ
+							      </label>
+							    </div>
+							</div>
+							<div class="form-group">
 								<label for="email" class="control-label">Email</label>
 								<div class="">
 									<input class='form-control' data-type="input" type='text' name='email' id='email' value ='{{Auth::user()->email}}' required />

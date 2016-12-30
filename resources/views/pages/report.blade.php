@@ -23,9 +23,9 @@
 <div class="container" id="report" style="padding-top: 62px;">
 
 	<div class="page-header">
-		<div class="col-xs-9">
+		<div class="col-xs-9"  id="summary">
         	<h1 id="timeline">Tổng Hợp Chuyến Đi</h1>
-        	<h3>{{$currentTour->origin_place.' - '.$currentTour->destination_place}} <span id="total_money" style="color: #e7745c"></span></h3>
+        	<h3>{{$currentTour->origin_place.' - '.$currentTour->destination_place}} <span id="total_money"></span></h3>
         	<p>{{ 'Đi: '.$currentTour->outbound_date.' | Về: '.$currentTour->inbound_date}}</p>
         	<p>{{ $currentTour->adults.' Người lớn | '.$currentTour->children.' Trẻ em'}}</p>
        	</div>
@@ -191,16 +191,33 @@
 													<table class="table table-hover">
 														<thead>
 													      	<tr>
-														        <th colspan="2">
+														        <th colspan="2" style="text-align: center;">
 																	<h3>Thông Tin Đặt Vé</h3>
 																</th>
 															</tr>
 														</thead>
 														<tbody>
+														@foreach($flights->Round->book_info as $key => $value)
+															 <tr>
+															    <th colspan="2" style="text-align: center;">Hành Khách {{$key +1}}</th>
+															  </tr>
 															<tr>
 																<td>Họ Tên:</td>
-																<td>{{$flights->Round->fullName}}</td>
+																<td>{{$value->full_name}}</td>
 															</tr>
+															<tr>
+																<td>Ngày Sinh:</td>
+																<td>{{$value->birthday}}</td>
+															</tr>
+															<tr>
+																<td>Giới Tính:</td>
+																<td>{{$value->gender}}</td>
+															</tr>
+														@endforeach
+
+															 <tr>
+															    <th colspan="2" style="text-align: center;">Thông Tin Liên Hệ</th>
+															  </tr>
 															<tr>
 																<td>Email:</td>
 																<td>{{$flights->Round->email}}</td>
@@ -209,6 +226,12 @@
 																<td>Số Điện Thoại:</td>
 																<td>{{$flights->Round->phone}}</td>
 															</tr>
+															@if($flights->Round->address != '')
+															<tr>
+																<td>Địa Chỉ:</td>
+																<td>{{$flights->Round->address}}</td>
+															</tr>
+															@endif
 															<tr>
 																<td>Ngày Đặt:</td>
 																<td>{{ $flights->Round->created_at }}</td>
@@ -362,6 +385,12 @@
 																	<td>Số Điện Thoại:</td>
 																	<td>{{$hotel_details->user->phone}}</td>
 																</tr>
+																@if($hotel_details->user->address != '')
+																<tr>
+																	<td>Địa Chỉ:</td>
+																	<td>{{$hotel_details->user->address}}</td>
+																</tr>
+																@endif
 																<tr>
 																	<td>Ngày Đặt:</td>
 																	<td>{{ $hotel_details->created_at }}</td>
@@ -564,6 +593,12 @@
 																	<td>Số Điện Thoại:</td>
 																	<td>{{$car_details->user->phone}}</td>
 																</tr>
+																@if($car_details->user->address != '')
+																<tr>
+																	<td>Địa Chỉ:</td>
+																	<td>{{$car_details->user->address}}</td>
+																</tr>
+																@endif
 																<tr>
 																	<td>Ngày Đặt:</td>
 																	<td>{{ $car_details->created_at }}</td>
@@ -700,28 +735,39 @@
 		$('#total_money').text('| TỔNG GIÁ: {{number_format($total_money,0,",",".")}}');
   		function print_report() {
   			var content = '<div class="container">';
-  			content += '<h1 style="text-align: center;">MÁY BAY</h1>';
-  			$('#accordion-flight').children('.print-flight').each(function(){
-  				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')
-  				.replace('data-toggle="collapse"', '');
-  				content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
-  			});
-  			content += '<h1 style="text-align: center;">KHÁCH SẠN</h1>';
-  			$('#accordion-hotel').children('.print-hotel').each(function(){
-  				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')
-  				.replace('data-toggle="collapse"', '');
-  			});
-
-  			content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
-  			content += '<h1 style="text-align: center;">THUÊ XE</h1>';
-  			$('#accordion-car').children('.print-car').each(function(){
-  				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')  				.replace('data-toggle="collapse"', '');
-  			});
-
-  			content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
-  			content += '<h1 style="text-align: center;">ĐỊA ĐIỂM</h1>';
+  			content += $('#summary').html();
   			
-  			content += $('.list-group').html().replace(/img/g, 'img style="height: 80px; width:80px; top: 0; right:0; position:absolute;"');
+  			@if(count($flight_round) > 0)
+	  			content += '<h1 style="text-align: center;">MÁY BAY</h1>';
+	  			$('#accordion-flight').children('.print-flight').each(function(){
+	  				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')
+	  				.replace('data-toggle="collapse"', '');
+	  				content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
+	  			});
+	  		@endif
+	  		
+	  		@if(count($hotels) > 0)
+	  			content += '<h1 style="text-align: center;">KHÁCH SẠN</h1>';
+	  			$('#accordion-hotel').children('.print-hotel').each(function(){
+	  				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')
+	  				.replace('data-toggle="collapse"', '');
+	  			});
+	  		@endif
+	  		
+	  		@if(count($cars) > 0)
+	  			content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
+	  			content += '<h1 style="text-align: center;">THUÊ XE</h1>';
+	  			$('#accordion-car').children('.print-car').each(function(){
+	  				content += $(this).html().replace('panel-collapse collapse', 'panel-collapse collapse in')  				.replace('data-toggle="collapse"', '');
+	  			});
+			@endif
+			
+			@if(count($places) > 0)
+	  			content += '<DIV class="clearfix" style="page-break-after:always"></DIV>';
+	  			content += '<h1 style="text-align: center;">ĐỊA ĐIỂM</h1>';
+	  			
+	  			content += $('.list-group').html().replace(/img/g, 'img style="height: 80px; width:80px; top: 0; right:0; position:absolute;"');
+			@endif
 
   			content += '</div>';
   			createPopup(content);
@@ -751,6 +797,7 @@
 	</script>
 	@endif
 	 
+	@if(count($places) > 0)
 	  <script type="text/javascript">
 	  	var place_list = [];
 	  	@foreach ($places as $key => $value)
@@ -759,7 +806,8 @@
 	  	@endforeach
 	  </script>
 	  <script src="{{ elixir('js/report.js') }}"></script>
-	  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40&callback=reportMap&language=vi&region=VN&libraries=places">
-	</script>
+	  	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvf3SMKYOCFlAtjUTKotmrF6EFrEk2a40&callback=reportMap&language=vi&region=VN&libraries=places">
+		</script>
+	@endif
 @endif
 @endsection

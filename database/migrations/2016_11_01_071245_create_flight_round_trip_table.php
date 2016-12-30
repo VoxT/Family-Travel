@@ -18,10 +18,9 @@ class CreateFlightRoundTripTable extends Migration
             $table->char('cabin_class', 12)->default('Economic');
             $table->tinyInteger('number_of_seat');
             $table->integer('price');
-            $table->string('full_name');
             $table->char('phone', 15);
             $table->string('email');
-            $table->char('gender', 5);
+            $table->string('address');
             $table->string('payment_id')->nullable();
             $table->foreign('payment_id')->references('paypal_id')->on('payments')->onDelete('cascade');
             $table->integer('tour_id')->unsigned();

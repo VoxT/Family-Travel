@@ -137,45 +137,138 @@
 							<input type="hidden" name="flightdetails" value="{{ $flightDetails }}">
 
 						<div class="col-md-5" style="padding-left: 30px;">
-							<div class="form-group">
-								<label for="full_name" class="control-label">Họ Tên</label>
-								<div class="">
-									<input class='form-control' data-type="input" type='text' name='full_name' id='full_name' value ='{{Auth::user()->full_name}}' required />
+
+						<div class="panel panel-default">
+
+							  <div class="panel-heading">
+							    <h3 class="panel-title">Người lớn</h3>
+							  </div>
+
+	  						<div class="panel-body">
+
+							@for($i = 0; $i < $input->adults; $i++)
+								@if($input->adults > 1)
+								<h4 style="margin-top: 0;">Người lớn {{$i + 1}}</h4>
+								@endif
+								<div class="form-group">
+									<label for="full_name[{{$i}}]" class="control-label">Họ Tên</label>
+									<div class="">
+										<input class='form-control' data-type="input" type='text' name='full_name[{{$i}}]' id='full_name[{{$i}}]' value ='@if($i == 0){{Auth::user()->full_name}} @endif' required />
+									</div>
 								</div>
-							</div>
-							<div class="form-group">
-								<label for="email" class="control-label">Email</label>
-								<div class="">
-									<input class='form-control' data-type="input" type='text' name='email' id='email' value ='{{Auth::user()->email}}' required />
+								<div class="row">
+									<div class="form-group col-md-7" style="padding: 0;">
+										<label for="birthday[{{$i}}]" class="control-label">Ngày Sinh</label>
+										<input class='form-control' data-type="input" type='date' name='birthday[{{$i}}]' id='birthday[{{$i}}]' value ='' required />
+										
+									</div>
+									<div class="form-group col-md-5">
+										<label for="" class="control-label">Giới tính</label>
+										<div class="form-check" style="margin-top: 5px;">
+									      <label class="form-check-label">
+									        <input type="radio" class="form-check-input" name="gender[{{$i}}]" id="optionsRadios1" value="male" required="">
+									        Nam
+									      </label> 
+									      <label class="form-check-label" style="margin-left: 10px;">
+									        <input type="radio" class="form-check-input" name="gender[{{$i}}]" id="optionsRadios2" value="female" required="">
+									        Nữ
+									      </label>
+									    </div>
+									</div>
 								</div>
+								@if( ($i + 1) < $input->adults)
+									<hr style="margin-top: 0px;" />
+								@endif
+							@endfor
 							</div>
-							<div class="form-group">
-								<label for="phone" class="control-label">Số Điện Thoại</label>
-								<div class="">
-									<input class='form-control' data-type="input" type='text' name='phone' id='phone' value ='{{Auth::user()->phone}}' required/>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="address" class="control-label">Địa Chỉ</label>
-								<div class="">
-									<input class='form-control' data-type="input" type='text' name='address' id='address' value ='{{Auth::user()->address}}' />
-								</div>
-							</div>
-							<div class="form-group">
-		                        <div class="book">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="book" onclick="$('#postFlight').attr('action', '/bookingflight');">
-		                                Đặt
-		                            </button>
-		                        </div>
-		                    </div>
-		                    <div class="form-group">
-		                        <div class="payment">
-		                            <button type="submit" class="btn btn-primary col-md-12" id="payment">
-		                                Đặt và Thanh Toán
-		                            </button>
-		                        </div>
-		                    </div>
 						</div>
+
+				@if($input->children > 0)
+					@for($i = 0; $i < $input->children; $i++)
+						<div class="panel panel-default">
+
+							  <div class="panel-heading">
+							    <h3 class="panel-title">Trẻ em</h3>
+							  </div>
+
+	  						<div class="panel-body">
+	  							@if($input->children > 1)
+	  							<h4 style="margin-top: 0;">Trẻ em {{$i}}</h4>
+	  							@endif
+								<div class="form-group">
+									<label for="full_name[{{$input->adults + $i}}]" class="control-label">Họ Tên</label>
+									<div class="">
+										<input class='form-control' data-type="input" type='text' name='full_name[{{$input->adults + $i}}]' id='full_name[{{$input->adults + $i}}]' value ='' required />
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-md-7" style="padding: 0;">
+										<label for="birthday[{{$input->adults + $i}}]" class="control-label">Ngày Sinh</label>
+										<input class='form-control' data-type="input" type='date' name='birthday[{{$input->adults + $i}}]' id='birthday[{{$input->adults + $i}}]' value ='' required />
+										
+									</div>
+									<div class="form-group col-md-5">
+										<label for="" class="control-label">Giới tính</label>
+										<div class="form-check" style="margin-top: 5px;">
+									      <label class="form-check-label">
+									        <input type="radio" class="form-check-input" name="gender[{{$input->adults + $i}}]" id="optionsRadios1" value="male" required="">
+									        Nam
+									      </label> 
+									      <label class="form-check-label" style="margin-left: 10px;">
+									        <input type="radio" class="form-check-input" name="gender[{{$input->adults + $i}}]" id="optionsRadios2" value="female" required="">
+									        Nữ
+									      </label>
+									    </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					@endfor
+				@endif
+
+						<div class="panel panel-default">
+
+							  <div class="panel-heading">
+							    <h3 class="panel-title">Thông tin liên hệ</h3>
+							  </div>
+
+	  						<div class="panel-body">
+								<div class="form-group">
+									<label for="email" class="control-label">Email</label>
+									<div class="">
+										<input class='form-control' data-type="input" type='text' name='email' id='email' value ='{{Auth::user()->email}}' required />
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="phone" class="control-label">Số Điện Thoại</label>
+									<div class="">
+										<input class='form-control' data-type="input" type='text' name='phone' id='phone' value ='{{Auth::user()->phone}}' required/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="address" class="control-label">Địa Chỉ</label>
+									<div class="">
+										<input class='form-control' data-type="input" type='text' name='address' id='address' value ='{{Auth::user()->address}}' />
+									</div>
+								</div>
+							</div>
+		                  </div>
+
+		                 <div class="form-group">
+	                        <div class="book">
+	                            <button type="submit" class="btn btn-primary col-md-12" id="book" onclick="$('#postFlight').attr('action', '/bookingflight');">
+	                                Đặt
+	                            </button>
+	                        </div>
+	                    </div>
+	                    <div class="form-group">
+	                        <div class="payment">
+	                            <button type="submit" class="btn btn-primary col-md-12" id="payment">
+	                                Đặt và Thanh Toán
+	                            </button>
+	                        </div>
+	                    </div>
+					</div>
 
 					</form>
 		      		</div>

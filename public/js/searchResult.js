@@ -322,7 +322,7 @@ function postPlace() {
 			place: {
 				name: placeDetails.name,
 				address: placeDetails.formatted_address,
-				place_type: iconType[icon[0]].icon,
+				place_type: icon[0],
 				place_id: placeDetails.place_id,
 				images: photos,
 				location: {

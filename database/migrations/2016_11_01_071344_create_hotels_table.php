@@ -36,7 +36,7 @@ class CreateHotelsTable extends Migration
             $table->char('phone', 15);
             $table->string('address');
             $table->string('email');
-            $table->char('gender', 5);
+            $table->char('gender', 6);
             $table->string('payment_id')->nullable();
             $table->foreign('payment_id')->references('paypal_id')->on('payments');
             $table->integer('tour_id')->unsigned();

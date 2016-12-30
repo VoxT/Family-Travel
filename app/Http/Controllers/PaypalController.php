@@ -499,6 +499,11 @@ class PaypalController extends Controller
 	public function storeSession($request)
 	{
 		\Session::put('user_name', $request->full_name);
+		\Session::put('gender', $request->gender);
+
+		if(isset($request->birthday))
+			\Session::put('birthday', $request->birthday);
+		
 		\Session::put('user_phone', $request->phone);
 		\Session::put('user_email', $request->email);
 		\Session::put('address',$request->address);
@@ -509,6 +514,8 @@ class PaypalController extends Controller
 	{
         \Session::forget($details);
         \Session::forget('user_name');
+        \Session::forget('gender');
+        \Session::forget('birthday');
         \Session::forget('user_phone');
         \Session::forget('user_email');
         \Session::forget('paypal_payment_id');

@@ -46,7 +46,7 @@ class CreateCarsTable extends Migration
             $table->string('full_name');
             $table->char('phone', 15);
             $table->string('email');
-            $table->char('gender', 5);
+            $table->char('gender', 6);
             $table->string('payment_id')->nullable();
             $table->foreign('payment_id')->references('paypal_id')->on('payments');
             $table->integer('tour_id')->unsigned();

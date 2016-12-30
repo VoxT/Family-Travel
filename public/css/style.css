@@ -2721,3 +2721,20 @@ td {
 .center {
   text-align: center;
 }
+
+#postFlight .panel.panel-default {
+  border: 1px solid #ddd !important;
+}
+
+#postFlight .panel-heading {
+    padding: 10px 15px !important;
+    border-bottom: none !important;
+}
+
+#postFlight .panel-body {
+      padding: 15px !important; 
+}
+
+#total_money {
+  color:  #e7745c;
+}

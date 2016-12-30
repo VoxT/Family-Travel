@@ -25,15 +25,22 @@ class ReportController extends Controller
     		$temp['Round'] = array('price' => $value->price,
     								'cabinClass' => $value->cabin_class,
     								'seats' => $value->number_of_seat,
-    								'fullName' => $value->full_name,
     								'email' => $value->email,
+                                    'address' => $value->address,
                                     'phone' => $value->phone,
+                                    'book_info' => $this->getFlightBookInfo($value->id),
     								'created_at' => (string) $value->created_at
     							);
     		array_push($flightsRespone, $temp);
     	}
 
     	return $flightsRespone;
+    }
+
+    public function getFlightBookInfo($flightRoundTripId)      
+    {
+        return DB::table('flight_book_info')->where('round_trip_id', $flightRoundTripId)
+                                ->get()->toArray();
     }
 
     // return all flight belong to a flight round trip

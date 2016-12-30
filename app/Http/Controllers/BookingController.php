@@ -45,17 +45,31 @@ class BookingController extends Controller
         // create flight round trip
         $id = DB::table('flight_round_trip')->insertGetId(
             ['cabin_class' => $input->cabinClass,
-             'number_of_seat' => $input->adults,
+             'number_of_seat' => $input->adults + $input->children,
              'price' => $flights->Price,
-             'full_name' => \Session::get('user_name'),
              'phone' => \Session::get('user_phone'),
              'email' => \Session::get('user_email'),
-             'gender' => 'other',
+             'address' => \Session::get('address'),
              'tour_id' => $tourId,
              'payment_id' => \Session::get('paypal_payment_id'),
              'created_at' => new \DateTime()
              ]
         );	
+
+        $name_array = \Session::get('user_name');
+        $gender_array = \Session::get('gender');
+        $birthday_array = \Session::get('birthday');
+
+        foreach ($name_array as $key => $value) {
+            DB::table('flight_book_info')->insert(
+                [
+                    'full_name' => $value,
+                    'gender' => $gender_array[$key],
+                    'birthday' => $birthday_array[$key],
+                    'round_trip_id' => $id
+                ]
+                );
+        }
 
         // create flight
         foreach ($flights as $key => $flight) {
@@ -121,7 +135,7 @@ class BookingController extends Controller
                 'email' => \Session::get('user_email'),
                 'address' => \Session::get('address'),
                 'phone' => \Session::get('user_phone'),
-                'gender' => 'other',
+                'gender' => \Session::get('gender'),
                 'payment_id' => \Session::get('paypal_payment_id'),
                 'tour_id' =>  $tourId,
                 'created_at' => new \DateTime()
@@ -170,7 +184,7 @@ class BookingController extends Controller
                 'email' => \Session::get('user_email'),
                 'address' => \Session::get('address'),
                 'phone' => \Session::get('user_phone'),
-                'gender' => 'other',
+                'gender' => \Session::get('gender'),
                 'payment_id' => \Session::get('paypal_payment_id'),
                 'tour_id' =>  $tourId,
                 'created_at' => new \DateTime()
@@ -264,6 +278,12 @@ class BookingController extends Controller
 
     public function storeSession($request)
     {
+        \Session::put('user_name', $request->full_name);
+        \Session::put('gender', $request->gender);
+
+        if(isset($request->birthday))
+            \Session::put('birthday', $request->birthday);
+        
         \Session::put('user_name', $request->full_name);
         \Session::put('user_phone', $request->phone);
         \Session::put('user_email', $request->email);
