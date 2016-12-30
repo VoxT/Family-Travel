@@ -39,6 +39,12 @@ Route::group(['middleware' => ['web']], function () {
 
 	Route::get('payment', 'PaypalController@postFlightPayment');
 	Route::get('payment_all/{tourId}', 'PaypalController@paymentAll');
+
+	Route::get('paymentFlightById/{Id}', 'PaypalController@flightPaymentById');
+
+	Route::get('paymentHotelById/{Id}', 'PaypalController@hotelPaymentById');
+
+	Route::get('paymentCarById/{Id}', 'PaypalController@carPaymentById');
 	// this is after make the payment, PayPal redirect back to your site
 	Route::get('payment/status/flight', array(
 	    'as' => 'payment.status.flight',
