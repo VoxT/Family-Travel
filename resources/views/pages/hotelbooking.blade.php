@@ -144,11 +144,11 @@
 							<div class="form-group">
 								<div class="form-check">
 									<label>Giới tính:</label>
-							      <label class="form-check-label">
+							      <label class="form-check-label radio-inline">
 							        <input type="radio" class="form-check-input" name="gender" id="optionsRadios1" value="male" required="">
 							        Nam
 							      </label> 
-							      <label class="form-check-label" style="margin-left: 10px;">
+							      <label class="form-check-label radio-inline" style="margin-left: 10px;">
 							        <input type="radio" class="form-check-input" name="gender" id="optionsRadios2" value="female" required="">
 							        Nữ
 							      </label>

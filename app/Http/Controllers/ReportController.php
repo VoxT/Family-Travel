@@ -22,7 +22,8 @@ class ReportController extends Controller
     	$flightsRespone = array();
     	foreach ($roundTrip as $key => $value) {
     		$temp = $this->renderFlightResponse($value->id);
-    		$temp['Round'] = array('price' => $value->price,
+    		$temp['Round'] = array( 'id' => $value->id,
+                                    'price' => $value->price,
     								'cabinClass' => $value->cabin_class,
     								'seats' => $value->number_of_seat,
     								'email' => $value->email,
@@ -132,6 +133,7 @@ class ReportController extends Controller
         foreach ($hotels as $key => $value) 
         {
             $arrayHotel = array(
+            'id' => $value->id,
             'checkindate' => $value->check_in_date,
             'checkoutdate' => $value->check_out_date,
             'guests' => $value->guests,
@@ -193,7 +195,7 @@ class ReportController extends Controller
         {
             $carArray = array();
             $carArray =  array(
-
+                'id' => $value->id,
                 'pick_up_place' => $value->pick_up_place,
                 'drop_off_place' => $value->drop_off_place,
                 'pick_up_datetime'=> $value->pick_up_datetime,

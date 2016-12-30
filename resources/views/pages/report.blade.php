@@ -271,6 +271,13 @@
 												</div>
 												@else 
 												@php($count_unpayment++)
+												<div class="form-group">
+							                        <div class="payment">
+							                            <a href="{{ url('paymentFlightById/'.$flights->Round->id) }}" type="button" class="btn btn-primary col-md-12" >
+							                                Thanh Toán
+							                            </a>
+							                        </div>
+							                    </div>
 												@endif
 											</div>
 									      </div>
@@ -329,7 +336,7 @@
 								        </a>
 									    <div id="collapse-hotel-{{$key}}" class="panel-collapse collapse @if($key ==0) in @endif" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
-									      	<div class="row">
+									      	<div class="">
 										      	<div class="col-xs-8">
 											      <div class="details" data-target='@{{data-target}}'>
 												       <div class="image-gallery">
@@ -430,6 +437,13 @@
 													</div>
 													@else 
 													@php($count_unpayment++)
+													<div class="form-group">
+								                        <div class="payment">
+								                            <a href="{{ url('paymentHotelById/'.$hotel_details->id) }}" type="button" class="btn btn-primary col-md-12" >
+								                                Thanh Toán
+								                            </a>
+								                        </div>
+								                    </div>
 													@endif
 												 </div>
 											</div>
@@ -494,7 +508,7 @@
 								        </a>
 									    <div id="collapse-car-{{$key}}" class="panel-collapse collapse @if($key ==0) in @endif" role="tabpanel" aria-labelledby="headingOne">
 									      <div class="panel-body">
-										      <div class="row">
+										      <div class="">
 										      	<div class="col-xs-8">
 											      	<div class="row">
 											      		<div class="col-xs-6">
@@ -638,6 +652,13 @@
 													</div>
 													@else 
 													@php($count_unpayment++)
+													<div class="form-group">
+								                        <div class="payment">
+								                            <a href="{{ url('paymentCarById/'.$car_details->id) }}" type="button" class="btn btn-primary col-md-12" >
+								                                Thanh Toán
+								                            </a>
+								                        </div>
+								                    </div>
 													@endif
 										      	</div>
 										      </div>

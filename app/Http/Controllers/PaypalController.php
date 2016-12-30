@@ -559,13 +559,14 @@ class PaypalController extends Controller
     public function flightPaymentById($id)
     {
     	$flight_round = DB::table('flight_round_trip')
-    					->select('id','price')
+    					->select('id','price', 'tour_id')
     					->where('id',$id)
     					->wherenull('payment_id')
     					->get()
     					->toArray();
     	$flightsPayment = $this->responseData($flight_round);
 
+    	\Session::put('tourID', $flight_round[0]->tour_id);
     	return $this->payFlights($flightsPayment);
     }
 
@@ -606,11 +607,13 @@ class PaypalController extends Controller
     public function hotelPaymentById($id)
     {
    		$hotelsPayment = DB::table('hotels')
-   						->select('id','name','price')
+   						->select('id','name','price', 'tour_id')
    						->where('id',$id)
    						->wherenull('payment_id')
    						->get()
    						->toArray();
+
+    	\Session::put('tourID', $hotelsPayment[0]->tour_id);
    		return $this->payHotels($hotelsPayment);
     }
 
@@ -630,11 +633,13 @@ class PaypalController extends Controller
     {
     	
    		$carsPayment = DB::table('cars')
-   						->select('id','vehicle','price')
+   						->select('id','vehicle','price', 'tour_id')
    						->where('id',$id)
    						->wherenull('payment_id')
    						->get()
    						->toArray();
+
+    	\Session::put('tourID', $carsPayment[0]->tour_id);
    		return $this->payCars($carsPayment);
 
     }

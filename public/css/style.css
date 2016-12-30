@@ -1894,13 +1894,14 @@ p.car-class {
   border-color: #68a19a !important;
 }
  
-#accordion button, #formLogin button, #formRegister button,.margin-top button {
+#accordion button, #formLogin button, #formRegister button,.margin-top button,.payment a {
   background: #68a19a;
   border-radius: 0;
   border: none;
 }
-#accordion button:hover, #formLogin button:hover, #formRegister button:hover,.margin-top button:hover {
+#accordion button:hover, .payment a:hover, #formLogin button:hover, #formRegister button:hover,.margin-top button:hover {
   background: #e7745c !important;
+  color: white !important;
 }
 #register, #login {
   color: #e7745c;
@@ -2618,7 +2619,8 @@ td {
 #collapse-place .list-group-item:hover {
   color: #8c8c8c;
 }
-#payment {
+#payment, .payment a {
+  color: white !important;
   margin-top: 10px;
   background: #0b91d8 !important;
 }
@@ -2660,9 +2662,11 @@ td {
   background: #04c9a6;
   color: white;
   border-radius: 0;
+  border:none;
 }
 #payment-all-button:hover {
   background: #e7745c;
+  border:none;
 }
 .view-report {
   padding: 15px;
