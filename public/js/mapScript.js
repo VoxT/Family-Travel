@@ -160,18 +160,22 @@ function initMap() {
     // });
 
      $(document).on('click', 'a[href="#restaurant"]', function() {
+      google.maps.event.trigger('idle', 'click');
       ShowRestaurant(destination_place_id);
     });  
      
      $(document).on('click', 'a[href="#museum"]', function() {
+      google.maps.event.trigger('idle', 'click');
       ShowMuseum(destination_place_id);
     }); 
      
      $(document).on('click', 'a[href="#parks"]', function() {
+      google.maps.event.trigger('idle', 'click');
       ShowPark(destination_place_id);
     }); 
 
      $(document).on('click', 'a[href="#other"]', function() {
+      google.maps.event.trigger('idle', 'click');
       ShowOther(destination_place_id);
     }); 
      
