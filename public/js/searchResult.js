@@ -311,7 +311,7 @@ function postPlace() {
 	for(var i in placeDetails.photos) {
 		photos.push(placeDetails.photos[i].getUrl({'maxWidth': 1000, 'maxHeight': 1000})) ;
 	}
-	var icon = intersectionJson(iconType, result.types);
+	var icon = intersectionJson(iconType, placeDetails.types);
       if(!(icon.length > 0)) {
         icon.push('art_gallery');
       }
