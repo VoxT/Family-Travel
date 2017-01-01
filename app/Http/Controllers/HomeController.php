@@ -34,8 +34,13 @@ class HomeController extends Controller
     
     public function searchResult()
     {
+        $tourId = $this->getTourId();
+        
+        $placeArray = App\Places::select('place_id')->where('tour_id', $tourId)->get()->toArray();
+
         return view('pages.searchResult')->with('request', json_encode(Input::get()))
-                                            ->with('tourId', $this->getTourId() )
+                                            ->with('tourId', $tourId)
+                                            ->with('places', $placeArray)
                                             ->with('login', Auth::check());
     }
 
@@ -64,7 +69,7 @@ class HomeController extends Controller
         }
 
         if($tourId != ''){
-            $tour = App\Tours::where('id', $tourId)->get();
+            $tour = App\Tours::where('id', $tourId)->where('user_id', Auth::id())->get();
 
             if(count($tour) != 0)
                 $tourId = $tour->first()->id;

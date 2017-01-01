@@ -7,7 +7,6 @@ var stop = false, typeofthing = 'all';
 
 var restaurantListener = null, museumListener = null, parkListener = null;
 var placeDetails = null;
-var bookPlaceList = [];
 
 var flightPath, flightPlanCoordinates;
 // begin result search map
@@ -514,7 +513,7 @@ function PlaceReviews(place, review = false)
                  +'</div>';
     else 
         button = '<div class="add">'
-                   +'<button type="button" class="btn" id="removePlace" title="Thêm vào chuyến đi"><i class="fa fa-check" aria-hidden="true"></i></button>'
+                   +'<button type="button" class="btn" id="removePlace" style="display: initial; margin-top:-55px;" title="Đã thêm vào chuyến đi"><i class="fa fa-check" aria-hidden="true"></i></button>'
                  +'</div>';
     var reviewsHtml = '<div class="review-details">';
     if(place.reviews){
@@ -557,7 +556,8 @@ function ShowRestaurant(place_id){
       }, function(place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           map.panTo(place.geometry.location);
-          map.setZoom(13);
+          if(restaurantMarkers.length == 0)
+            map.setZoom(13);
           clearResults();
           restaurantListener = map.addListener('idle', searchRestaurant);
         }
@@ -589,7 +589,8 @@ function ShowMuseum(place_id){
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           clearResults();
           map.panTo(place.geometry.location);
-          map.setZoom(13);
+          if(museumMarkers.length == 0)
+            map.setZoom(13);
 
           museumListener = map.addListener('idle', searchMuseum);
         }
@@ -618,7 +619,8 @@ function ShowPark(place_id){
       }, function(place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           map.panTo(place.geometry.location);
-          map.setZoom(13);
+          if(parkMarkers.length == 0)
+            map.setZoom(13);
           map.addListener('idle', searchPark);
         }
       });
@@ -648,7 +650,8 @@ function ShowOther(place_id){
       }, function(place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           map.panTo(place.geometry.location);
-          map.setZoom(13);
+          if(otherMarkers.length == 0)
+            map.setZoom(13);
           map.addListener('idle', searchOther);
         }
       });

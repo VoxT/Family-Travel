@@ -393,14 +393,11 @@
   var tourId = '{{$tourId}}';
   var isLogin = {{$login? 'true':'false'}};
 
-  $('#switch').click(function(){
-    var originInput = $('#origin-input').val();
-    $('#origin-input').val($('#destination-input').val());
-    $('#destination-input').val(originInput);
-  });
-  $('#planeModal').on('hide.bs.modal', function (e) {
-
-  });
+  var bookPlaceList = [
+    @foreach($places as $value)
+      '{{$value['place_id']}}',
+    @endforeach
+  ];
 </script>
 
   <script src="{{ elixir('js/mapScript.js') }}"></script> 

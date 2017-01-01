@@ -276,7 +276,7 @@ class ReportController extends Controller
                             'places' => $this->placeResponse($tourId)
                         );
 
-        $allTour = App\Tours::where('user_id', $user->id)->get();
+        $allTour = App\Tours::where('user_id', $user->id)->where('id', '<>', $tour->id)->get();
 
     	return view('pages.report')->with('data',  $returnArray)
                                     ->with('tours', $allTour)

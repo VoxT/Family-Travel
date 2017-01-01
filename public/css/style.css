@@ -297,8 +297,11 @@ button.list-group-item > p {
   background-color: white;
   color: #0b91d8;
 }
-.things, .place {
+.things{
   background-color: #e47225;
+}
+.place {
+  background-color: #e47225 !important;
 }
 #things:hover {
   background-color: #e47225;

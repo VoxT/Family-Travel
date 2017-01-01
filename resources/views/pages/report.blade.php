@@ -30,7 +30,7 @@
         	<p>{{ $currentTour->adults.' Người lớn | '.$currentTour->children.' Trẻ em'}}</p>
        	</div>
 		<div class="col-xs-3">
-        @if(count($tours) > 1)
+        @if(count($tours) > 0)
 		 <div class="dropdown">
 		    <button class="btn btn-default dropdown-toggle" type="button" id="tour-menu" data-toggle="dropdown">Xem Báo Cáo Chuyến Đi Khác 
 		    <span class="caret"></span></button>
