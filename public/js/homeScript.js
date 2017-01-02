@@ -151,13 +151,13 @@ function autocompletePlace() {
     }
      // Get each component of the address from the place details
     // and fill the corresponding field on the form.
-    for (var i = 0; i < place.address_components.length; i++) {
-      var addressType = place.address_components[i].types[0];
-      if (addressType === 'administrative_area_level_1') {
-        var val = place.address_components[i]['long_name'];
-        origin_place.value = val;
-      }
-    }
+    // for (var i = 0; i < place.address_components.length; i++) {
+    //   var addressType = place.address_components[i].types[0];
+    //   if (addressType === 'administrative_area_level_1') {
+    //     var val = place.address_components[i]['long_name'];
+    //     origin_place.value = val;
+    //   }
+    // }
     
     $('#oPlaceId').val(place.place_id);    
     $('#olat').val(place.geometry.location.lat());
@@ -175,13 +175,13 @@ function autocompletePlace() {
     }
     // Get each component of the address from the place details
     // and fill the corresponding field on the form.
-    for (var i = 0; i < place.address_components.length; i++) {
-      var addressType = place.address_components[i].types[0];
-      if (addressType === 'administrative_area_level_1') {
-        var val = place.address_components[i]['long_name'];
-        destination_place.value = val;
-      }
-    }
+    // for (var i = 0; i < place.address_components.length; i++) {
+    //   var addressType = place.address_components[i].types[0];
+    //   if (addressType === 'administrative_area_level_1') {
+    //     var val = place.address_components[i]['long_name'];
+    //     destination_place.value = val;
+    //   }
+    // }
 
     $('#dPlaceId').val(place.place_id);
     $('#dlat').val(place.geometry.location.lat());

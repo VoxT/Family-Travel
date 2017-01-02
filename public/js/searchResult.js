@@ -306,6 +306,12 @@ $(document).on('click', '#addPlace', function (e) {
 	else $('#loginModal').modal();
 });
 
+$(document).on('click', '#current_report', function (e) {
+	if(isLogin)
+		window.open($(this).attr('url'), '_blank');
+	else $('#loginModal').modal();
+});
+
 function postPlace() {
 	var photos = [];
 	for(var i in placeDetails.photos) {

@@ -71,14 +71,14 @@
 		 			<div class="field-box flex">
 			 			<div class="place-selector">
 					        <div class="place-selector__root clearfix">
-					            <input type="text" name="originplace" id="origin-input" placeholder="Điểm đi" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="" />
+					            <input type="text" name="originplace" id="origin-input" placeholder="Điểm đi" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="" required="Nhập điểm đi" />
 					        </div>
 					    </div>
 				    </div>
 				    <div class="field-box flex">
 			 			<div class="place-selector">
 					        <div class="place-selector__root clearfix" tabindex="1">
-					            <input type="text" name="destinationplace" id="destination-input" placeholder="Điểm đến" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="">
+					            <input type="text" name="destinationplace" id="destination-input" placeholder="Điểm đến" class="place-selector__cover text-ellipsis populated" onclick="this.focus();this.select()" value="" required="Nhập điểm đến">
 					        </div>
 					    </div>
 				    </div>
@@ -124,6 +124,11 @@
 								    <li><a role="menuitem" class="dropdown-item" data-value="1" >1</a></li>
 								    <li><a role="menuitem" class="dropdown-item" data-value="2" >2</a></li>
 								    <li><a role="menuitem" class="dropdown-item" data-value="3" >3</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="4" >4</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="5" >5</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="6" >6</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="7" >7</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="8" >8</a></li>
 								</ul>
 			    			</div>
 			    		</div>
@@ -141,6 +146,11 @@
 								    <li><a role="menuitem" class="dropdown-item" data-value="1" >1</a></li>
 								    <li><a role="menuitem" class="dropdown-item" data-value="2" >2</a></li>
 								    <li><a role="menuitem" class="dropdown-item" data-value="3" >3</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="4" >4</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="5" >5</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="6" >6</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="7" >7</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="8" >8</a></li>
 								</ul>
 			    			</div>
 			    		</div>
@@ -158,6 +168,11 @@
 								    <li><a role="menuitem" class="dropdown-item" data-value="1" >1</a></li>
 								    <li><a role="menuitem" class="dropdown-item" data-value="2" >2</a></li>
 								    <li><a role="menuitem" class="dropdown-item" data-value="3" >3</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="4" >4</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="5" >5</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="6" >6</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="7" >7</a></li>
+								    <li><a role="menuitem" class="dropdown-item" data-value="8" >8</a></li>
 								</ul>
 			    			</div>
 			    		</div>

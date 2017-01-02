@@ -434,7 +434,7 @@ function getEnityId(destinationplace, checkindate, checkoutdate, guests, rooms) 
 		}
 		if(entityid !== '' && request.inbounddate != '') {
 			Hotel(checkindate, checkoutdate, guests, rooms);
-			Car(entityid, entityid, request.outbounddate+'T12:00', request.inbounddate+'T12:00');
+			Car(entityid, entityid, request.outbounddate+'T08:00', request.inbounddate+'T08:00');
 		}
 	}).fail(function (e) {
 		

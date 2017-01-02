@@ -46,6 +46,7 @@ class CarHireController extends Controller
 
             //id của image xe
             $image_id = $car['image_id'];
+            $image_url = 'https://cdn4.iconfinder.com/data/icons/car-silhouettes/1000/sedan-512.png';
 
             foreach ($images as $image)
             {

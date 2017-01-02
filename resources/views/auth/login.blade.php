@@ -50,9 +50,9 @@
                                 Đăng nhập
                             </button>
 
-                            <a class="btn btn-link" href="{{ url('/password/reset') }}">
+                            <!-- <a class="btn btn-link" href="{{ url('/password/reset') }}">
                                 Quên mật khẩu?
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </form>

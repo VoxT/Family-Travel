@@ -27,7 +27,7 @@
       </form>
 
       <div class="view-report">
-        <a href="{{ url('current_report') }}" target="_blank"><i class="fa fa-print" aria-hidden="true"></i> Xem Chuyến Đi</a>
+        <button class="btn btn-warning" url="{{ url('current_report') }}" target="_blank" id="current_report"><i class="fa fa-print" aria-hidden="true"></i> Xem Chuyến Đi</button>
       </div>
     </div>
     <!-- /.form -->
@@ -122,6 +122,10 @@
               <option>2</option>
               <option>3</option>
               <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
             </select>
           </div>
               <div class="form-group">
@@ -132,6 +136,10 @@
               <option>2</option>
               <option>3</option>
               <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
             </select>
           </div>
               <div class="form-group">
@@ -142,6 +150,10 @@
               <option>2</option>
               <option>3</option>
               <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
             </select>
           </div>
             </div>
@@ -208,6 +220,30 @@
           <option>08:30</option>
           <option>09:00</option>
           <option>09:30</option>
+          <option>10:00</option>
+          <option>10:30</option>
+          <option>11:00</option>
+          <option>11:30</option>
+          <option>12:00</option>
+          <option>12:30</option>
+          <option>13:00</option>
+          <option>13:30</option>
+          <option>14:00</option>
+          <option>14:30</option>
+          <option>15:00</option>
+          <option>15:30</option>
+          <option>16:00</option>
+          <option>16:30</option>
+          <option>17:00</option>
+          <option>17:30</option>
+          <option>18:00</option>
+          <option>18:30</option>
+          <option>19:00</option>
+          <option>19:30</option>
+          <option>20:00</option>
+          <option>20:30</option>
+          <option>21:00</option>
+          <option>21:30</option>
       </select>
         <button type="button" class="arrival" id="dropoffdate"><i class="fa fa-calendar" aria-hidden="true"></i> 
             <span> --/--/---- </span>
@@ -219,6 +255,30 @@
           <option>08:30</option>
           <option>09:00</option>
           <option>09:30</option>
+          <option>10:00</option>
+          <option>10:30</option>
+          <option>11:00</option>
+          <option>11:30</option>
+          <option>12:00</option>
+          <option>12:30</option>
+          <option>13:00</option>
+          <option>13:30</option>
+          <option>14:00</option>
+          <option>14:30</option>
+          <option>15:00</option>
+          <option>15:30</option>
+          <option>16:00</option>
+          <option>16:30</option>
+          <option>17:00</option>
+          <option>17:30</option>
+          <option>18:00</option>
+          <option>18:30</option>
+          <option>19:00</option>
+          <option>19:30</option>
+          <option>20:00</option>
+          <option>20:30</option>
+          <option>21:00</option>
+          <option>21:30</option>
       </select>
           <input type="date" name="pickupdatetime" id="pickupdatetime">
           <input type="date" name="dropoffdatetime" id="dropoffdatetime">
@@ -264,6 +324,10 @@
               <option>2</option>
               <option>3</option>
               <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
             </select>
           </div>
               <div class="form-group">
@@ -273,6 +337,10 @@
               <option>2</option>
               <option>3</option>
               <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
             </select>
           </div>
             </div>
