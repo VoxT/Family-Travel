@@ -44,6 +44,7 @@ class LoginController extends Controller
     {           
         Auth::logout();
         Cache::flush();
+        \Session::flush();
         return response()->json(['message' => 'success']);
     }
 

@@ -803,7 +803,7 @@
 		    mywindow.document.write( "</body></html>" );
 
 		    setTimeout(function() {mywindow.print(); }, 300);
-		   // setTimeout(function() {mywindow.close(); }, 210);
+		    setTimeout(function() {mywindow.close(); }, 310);
 
 		    return true;
 
